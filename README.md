@@ -4,8 +4,6 @@ Core delivery platform Node.js Frontend Template.
 
 - [Requirements](#requirements)
   - [Node.js](#nodejs)
-- [Redis](#redis)
-- [Server-side Caching](#server-side-caching)
 - [Local Development](#local-development)
   - [Setup](#setup)
   - [Development](#development)
@@ -31,22 +29,6 @@ To use the correct version of Node.js for this application, via nvm:
 cd cdp-defra-id-stub
 nvm use
 ```
-
-## Redis
-
-Redis is an in-memory key-value store. Every instance of a service has access to the same Redis key-value store similar to how services might have a database (or MongoDB). All frontend services are given access to a namespaced prefixed that matches the service name. e.g. `my-service` will have access to everything in Redis that is prefixed with `my-service`.
-
-Redis has been **disabled** in newly created services by setting the `redis.enabled` property to `false`. The CDP platform team have to inject Redis configuration into your service first. Your service will death-loop if Redis is enabled without speaking to us first.
-
-> [!IMPORTANT]
-> If enabling Redis, contact the CDP Platform Team first. Deploying your service with Redis enabled, before we've injected Redis configuration will cause your service to death-loop.
-
-## Server-side Caching
-
-We use Catbox for server-side caching. Specifically CatboxRedis, the Redis adapter for CatBox. It is important that in memory caching isn't used for server-side caching as this will cause issues when there is more than one instance of your service running. Server-side caching has been **disabled** in newly created services by setting the `redis.enabled` property to `false`. Please see [Redis](#redis) for more information.
-
-> [!IMPORTANT]
-> If you want to enable server-side caching using Catbox, contact the CDP Platform Team first. Deploying your service with Redis enabled, before we've injected Redis configuration will cause your service to death-loop.
 
 ## Local Development
 

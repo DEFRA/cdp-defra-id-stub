@@ -18,7 +18,7 @@ const config = convict({
   port: {
     doc: 'The port to bind.',
     format: 'port',
-    default: 3000,
+    default: 3200,
     env: 'PORT'
   },
   staticCacheTimeout: {
@@ -146,6 +146,44 @@ const config = convict({
       format: Boolean,
       default: process.env.NODE_ENV !== 'production',
       env: 'USE_SINGLE_INSTANCE_CACHE'
+    }
+  },
+  oidc: {
+    basePath: {
+      doc: 'the base path all oidc stubs will be served from',
+      format: String,
+      default: '/cdp-defra-id-stub',
+      env: 'OIDC_BASE_PATH'
+    },
+    clientId: {
+      doc: 'client id to use in the oidc stub',
+      format: String,
+      default: '63983fc2-cfff-45bb-8ec2-959e21062b9a',
+      env: 'OIDC_CLIENT_ID'
+    },
+    clientSecret: {
+      doc: 'the client secret key for the oidc stub',
+      format: String,
+      default: '',
+      env: 'OIDC_CLIENT_SECRET'
+    },
+    publicKeyBase64: {
+      doc: 'base 64 encoded public pem',
+      format: String,
+      default: undefined,
+      env: 'OIDC_PUBLIC_KEY_B64'
+    },
+    privateKeyBase64: {
+      doc: 'base 64 encoded private pem',
+      format: String,
+      default: undefined,
+      env: 'OIDC_PRIVATE_KEY_B64'
+    },
+    showLogin: {
+      doc: 'if set, shows login page, else it auto logs in as admin',
+      format: Boolean,
+      default: false,
+      env: 'OIDC_SHOW_LOGIN'
     }
   }
 })
