@@ -10,6 +10,10 @@ import {
 import { userInfoController } from '~/src/server/oidc/controllers/user-info-controller.js'
 import { config } from '~/src/config/index.js'
 import { logoutController } from '~/src/server/oidc/controllers/logout-controller.js'
+import {
+  showSetupController,
+  setupController
+} from '~/src/server/oidc/controllers/setup-controller.js'
 
 const oidc = {
   plugin: {
@@ -33,6 +37,16 @@ const oidc = {
       server.decorate('request', 'keys', keys)
 
       server.route([
+        {
+          method: 'GET',
+          path: `${oidcBasePath}`,
+          ...showSetupController
+        },
+        {
+          method: 'POST',
+          path: `${oidcBasePath}/setup`,
+          ...setupController
+        },
         {
           method: 'GET',
           path: `${oidcBasePath}/.well-known/openid-configuration`,

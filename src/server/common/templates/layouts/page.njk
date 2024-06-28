@@ -3,6 +3,13 @@
 {% from "page-body/macro.njk" import appPageBody %}
 {% from "breadcrumbs/macro.njk" import appBreadcrumbs %}
 {% from "heading/macro.njk" import appHeading %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
 
 {% set mainClasses = "app-main-wrapper" %}
 
@@ -27,6 +34,16 @@
 {% endblock %}
 
 {% block beforeContent %}
+
+  {% if globalValidationFailures | length %}
+    {% for globalValidationFailure in globalValidationFailures %}
+      {{ appBanner({
+        text: globalValidationFailure,
+        type: "error"
+      }) }}
+    {% endfor %}
+  {% endif %}
+
   {% if breadcrumbs.length > 1 %}
     {{ appBreadcrumbs({
       items: breadcrumbs
