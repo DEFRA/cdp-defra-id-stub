@@ -11,8 +11,12 @@ import { userInfoController } from '~/src/server/oidc/controllers/user-info-cont
 import { config } from '~/src/config/index.js'
 import { logoutController } from '~/src/server/oidc/controllers/logout-controller.js'
 import {
-  showSetupController,
-  setupController
+  showSetupDetailsController,
+  setupDetailsController,
+  showSetupEnrolmentController,
+  setupEnrolmentController,
+  showSetupRelationshipController,
+  setupRelationshipController
 } from '~/src/server/oidc/controllers/setup-controller.js'
 
 const oidc = {
@@ -40,12 +44,32 @@ const oidc = {
         {
           method: 'GET',
           path: `${oidcBasePath}`,
-          ...showSetupController
+          ...showSetupDetailsController
         },
         {
           method: 'POST',
           path: `${oidcBasePath}/setup`,
-          ...setupController
+          ...setupDetailsController
+        },
+        {
+          method: 'GET',
+          path: `${oidcBasePath}/{userId}/enrolment`,
+          ...showSetupEnrolmentController
+        },
+        {
+          method: 'POST',
+          path: `${oidcBasePath}/{userId}/enrolment`,
+          ...setupEnrolmentController
+        },
+        {
+          method: 'GET',
+          path: `${oidcBasePath}/{userId}/relationship`,
+          ...showSetupRelationshipController
+        },
+        {
+          method: 'POST',
+          path: `${oidcBasePath}/{userId}/relationship`,
+          ...setupRelationshipController
         },
         {
           method: 'GET',

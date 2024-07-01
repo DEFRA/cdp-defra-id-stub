@@ -6,7 +6,13 @@ const loggerOptions = {
   enabled: !config.get('isTest'),
   ignorePaths: ['/health', '/public'],
   redact: {
-    paths: ['req.headers.authorization', 'req.headers.cookie', 'res.headers'],
+    paths: [
+      'req',
+      'req.headers.authorization',
+      'req.headers.cookie',
+      'res.headers',
+      'responseTime'
+    ],
     remove: true
   },
   level: config.get('logLevel'),

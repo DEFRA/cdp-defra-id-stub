@@ -9,6 +9,7 @@ import { catchAll } from '~/src/server/common/helpers/errors.js'
 import { secureContext } from '~/src/server/common/helpers/secure-context/index.js'
 import { sessionCache } from '~/src/server/common/helpers/session-cache/session-cache.js'
 import { getCacheEngine } from '~/src/server/common/helpers/session-cache/cache-engine.js'
+import { addFlashMessagesToContext } from '~/src/server/common/helpers/add-flash-messages-to-context.js'
 
 const isProduction = config.get('isProduction')
 
@@ -57,6 +58,9 @@ async function createServer() {
   // Register all of the controllers/routes defined in src/server/router.js
   await server.register([router])
 
+  server.ext('onPreResponse', addFlashMessagesToContext, {
+    before: ['yar']
+  })
   server.ext('onPreResponse', catchAll)
 
   return server

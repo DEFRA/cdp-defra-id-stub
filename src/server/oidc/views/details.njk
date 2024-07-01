@@ -1,0 +1,151 @@
+{% extends "layouts/page.njk" %}
+
+{% block content %}
+  {{ appHeading({
+    title: heading,
+    caption: "DEFRA ID Stub User Set Up"
+  }) }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <div class="govuk-body" data-testid="app-page-body">
+
+        <form action="{{ action }}" method="post">
+          <input type="hidden" name="csrfToken" value="{{ csrfToken }}"/>
+
+          {% call govukFieldset() %}
+
+            {{ govukInput({
+              label: {
+                text: "User ID",
+                classes: "govuk-label--m"
+              },
+              id: "userid",
+              name: "userid",
+              value: userId,
+              hint: {
+                text: "(B2C object ID), randomly generated"
+              },
+              attributes: {
+                "data-1p-ignore": ""
+              },
+              errorMessage: {
+                text: formErrors.userid.message
+              } if formErrors.userid.message
+            }) }}
+
+            {{ govukInput({
+              label: {
+                text: "Contact ID",
+                classes: "govuk-label--m"
+              },
+              id: "contactid",
+              name: "contactid",
+              value: contactId,
+              hint: {
+                text: "Randomly generated"
+              },
+              attributes: {
+                "data-1p-ignore": ""
+              },
+              errorMessage: {
+                text: formErrors.contactid.message
+              } if formErrors.contactid.message
+            }) }}
+
+
+            {{ govukInput({
+              label: {
+                text: "Email address",
+                classes: "govuk-label--m"
+              },
+              id: "email",
+              name: "email",
+              inputmode: "email",
+              hint: {
+                text: "What is your email address?"
+              },
+              attributes: {
+                "data-1p-ignore": ""
+              },
+              errorMessage: {
+                text: formErrors.email.message
+              } if formErrors.email.message
+            }) }}
+
+
+            {{ govukInput({
+              label: {
+                text: "First name",
+                classes: "govuk-label--m"
+              },
+              id: "firstname",
+              name: "firstname",
+              hint: {
+                text: "What is your first name?"
+              },
+              attributes: {
+                "data-1p-ignore": ""
+              },
+              errorMessage: {
+                text: formErrors.firstname.message
+              } if formErrors.firstname.message
+            }) }}
+
+
+            {{ govukInput({
+              label: {
+                text: "Last name",
+                classes: "govuk-label--m"
+              },
+              id: "lastname",
+              name: "lastname",
+              hint: {
+                text: "What is your last name?"
+              },
+              attributes: {
+                "data-1p-ignore": ""
+              },
+              errorMessage: {
+                text: formErrors.lastname.message
+              } if formErrors.lastname.message
+            }) }}
+
+
+            {{ govukInput({
+              label: {
+                text: "Unique reference",
+                classes: "govuk-label--m"
+              },
+              id: "uniqueref",
+              name: "uniqueref",
+              value: uniqueRef,
+              hint: {
+                text: "Randomly generated"
+              },
+              attributes: {
+                "data-1p-ignore": ""
+              },
+              errorMessage: {
+                text: formErrors.uniqueref.message
+              } if formErrors.uniqueref.message
+            }) }}
+
+          {% endcall %}
+
+          {% call govukFieldset() %}
+
+          {{ govukButton({
+            text: "Continue"
+          }) }}
+
+          {% endcall %}
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}
