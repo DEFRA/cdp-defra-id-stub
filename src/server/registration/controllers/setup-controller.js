@@ -3,8 +3,8 @@ import Joi from 'joi'
 
 import { config } from '~/src/config/index.js'
 import { buildErrorDetails } from '~/src/server/common/helpers/build-error-details.js'
-import { detailsValidation } from '~/src/server/oidc/helpers/schemas/details-validation.js'
-import { enrolmentValidation } from '~/src/server/oidc/helpers/schemas/enrolment-validation.js'
+import { detailsValidation } from '~/src/server/registration/helpers/schemas/details-validation.js'
+import { enrolmentValidation } from '~/src/server/registration/helpers/schemas/enrolment-validation.js'
 import { createLogger } from '../../common/helpers/logging/logger.js'
 
 const oidcBasePath = config.get('oidc.basePath')
