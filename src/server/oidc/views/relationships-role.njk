@@ -14,32 +14,72 @@
           <input type="hidden" name="csrfToken" value="{{ csrfToken }}"/>
           <input type="hidden" name="userid" value="{{ userId }}"/>
 
+
           {% call govukFieldset() %}
 
+
             {{ govukInput({
-              label: {
-                text: "Currently Selected Relationship ID",
-                classes: "govuk-label--m"
-              },
-              id: "selectedrelationshipid",
-              name: "selectedrelationshipid",
-              value: selectedRelationshipId,
-              hint: {
-                text: "Randomly generated"
-              },
-              attributes: {
-                "data-1p-ignore": ""
-              },
-              errorMessage: {
-                text: formErrors.selectedrelationshipid.message
-              } if formErrors.selectedrelationshipid.message
+               label: {
+                  text: "Role Name"
+               },
+               id: "rolename",
+               name: "rolename",
+               autocomplete: "rolename",
+               classes: "govuk-!-width-one-half"
             }) }}
 
+
+            {{ govukSelect({
+               id: "rolestatus",
+               name: "rolestatus",
+               label: {
+                  text: "Role Status"
+               },
+               items: [
+                  {
+                     value: "incomplete",
+                     text: "Incomplete"
+                  },
+                  {
+                     value: "pending",
+                     text: "Pending"
+                  },
+                  {
+                     value: "complete",
+                     text: "Complete (approved)"
+                  },
+                  {
+                     value: "rejected",
+                     text: "Rejected"
+                  },
+                  {
+                     value: "blocked",
+                     text: "Blocked"
+                  },
+                  {
+                     value: "removed",
+                     text: "Removed"
+                  },
+                  {
+                     value: "offboarded",
+                     text: "Offboarded"
+                  }
+               ]
+            }) }}
           {% endcall %}
+
+         <div class="govuk-button-group">
+
+            {{ govukButton({
+               text: "Add role to relationship",
+               classes: "govuk-button--secondary"
+            }) }}
+
+         </div>
 
           {% call govukFieldset({
             legend: {
-               text: "User Relationships",
+               text: "New User Relationships",
                classes: "govuk-fieldset__legend--m",
                isPageHeading: false
             }
@@ -51,6 +91,7 @@
                },
                id: "relationshipid",
                name: "relationshipid",
+               value: relationshipId,
                autocomplete: "relationshipid",
                classes: "govuk-!-width-three-quarters",
               errorMessage: {
@@ -64,6 +105,7 @@
                },
                id: "organisationid",
                name: "organisationid",
+               value: organisationId,
                autocomplete: "organisationid",
                classes: "govuk-!-width-three-quarters"
             }) }}
@@ -74,6 +116,7 @@
                },
                id: "organisationname",
                name: "organisationname",
+               value: organisationName,
                autocomplete: "organisationname",
                classes: "govuk-!-width-three-quarters"
             }) }}
@@ -111,82 +154,33 @@
               } if formErrors.relationshiprole.message
             }) }}
 
+          {% endcall %}
+
+
+         <div class="govuk-button-group">
+
 
             {{ govukButton({
-               text: "Add role to relationship",
+               text: "Add relationship"
+            }) }}
+
+            {{ govukButton({
+               text: "Continue",
                classes: "govuk-button--secondary"
             }) }}
 
-            {{ govukInput({
-               label: {
-                  text: "Role Name"
-               },
-               id: "rolename",
-               name: "rolename",
-               autocomplete: "rolename",
-               classes: "govuk-!-width-one-half"
-            }) }}
-
-
-            {{ govukSelect({
-               id: "rolestatus",
-               name: "rolestatus",
-               label: {
-                  text: "Sole Status"
-               },
-               hint: {
-                  text: "Role status"
-               },
-               items: [
-                  {
-                     value: "incomplete",
-                     text: "Incomplete"
-                  },
-                  {
-                     value: "pending",
-                     text: "Pending"
-                  },
-                  {
-                     value: "complete",
-                     text: "Complete (approved)"
-                  },
-                  {
-                     value: "rejected",
-                     text: "Rejected"
-                  },
-                  {
-                     value: "blocked",
-                     text: "Blocked"
-                  },
-                  {
-                     value: "removed",
-                     text: "Removed"
-                  },
-                  {
-                     value: "offboarded",
-                     text: "Offboarded"
-                  }
-               ]
-            }) }}
-
-          {% endcall %}
-
-          {% call govukFieldset() %}
-
-            {{ govukButton({
-               text: "Add another relationship",
-               classes: "govuk-button--secondary"
-            }) }}
-
-
-            {{ govukButton({
-               text: "Continue"
-            }) }}
-
-          {% endcall %}
+            </div>
 
         </form>
 
+         <div class="govuk-button-group">
+
+            <a class="govuk-link" href="{{ enrolmentLink }}">Go back</a>
+
+
+            <a class="govuk-link" href="{{ enrolmentLink }}">Continue</a>
+
+            </div>
       </div>
     </div>
   </div>

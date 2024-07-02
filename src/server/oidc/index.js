@@ -14,10 +14,13 @@ import {
   showSetupDetailsController,
   setupDetailsController,
   showSetupEnrolmentController,
-  setupEnrolmentController,
-  showSetupRelationshipController,
-  setupRelationshipController
+  setupEnrolmentController
 } from '~/src/server/oidc/controllers/setup-controller.js'
+import {
+  showAddRelationshipController,
+  showRelationshipListController,
+  addRelationshipController
+} from '~/src/server/oidc/controllers/relationship-controller.js'
 
 const oidc = {
   plugin: {
@@ -64,12 +67,17 @@ const oidc = {
         {
           method: 'GET',
           path: `${oidcBasePath}/{userId}/relationship`,
-          ...showSetupRelationshipController
+          ...showAddRelationshipController
+        },
+        {
+          method: 'GET',
+          path: `${oidcBasePath}/{userId}/relationship/{relationshipId}`,
+          ...showRelationshipListController
         },
         {
           method: 'POST',
           path: `${oidcBasePath}/{userId}/relationship`,
-          ...setupRelationshipController
+          ...addRelationshipController
         },
         {
           method: 'GET',

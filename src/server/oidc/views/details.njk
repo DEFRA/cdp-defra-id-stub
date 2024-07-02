@@ -62,6 +62,7 @@
               id: "email",
               name: "email",
               inputmode: "email",
+              value: email,
               hint: {
                 text: "What is your email address?"
               },
@@ -81,6 +82,7 @@
               },
               id: "firstname",
               name: "firstname",
+              value: firstname,
               hint: {
                 text: "What is your first name?"
               },
@@ -100,6 +102,7 @@
               },
               id: "lastname",
               name: "lastname",
+              value: lastname,
               hint: {
                 text: "What is your last name?"
               },
@@ -133,13 +136,14 @@
 
           {% endcall %}
 
-          {% call govukFieldset() %}
+
+         <div class="govuk-button-group">
 
           {{ govukButton({
             text: "Continue"
           }) }}
 
-          {% endcall %}
+         </div>
 
         </form>
 

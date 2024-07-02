@@ -4,7 +4,7 @@ import { config } from '~/src/config/index.js'
 
 const loggerOptions = {
   enabled: !config.get('isTest'),
-  ignorePaths: ['/health', '/public'],
+  ignorePaths: ['/health', '/public', '/favicon.ico'],
   redact: {
     paths: [
       'req',
