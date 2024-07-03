@@ -15,23 +15,25 @@
           <input type="hidden" name="csrfToken" value="{{ csrfToken }}"/>
           <input type="hidden" name="userid" value="{{ userId }}"/>
 
-          {% call govukFieldset({
-            legend: {
-               text: "Relationships",
-               classes: "govuk-fieldset__legend--m",
-               isPageHeading: false
-            }
-            }) %}
+          {% if currentRelationship|length > 0 %}
+            {% call govukFieldset({
+               legend: {
+                  text: "Relationships",
+                  classes: "govuk-fieldset__legend--m",
+                  isPageHeading: false
+               }
+               }) %}
 
-            {{ relationshipSummary.relationshipSummary(currentRelationship,true) }}
+               {{ relationshipSummary.relationshipSummary(currentRelationship,true) }}
 
-            {% for relationship in relationships %}
+               {% for relationship in relationships %}
 
-               {{ relationshipSummary.relationshipSummary(relationship,false) }}
+                  {{ relationshipSummary.relationshipSummary(relationship,false) }}
 
-            {% endfor %}
+               {% endfor %}
 
-          {% endcall %}
+            {% endcall %}
+          {% endif %}
 
           {% call govukFieldset({
             legend: {

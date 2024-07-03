@@ -14,6 +14,7 @@ import {
   storeRelationship
 } from '~/src/server/registration/helpers/new-relationship.js'
 import { transformRelationships } from '~/src/server/registration/transformers/relationship-transformer.js'
+import { updateRegistration } from '~/src/server/registration/helpers/update-registration.js'
 
 const oidcBasePath = config.get('oidc.basePath')
 
@@ -25,44 +26,8 @@ function relationshipPath(userId) {
   return `${oidcBasePath}/${userId}/relationship`
 }
 
-function selectedRelationshipPath(userId, relationshipId) {
-  return `${oidcBasePath}/${userId}/relationship/${relationshipId}`
-}
-
 function confirmPath(userId) {
   return `${oidcBasePath}/${userId}/confirm`
-}
-
-const showAddRelationshipController = {
-  options: {
-    validate: {
-      params: Joi.object({
-        userId: Joi.string().uuid().required()
-      })
-    }
-  },
-  handler: async (request, h) => {
-    const { userId } = request.params
-
-    const registration = await findRegistration(userId, request.registrations)
-
-    if (!registration) {
-      request.logger.error({ userId }, '====== Registration not found ======')
-      return h.redirect(oidcBasePath)
-    }
-
-    return h.view('registration/views/relationships-none', {
-      pageTitle: 'DEFRA ID Relationships Setup',
-      heading: 'DEFRA ID Relationships Setup',
-      action: relationshipPath(userId),
-      userId,
-      csrfToken: crypto.randomUUID(),
-      relationshipId: crypto.randomUUID(),
-      organisationId: crypto.randomUUID(),
-      organisationName: 'DEFRA Example Organisation',
-      enrolmentLink: enrolmentPath(userId)
-    })
-  }
 }
 
 const addRelationshipController = {
@@ -120,10 +85,14 @@ const addRelationshipController = {
       relationship,
       request.registrations
     )
+    if (!registration.currentRelationship) {
+      registration.currentRelationship = relationshipid
+      await updateRegistration(userId, registration, request.registrations)
+    }
 
     request.logger.info({ relationship }, '====== Add relationships =======')
 
-    return h.redirect(selectedRelationshipPath(userId, relationshipid))
+    return h.redirect(relationshipPath(userId))
   }
 }
 
@@ -131,13 +100,12 @@ const showRelationshipListController = {
   options: {
     validate: {
       params: Joi.object({
-        userId: Joi.string().uuid().required(),
-        relationshipId: Joi.string().uuid().required()
+        userId: Joi.string().uuid().required()
       })
     }
   },
   handler: async (request, h) => {
-    const { userId, relationshipId } = request.params
+    const { userId } = request.params
 
     const registration = await findRegistration(userId, request.registrations)
 
@@ -148,42 +116,44 @@ const showRelationshipListController = {
 
     request.logger.info('====== Show relationships list =======')
 
-    const currentRelationship = await findRelationship(
-      userId,
-      relationshipId,
-      request.registrations
-    )
-
-    if (!currentRelationship) {
-      request.logger.error(
-        { userId },
-        '====== Current relationship not found ======'
-      )
-      return h.redirect(oidcBasePath)
-    }
-
-    request.logger.info(
-      { currentRelationship },
-      '====== Current relationship found ======='
-    )
-
     const relationships = await findRelationships(userId, request.registrations)
-    const otherRelationships = relationships.filter(
-      (relationship) =>
-        relationship.relationshipId !== currentRelationship.relationshipId
-    )
-    const currentRelationshipRows = transformRelationships(
-      [currentRelationship],
-      currentRelationship
-    )[0]
-    const relationshipsRows = transformRelationships(otherRelationships)
 
-    request.logger.info(
-      {
-        otherRelationships
-      },
-      '====== Other relationships found ======='
-    )
+    let currentRelationship
+    let currentRelationshipRows = []
+    let relationshipsRows = []
+    if (registration.currentRelationship) {
+      currentRelationship = await findRelationship(
+        userId,
+        registration.currentRelationship,
+        request.registrations
+      )
+
+      if (!currentRelationship) {
+        request.logger.error(
+          { userId },
+          '====== Current relationship not found ======'
+        )
+      }
+      request.logger.info(
+        { currentRelationship },
+        '====== Current relationship found ======='
+      )
+      currentRelationshipRows = transformRelationships(
+        [currentRelationship],
+        currentRelationship
+      )[0]
+      const otherRelationships = relationships.filter(
+        (relationship) =>
+          relationship.relationshipId !== currentRelationship.relationshipId
+      )
+      relationshipsRows = transformRelationships(otherRelationships)
+      request.logger.info(
+        {
+          otherRelationships
+        },
+        '====== Other relationships found ======='
+      )
+    }
 
     return h.view('registration/views/relationships-list', {
       pageTitle: 'DEFRA ID Relationships Setup',
@@ -203,8 +173,4 @@ const showRelationshipListController = {
   }
 }
 
-export {
-  showAddRelationshipController,
-  showRelationshipListController,
-  addRelationshipController
-}
+export { showRelationshipListController, addRelationshipController }

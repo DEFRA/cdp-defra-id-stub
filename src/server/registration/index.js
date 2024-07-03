@@ -8,7 +8,6 @@ import {
   setupEnrolmentController
 } from '~/src/server/registration/controllers/enrolment-controller.js'
 import {
-  showAddRelationshipController,
   showRelationshipListController,
   addRelationshipController
 } from '~/src/server/registration/controllers/relationship-controller.js'
@@ -41,17 +40,12 @@ const registration = {
         {
           method: 'GET',
           path: `${oidcBasePath}/{userId}/relationship`,
-          ...showAddRelationshipController
+          ...showRelationshipListController
         },
         {
           method: 'POST',
           path: `${oidcBasePath}/{userId}/relationship`,
           ...addRelationshipController
-        },
-        {
-          method: 'GET',
-          path: `${oidcBasePath}/{userId}/relationship/{relationshipId}`,
-          ...showRelationshipListController
         }
       ])
     }
