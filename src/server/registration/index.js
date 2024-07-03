@@ -1,7 +1,9 @@
 import { oidcBasePath } from '~/src/server/oidc/oidc-config.js'
 import {
   showRegistrationController,
-  registrationController
+  registrationController,
+  showExistingRegistrationController,
+  updateRegistrationController
 } from '~/src/server/registration/controllers/registration-controller.js'
 import {
   showRelationshipListController,
@@ -20,9 +22,19 @@ const registration = {
           ...showRegistrationController
         },
         {
+          method: 'GET',
+          path: `${oidcBasePath}/{userId}`,
+          ...showExistingRegistrationController
+        },
+        {
           method: 'POST',
           path: `${oidcBasePath}/setup`,
           ...registrationController
+        },
+        {
+          method: 'POST',
+          path: `${oidcBasePath}/{userId}/update`,
+          ...updateRegistrationController
         },
         {
           method: 'GET',
