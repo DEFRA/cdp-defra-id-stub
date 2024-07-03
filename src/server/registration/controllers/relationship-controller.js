@@ -20,10 +20,6 @@ import { transformRelationships } from '~/src/server/registration/transformers/r
 
 const oidcBasePath = config.get('oidc.basePath')
 
-function enrolmentPath(userId) {
-  return `${oidcBasePath}/${userId}/enrolment`
-}
-
 function relationshipPath(userId) {
   return `${oidcBasePath}/${userId}/relationship`
 }
@@ -162,7 +158,7 @@ const showRelationshipListController = {
       heading: 'DEFRA ID Relationships Setup',
       action: relationshipPath(userId),
       userId,
-      enrolmentLink: enrolmentPath(userId),
+      goBackLink: oidcBasePath,
       confirmLink: confirmPath(userId),
       csrfToken: crypto.randomUUID(),
       selectedRelationshipId: crypto.randomUUID(),

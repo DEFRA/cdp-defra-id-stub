@@ -136,6 +136,96 @@
 
           {% endcall %}
 
+          {% call govukFieldset() %}
+
+            {{ govukRadios({
+              id: "loa",
+              name: "loa",
+              classes: "govuk-radios--inline",
+              hint: {
+                text: "Level of assurance"
+              },
+              fieldset: {
+                legend: {
+                  text: "LoA (contact's level of assurance)",
+                  isPageHeading: true,
+                  classes: "govuk-fieldset__legend--m"
+                }
+              },
+              items: [
+                {
+                  value: "LOA0",
+                  text: "LOA0"
+                },
+                {
+                  value: "LOA1",
+                  text: "LOA1",
+                  checked: true
+                },
+                {
+                  value: "LOA2",
+                  text: "LOA2"
+                }
+              ],
+              attributes: {
+                "data-1p-ignore": ""
+              },
+              errorMessage: {
+                text: formErrors.loa.message
+              } if formErrors.loa.message
+            }) }}
+
+          {% endcall %}
+
+          {% call govukFieldset() %}
+
+            {{ govukInput({
+              label: {
+                text: "Enrolments",
+                classes: "govuk-label--m"
+              },
+              id: "enrolments",
+              name: "enrolments",
+              value: enrolments,
+              inputmode: "numeric",
+              classes: "govuk-!-width-one-quarter",
+              hint: {
+                text: "Number of enrolments"
+              },
+              attributes: {
+                "data-1p-ignore": ""
+              },
+              errorMessage: {
+                text: formErrors.enrolments.message
+              } if formErrors.enrolments.message
+            }) }}
+
+          {% endcall %}
+
+          {% call govukFieldset() %}
+
+            {{ govukInput({
+              label: {
+                text: "Enrolment Requests",
+                classes: "govuk-label--m"
+              },
+              id: "enrolmentrequests",
+              name: "enrolmentrequests",
+              value: enrolmentRequests,
+              inputmode: "numeric",
+              classes: "govuk-!-width-one-quarter",
+              hint: {
+                text: "Number of enrolment requests"
+              },
+              attributes: {
+                "data-1p-ignore": ""
+              },
+              errorMessage: {
+                text: formErrors.enrolmentrequests.message
+              } if formErrors.enrolmentrequests.message
+            }) }}
+
+          {% endcall %}
 
          <div class="govuk-button-group">
 

@@ -10,8 +10,8 @@ import {
 
 const oidcBasePath = config.get('oidc.basePath')
 
-function enrolmentPath(userId) {
-  return `${oidcBasePath}/${userId}/enrolment`
+function relationshipPath(userId) {
+  return `${oidcBasePath}/${userId}/relationship`
 }
 
 const showRegistrationController = {
@@ -26,6 +26,8 @@ const showRegistrationController = {
       email: 'some@example.com',
       firstname: 'Firstnamer',
       lastname: 'Lastnameson',
+      enrolments: 1,
+      enrolmentRequests: 1,
       csrfToken: crypto.randomUUID()
     })
   }
@@ -58,11 +60,14 @@ const registrationController = {
     registration.firstname = payload.firstname
     registration.lastname = payload.lastname
     registration.uniqueRef = payload.uniqueref
+    registration.loa = payload.loa
+    registration.enrolments = payload.enrolments
+    registration.enrolmentRequests = payload.enrolmentRequests
     await storeRegistration(userid, registration, request.registrations)
 
     //  request.logger.info({ registration }, '======New registration=======')
 
-    return h.redirect(enrolmentPath(userid))
+    return h.redirect(relationshipPath(userid))
   }
 }
 
