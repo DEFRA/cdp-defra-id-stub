@@ -1,12 +1,12 @@
+const prefix = 'defra-id'
+
 const cacheKeys = {
-  // Cache keys for the registration process
-  registrationIds: 'registration-ids',
-  registration: (id) => `registration:${id}`,
-  // Cache keys for the relationship process
-  relationshipIds: 'relationship-ids',
+  registrationIds: `${prefix}:registration-ids`,
+  registration: (id) => `${prefix}:registration:${id}`,
+  relationshipIds: `${prefix}:relationship-ids`,
+  userRelationshipIds: (userId) => `${prefix}:relationship-ids:${userId}`,
   relationship: (userId, relationshipId) =>
-    `relationship:${userId}:${relationshipId}`,
-  userRelationshipIds: (userId) => `relationship-ids:${userId}`
+    `${prefix}:relationship:${userId}:${relationshipId}`
 }
 
 export { cacheKeys }

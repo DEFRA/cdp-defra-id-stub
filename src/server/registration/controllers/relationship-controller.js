@@ -13,6 +13,7 @@ import {
   newRelationship,
   storeRelationship
 } from '~/src/server/registration/helpers/new-relationship.js'
+import { transformRelationships } from '~/src/server/registration/transformers/relationship-transformer.js'
 
 const oidcBasePath = config.get('oidc.basePath')
 
@@ -167,8 +168,22 @@ const showRelationshipListController = {
     )
 
     const relationships = await findRelationships(userId, request.registrations)
+    const otherRelationships = relationships.filter(
+      (relationship) =>
+        relationship.relationshipId !== currentRelationship.relationshipId
+    )
+    const currentRelationshipRows = transformRelationships(
+      [currentRelationship],
+      currentRelationship
+    )[0]
+    const relationshipsRows = transformRelationships(otherRelationships)
 
-    request.logger.info({ relationships }, '====== Relationships found =======')
+    request.logger.info(
+      {
+        otherRelationships
+      },
+      '====== Other relationships found ======='
+    )
 
     return h.view('registration/views/relationships-list', {
       pageTitle: 'DEFRA ID Relationships Setup',
@@ -182,11 +197,8 @@ const showRelationshipListController = {
       relationshipId: crypto.randomUUID(),
       organisationId: crypto.randomUUID(),
       organisationName: 'DEFRA Example Organisation',
-      currentRelationship,
-      relationships: relationships.filter(
-        (relationship) =>
-          relationship.relationshipId !== currentRelationship.relationshipId
-      )
+      currentRelationship: currentRelationshipRows,
+      relationships: relationshipsRows
     })
   }
 }

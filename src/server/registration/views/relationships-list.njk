@@ -1,4 +1,5 @@
 {% extends "layouts/page.njk" %}
+{% import "registration/components/relationship-summary.njk" as relationshipSummary %}
 
 {% block content %}
   {{ appHeading({
@@ -16,162 +17,19 @@
 
           {% call govukFieldset({
             legend: {
-               text: "Current Relationship",
-               classes: "govuk-fieldset__legend--m",
-               isPageHeading: false
-            }
-            }) %}
-
-            {{ govukSummaryList({
-               card: {
-                  title: {
-                     text: "Relationship"
-                  },
-                  actions: {
-                     items: [
-                        {
-                           href: "/relationships",
-                           text: "Add role",
-                           visuallyHiddenText: "to relationship"
-                        }
-                     ]
-                  }
-               },
-               rows: [
-                  {
-                     key: {
-                        text: "Relationship ID"
-                     },
-                     value: {
-                        text: currentRelationship.relationshipId
-                     }
-                  },
-                  {
-                     key: {
-                        text: "Organisation ID"
-                     },
-                     value: {
-                        text: currentRelationship.organisationIdId
-                     }
-                  },
-                  {
-                     key: {
-                        text: "Organisation Name"
-                     },
-                     value: {
-                        text: currentRelationship.organisationName
-                     }
-                  },
-                  {
-                     key: {
-                        text: "Role Name"
-                     },
-                     value: {
-                        text: 'roleName'
-                     },
-                     actions: {
-                        items: [
-                           {
-                              href: "/relationships",
-                              text: "Remove",
-                              visuallyHiddenText: "role from relationship"
-                           }
-                        ]
-                     }
-                  },
-                  {
-                     key: {
-                        text: "Role Status"
-                     },
-                     value: {
-                        text: 'roleStatus'
-                     }
-                  }
-               ]
-               }) }}
-
-
-          {% endcall %}
-
-          {% call govukFieldset({
-            legend: {
                text: "Relationships",
                classes: "govuk-fieldset__legend--m",
                isPageHeading: false
             }
             }) %}
 
-          {% for relationship in relationships %}
+            {{ relationshipSummary.relationshipSummary(currentRelationship,true) }}
 
-            {{ govukSummaryList({
-               card: {
-                  title: {
-                     text: "Relationship"
-                  },
-                  actions: {
-                     items: [
-                        {
-                           href: "/relationships",
-                           text: "Add role",
-                           visuallyHiddenText: "to relationship"
-                        }
-                     ]
-                  }
-               },
-               rows: [
-                  {
-                     key: {
-                        text: "Relationship ID"
-                     },
-                     value: {
-                        text: relationship.relationshipId
-                     }
-                  },
-                  {
-                     key: {
-                        text: "Organisation ID"
-                     },
-                     value: {
-                        text: relationship.organisationId
-                     }
-                  },
-                  {
-                     key: {
-                        text: "Organisation Name"
-                     },
-                     value: {
-                        text: relationship.organisationName
-                     }
-                  },
-                  {
-                     key: {
-                        text: "Role Name"
-                     },
-                     value: {
-                        text: 'roleName'
-                     },
-                     actions: {
-                        items: [
-                           {
-                              href: "/relationships",
-                              text: "Remove",
-                              visuallyHiddenText: "role from relationship"
-                           }
-                        ]
-                     }
-                  },
-                  {
-                     key: {
-                        text: "Role Status"
-                     },
-                     value: {
-                        text: 'roleStatus'
-                     }
-                  }
-               ]
-               }) }}
+            {% for relationship in relationships %}
 
-          {% endfor %}
+               {{ relationshipSummary.relationshipSummary(relationship,false) }}
+
+            {% endfor %}
 
           {% endcall %}
 
