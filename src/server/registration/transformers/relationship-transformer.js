@@ -1,7 +1,9 @@
-const removeAction = {
-  href: '#',
-  text: 'Remove',
-  visuallyHiddenText: 'remove relationship'
+const removeAction = (relationship) => {
+  return {
+    href: `relationship/${relationship.relationshipId}/remove`,
+    text: 'Remove',
+    visuallyHiddenText: 'remove relationship'
+  }
 }
 
 const currentAction = {
@@ -16,8 +18,8 @@ function transformRelationships(relationships, currentRelationship) {
       title: currentRelationship ? 'Current relationship' : '',
       actions: {
         items: currentRelationship
-          ? [removeAction]
-          : [currentAction, removeAction]
+          ? [removeAction(r)]
+          : [currentAction, removeAction(r)]
       },
       rows: [
         {

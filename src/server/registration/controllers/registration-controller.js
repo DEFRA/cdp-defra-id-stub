@@ -60,7 +60,7 @@ const registrationController = {
     registration.uniqueRef = payload.uniqueref
     await storeRegistration(userid, registration, request.registrations)
 
-    request.logger.info({ registration }, '======New registration=======')
+    //  request.logger.info({ registration }, '======New registration=======')
 
     return h.redirect(enrolmentPath(userid))
   }

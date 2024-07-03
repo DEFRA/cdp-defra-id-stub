@@ -27,7 +27,7 @@ const showEnrolmentController = {
   },
   handler: async (request, h) => {
     const { userId } = request.params
-    request.logger.info(userId, '====== show enrolment =======')
+    //  request.logger.info(userId, '====== show enrolment =======')
 
     const registration = await findRegistration(userId, request.registrations)
 
@@ -83,20 +83,20 @@ const setupEnrolmentController = {
       })
       return h.redirect(enrolmentPath(userId))
     }
-    request.logger.info(payload, '======Payload enrolment received=======')
-    request.logger.info(
-      { registration },
-      '======Enrolment existing registration======='
-    )
+    //  request.logger.info(payload, '======Payload enrolment received=======')
+    //  request.logger.info(
+    //    { registration },
+    //    '======Enrolment existing registration======='
+    //  )
 
     registration.loa = payload.loa
     registration.enrolments = payload.enrolments
     registration.enrolmentRequests = payload.enrolmentRequests
 
-    request.logger.info(
-      { registration },
-      '======Enrolment updated registration======='
-    )
+    //  request.logger.info(
+    //    { registration },
+    //    '======Enrolment updated registration======='
+    //  )
 
     await updateRegistration(userId, registration, request.registrations)
 

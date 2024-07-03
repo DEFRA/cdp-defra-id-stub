@@ -16,6 +16,18 @@ async function findRelationships(userId, cache) {
   return relationships.filter((relationship) => relationship !== null)
 }
 
+async function findNonCurrentRelationships(
+  userId,
+  currentRelationshipId,
+  cache
+) {
+  const relationships = await findRelationships(userId, cache)
+  const otherRelationships = relationships.filter(
+    (relationship) => relationship.relationshipId !== currentRelationshipId
+  )
+  return otherRelationships
+}
+
 async function findRelationship(userId, relationshipId, cache) {
   const relationship = await cache.get(
     cacheKeys.relationship(userId, relationshipId)
@@ -23,4 +35,4 @@ async function findRelationship(userId, relationshipId, cache) {
   return relationship
 }
 
-export { findRelationship, findRelationships }
+export { findRelationship, findNonCurrentRelationships, findRelationships }

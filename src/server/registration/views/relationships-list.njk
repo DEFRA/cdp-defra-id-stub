@@ -24,11 +24,11 @@
                }
                }) %}
 
-               {{ relationshipSummary.relationshipSummary(currentRelationship,true) }}
+               {{ relationshipSummary.relationshipSummary(currentRelationship) }}
 
                {% for relationship in relationships %}
 
-                  {{ relationshipSummary.relationshipSummary(relationship,false) }}
+                  {{ relationshipSummary.relationshipSummary(relationship) }}
 
                {% endfor %}
 
@@ -124,17 +124,9 @@
             </div>
          <div class="govuk-button-group">
 
-            {{ govukButton({
-               text: "Go back",
-               classes: "govuk-button--secondary",
-               href: enrolmentLink
-            }) }}
+            <a class="govuk-link" href="{{ enrolmentLink }}">Go back</a>
 
-            {{ govukButton({
-               text: "Continue",
-               classes: "govuk-button--secondary",
-               href: confirmLink
-            }) }}
+            <a class="govuk-link" href="{{ confirmLink }}">Continue</a>
 
             </div>
 

@@ -5,16 +5,18 @@ import { config } from '~/src/config/index.js'
 import { buildErrorDetails } from '~/src/server/common/helpers/build-error-details.js'
 import { relationshipValidation } from '~/src/server/registration/helpers/schemas/relationship-validation.js'
 import { findRegistration } from '~/src/server/registration/helpers/find-registration.js'
+import { updateRegistration } from '~/src/server/registration/helpers/update-registration.js'
+import { removeRelationship } from '~/src/server/registration/helpers/remove-relationship.js'
 import {
   findRelationship,
-  findRelationships
+  findRelationships,
+  findNonCurrentRelationships
 } from '~/src/server/registration/helpers/find-relationships.js'
 import {
   newRelationship,
   storeRelationship
 } from '~/src/server/registration/helpers/new-relationship.js'
 import { transformRelationships } from '~/src/server/registration/transformers/relationship-transformer.js'
-import { updateRegistration } from '~/src/server/registration/helpers/update-registration.js'
 
 const oidcBasePath = config.get('oidc.basePath')
 
@@ -49,7 +51,7 @@ const addRelationshipController = {
       return h.redirect(oidcBasePath)
     }
 
-    request.logger.info({ registration }, '======Registration found=======')
+    //  request.logger.info({ registration }, '======Registration found=======')
 
     const validationResult = relationshipValidation.validate(payload, {
       abortEarly: false
@@ -66,10 +68,10 @@ const addRelationshipController = {
       return h.redirect(relationshipPath(userId))
     }
 
-    request.logger.info(
-      { payload },
-      '====== Add relationships received ======='
-    )
+    //  request.logger.info(
+    //    { payload },
+    //    '====== Add relationships received ======='
+    //  )
 
     const { relationshipid } = payload
     const relationship = await newRelationship(
@@ -90,7 +92,7 @@ const addRelationshipController = {
       await updateRegistration(userId, registration, request.registrations)
     }
 
-    request.logger.info({ relationship }, '====== Add relationships =======')
+    request.logger.info({ relationship }, '====== Relationships added =======')
 
     return h.redirect(relationshipPath(userId))
   }
@@ -114,7 +116,7 @@ const showRelationshipListController = {
       return h.redirect(oidcBasePath)
     }
 
-    request.logger.info('====== Show relationships list =======')
+    //  request.logger.info('====== Show relationships list =======')
 
     const relationships = await findRelationships(userId, request.registrations)
 
@@ -134,10 +136,10 @@ const showRelationshipListController = {
           '====== Current relationship not found ======'
         )
       }
-      request.logger.info(
-        { currentRelationship },
-        '====== Current relationship found ======='
-      )
+      // request.logger.info(
+      //   { currentRelationship },
+      //   '====== Current relationship found ======='
+      // )
       currentRelationshipRows = transformRelationships(
         [currentRelationship],
         currentRelationship
@@ -173,4 +175,70 @@ const showRelationshipListController = {
   }
 }
 
-export { showRelationshipListController, addRelationshipController }
+const removeRelationshipController = {
+  options: {
+    validate: {
+      params: Joi.object({
+        userId: Joi.string().uuid().required(),
+        relationshipId: Joi.string().uuid().required()
+      })
+    }
+  },
+  handler: async (request, h) => {
+    const { userId, relationshipId } = request.params
+
+    const registration = await findRegistration(userId, request.registrations)
+
+    if (!registration) {
+      request.logger.error({ userId }, '====== Registration not found ======')
+      return h.redirect(oidcBasePath)
+    }
+
+    //  request.logger.info({ registration }, '======Registration found=======')
+
+    const relationship = await findRelationship(
+      userId,
+      relationshipId,
+      request.registrations
+    )
+
+    if (!relationship) {
+      request.logger.error(
+        { userId, relationshipId },
+        '====== Relationship not found ======'
+      )
+      return h.redirect(relationshipPath(userId))
+    }
+
+    //  request.logger.info({ relationship }, '======Relationship found=======')
+
+    if (
+      registration.currentRelationship &&
+      registration.currentRelationship === relationshipId
+    ) {
+      const otherRelationships = await findNonCurrentRelationships(
+        userId,
+        registration.currentRelationship,
+        request.registrations
+      )
+      if (otherRelationships.length > 0) {
+        registration.currentRelationship = otherRelationships[0].relationshipId
+      } else {
+        delete registration.currentRelationship
+      }
+      await updateRegistration(userId, registration, request.registrations)
+    }
+
+    await removeRelationship(userId, relationshipId, request.registrations)
+
+    request.logger.info({ relationshipId }, '======Relationship removed=======')
+
+    return h.redirect(relationshipPath(userId))
+  }
+}
+
+export {
+  showRelationshipListController,
+  addRelationshipController,
+  removeRelationshipController
+}
