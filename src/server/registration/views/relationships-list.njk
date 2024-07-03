@@ -43,7 +43,7 @@
                         text: "Relationship ID"
                      },
                      value: {
-                        text: 'relationshipId'
+                        text: currentRelationship.relationshipId
                      }
                   },
                   {
@@ -51,7 +51,7 @@
                         text: "Organisation ID"
                      },
                      value: {
-                        text: 'organisationIdId'
+                        text: currentRelationship.organisationIdId
                      }
                   },
                   {
@@ -59,7 +59,7 @@
                         text: "Organisation Name"
                      },
                      value: {
-                        text: 'organisationName'
+                        text: currentRelationship.organisationName
                      }
                   },
                   {
@@ -93,6 +93,87 @@
 
           {% endcall %}
 
+          {% call govukFieldset({
+            legend: {
+               text: "Relationships",
+               classes: "govuk-fieldset__legend--m",
+               isPageHeading: false
+            }
+            }) %}
+
+          {% for relationship in relationships %}
+
+            {{ govukSummaryList({
+               card: {
+                  title: {
+                     text: "Relationship"
+                  },
+                  actions: {
+                     items: [
+                        {
+                           href: "/relationships",
+                           text: "Add role",
+                           visuallyHiddenText: "to relationship"
+                        }
+                     ]
+                  }
+               },
+               rows: [
+                  {
+                     key: {
+                        text: "Relationship ID"
+                     },
+                     value: {
+                        text: relationship.relationshipId
+                     }
+                  },
+                  {
+                     key: {
+                        text: "Organisation ID"
+                     },
+                     value: {
+                        text: relationship.organisationId
+                     }
+                  },
+                  {
+                     key: {
+                        text: "Organisation Name"
+                     },
+                     value: {
+                        text: relationship.organisationName
+                     }
+                  },
+                  {
+                     key: {
+                        text: "Role Name"
+                     },
+                     value: {
+                        text: 'roleName'
+                     },
+                     actions: {
+                        items: [
+                           {
+                              href: "/relationships",
+                              text: "Remove",
+                              visuallyHiddenText: "role from relationship"
+                           }
+                        ]
+                     }
+                  },
+                  {
+                     key: {
+                        text: "Role Status"
+                     },
+                     value: {
+                        text: 'roleStatus'
+                     }
+                  }
+               ]
+               }) }}
+
+          {% endfor %}
+
+          {% endcall %}
 
           {% call govukFieldset({
             legend: {

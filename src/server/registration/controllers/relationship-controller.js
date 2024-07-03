@@ -5,7 +5,10 @@ import { config } from '~/src/config/index.js'
 import { buildErrorDetails } from '~/src/server/common/helpers/build-error-details.js'
 import { relationshipValidation } from '~/src/server/registration/helpers/schemas/relationship-validation.js'
 import { findRegistration } from '~/src/server/registration/helpers/find-registration.js'
-import { findRelationships } from '~/src/server/registration/helpers/find-relationships.js'
+import {
+  findRelationship,
+  findRelationships
+} from '~/src/server/registration/helpers/find-relationships.js'
 import {
   newRelationship,
   storeRelationship
@@ -133,7 +136,7 @@ const showRelationshipListController = {
     }
   },
   handler: async (request, h) => {
-    const { userId } = request.params
+    const { userId, relationshipId } = request.params
 
     const registration = await findRegistration(userId, request.registrations)
 
@@ -143,6 +146,25 @@ const showRelationshipListController = {
     }
 
     request.logger.info('====== Show relationships list =======')
+
+    const currentRelationship = await findRelationship(
+      userId,
+      relationshipId,
+      request.registrations
+    )
+
+    if (!currentRelationship) {
+      request.logger.error(
+        { userId },
+        '====== Current relationship not found ======'
+      )
+      return h.redirect(oidcBasePath)
+    }
+
+    request.logger.info(
+      { currentRelationship },
+      '====== Current relationship found ======='
+    )
 
     const relationships = await findRelationships(userId, request.registrations)
 
@@ -157,7 +179,14 @@ const showRelationshipListController = {
       confirmLink: confirmPath(userId),
       csrfToken: crypto.randomUUID(),
       selectedRelationshipId: crypto.randomUUID(),
-      relationships
+      relationshipId: crypto.randomUUID(),
+      organisationId: crypto.randomUUID(),
+      organisationName: 'DEFRA Example Organisation',
+      currentRelationship,
+      relationships: relationships.filter(
+        (relationship) =>
+          relationship.relationshipId !== currentRelationship.relationshipId
+      )
     })
   }
 }
