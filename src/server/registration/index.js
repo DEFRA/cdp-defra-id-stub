@@ -1,10 +1,12 @@
 import { oidcBasePath } from '~/src/server/oidc/oidc-config.js'
 import {
-  showSetupDetailsController,
-  setupDetailsController,
-  showSetupEnrolmentController,
+  showRegistrationController,
+  registrationController
+} from '~/src/server/registration/controllers/registration-controller.js'
+import {
+  showEnrolmentController,
   setupEnrolmentController
-} from '~/src/server/registration/controllers/setup-controller.js'
+} from '~/src/server/registration/controllers/enrolment-controller.js'
 import {
   showAddRelationshipController,
   showRelationshipListController,
@@ -19,17 +21,17 @@ const registration = {
         {
           method: 'GET',
           path: `${oidcBasePath}`,
-          ...showSetupDetailsController
+          ...showRegistrationController
         },
         {
           method: 'POST',
           path: `${oidcBasePath}/setup`,
-          ...setupDetailsController
+          ...registrationController
         },
         {
           method: 'GET',
           path: `${oidcBasePath}/{userId}/enrolment`,
-          ...showSetupEnrolmentController
+          ...showEnrolmentController
         },
         {
           method: 'POST',
@@ -42,14 +44,14 @@ const registration = {
           ...showAddRelationshipController
         },
         {
-          method: 'GET',
-          path: `${oidcBasePath}/{userId}/relationship/{relationshipId}`,
-          ...showRelationshipListController
-        },
-        {
           method: 'POST',
           path: `${oidcBasePath}/{userId}/relationship`,
           ...addRelationshipController
+        },
+        {
+          method: 'GET',
+          path: `${oidcBasePath}/{userId}/relationship/{relationshipId}`,
+          ...showRelationshipListController
         }
       ])
     }

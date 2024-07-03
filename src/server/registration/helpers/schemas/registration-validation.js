@@ -1,6 +1,6 @@
 import Joi from 'joi'
 
-const detailsValidation = Joi.object({
+const registrationValidation = Joi.object({
   csrfToken: Joi.string().uuid().required(),
   userid: Joi.string().uuid().required().messages({
     'any.only': 'Enter an id',
@@ -28,4 +28,4 @@ const detailsValidation = Joi.object({
   })
 })
 
-export { detailsValidation }
+export { registrationValidation }
