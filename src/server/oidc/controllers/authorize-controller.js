@@ -1,7 +1,7 @@
 import { oidcConfig } from '~/src/server/oidc/oidc-config.js'
 import { validateScope } from '~/src/server/oidc/helpers/validate-scope.js'
 import { newSession } from '~/src/server/oidc/helpers/session-store.js'
-import { findUser } from '~/src/server/oidc/helpers/users.js'
+import { findUser, findAllUsers } from '~/src/server/oidc/helpers/users.js'
 import { renderLoginPage } from '~/src/server/oidc/helpers/render-login-page.js'
 import { config } from '~/src/config/index.js'
 
@@ -13,7 +13,8 @@ const authorizeController = {
     let loginUser = 'admin'
     if (config.get('oidc.showLogin')) {
       if (request.query.user === undefined) {
-        return renderLoginPage(request.url, h)
+        const allUsers = await findAllUsers(request.registrations)
+        return renderLoginPage(allUsers, request.url, h)
       }
       loginUser = request.query.user
     }
@@ -51,7 +52,7 @@ const authorizeController = {
         .code(400)
     }
 
-    const user = await findUser(loginUser)
+    const user = await findUser(loginUser, request.registrations)
     if (user === undefined) {
       request.logger.error(`Invalid user selected ${request.query.user}`)
       return h.response(`Invalid user selection!`).code(400)

@@ -54,6 +54,11 @@ const registration = {
         },
         {
           method: 'GET',
+          path: `${oidcBasePath}/{userId}/relationship/{relationshipId}/current`,
+          ...removeRelationshipController
+        },
+        {
+          method: 'GET',
           path: `${oidcBasePath}/{userId}/summary`,
           ...summaryRegistrationController
         }

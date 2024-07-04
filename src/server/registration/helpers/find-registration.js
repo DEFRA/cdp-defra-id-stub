@@ -6,7 +6,7 @@ async function findRegistration(userId, cache) {
 }
 
 async function findRegistrations(cache) {
-  const allUserIds = await cache.get(cacheKeys.registrationIds)
+  const allUserIds = (await cache.get(cacheKeys.registrationIds)) ?? []
   const registrations = await asyncMap(allUserIds, (id) =>
     findRegistration(id, cache)
   )
