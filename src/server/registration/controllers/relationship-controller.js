@@ -49,8 +49,6 @@ const addRelationshipController = {
       return h.redirect(oidcBasePath)
     }
 
-    //  request.logger.info({ registration }, '======Registration found=======')
-
     const validationResult = relationshipValidation.validate(payload, {
       abortEarly: false
     })
@@ -66,28 +64,23 @@ const addRelationshipController = {
       return h.redirect(relationshipPath(userId))
     }
 
-    //  request.logger.info(
-    //    { payload },
-    //    '====== Add relationships received ======='
-    //  )
-
-    const { relationshipid } = payload
+    const { relationshipId } = payload
     const relationship = await newRelationship(
       userId,
-      relationshipid,
+      relationshipId,
       request.registrations
     )
-    relationship.organisationId = payload.organisationid
-    relationship.organisationName = payload.organisationname
-    relationship.relationshipRole = payload.relationshiprole
+    relationship.organisationId = payload.organisationId
+    relationship.organisationName = payload.organisationName
+    relationship.relationshipRole = payload.relationshipRole
     await storeRelationship(
       userId,
-      relationshipid,
+      relationshipId,
       relationship,
       request.registrations
     )
     if (!registration.currentRelationshipId) {
-      registration.currentRelationshipId = relationshipid
+      registration.currentRelationshipId = relationshipId
       await updateRegistration(userId, registration, request.registrations)
     }
 
@@ -115,8 +108,6 @@ const showRelationshipListController = {
       return h.redirect(oidcBasePath)
     }
 
-    //  request.logger.info('====== Show relationships list =======')
-
     let currentRelationship
     let currentRelationshipRows = []
     let relationshipsRows = []
@@ -133,10 +124,7 @@ const showRelationshipListController = {
           '====== Current relationship not found ======'
         )
       }
-      // request.logger.info(
-      //   { currentRelationship },
-      //   '====== Current relationship found ======='
-      // )
+
       currentRelationshipRows = transformRelationships(
         [currentRelationship],
         currentRelationship
@@ -192,8 +180,6 @@ const removeRelationshipController = {
       return h.redirect(oidcBasePath)
     }
 
-    //  request.logger.info({ registration }, '======Registration found=======')
-
     const relationship = await findRelationship(
       userId,
       relationshipId,
@@ -207,8 +193,6 @@ const removeRelationshipController = {
       )
       return h.redirect(relationshipPath(userId))
     }
-
-    //  request.logger.info({ relationship }, '======Relationship found=======')
 
     if (
       registration.currentRelationshipId &&

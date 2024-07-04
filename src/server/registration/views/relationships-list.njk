@@ -47,24 +47,24 @@
                label: {
                   text: "Relationship ID"
                },
-               id: "relationshipid",
-               name: "relationshipid",
+               id: "relationshipId",
+               name: "relationshipId",
                value: relationshipId,
-               autocomplete: "relationshipid",
+               autocomplete: "relationshipId",
                classes: "govuk-!-width-three-quarters",
               errorMessage: {
-                text: formErrors.relationshipid.message
-              } if formErrors.relationshipid.message
+                text: formErrors.relationshipId.message
+              } if formErrors.relationshipId.message
             }) }}
 
             {{ govukInput({
                label: {
                   text: "Organisation ID"
                },
-               id: "organisationid",
-               name: "organisationid",
+               id: "organisationId",
+               name: "organisationId",
                value: organisationId,
-               autocomplete: "organisationid",
+               autocomplete: "organisationId",
                classes: "govuk-!-width-three-quarters"
             }) }}
 
@@ -72,16 +72,16 @@
                label: {
                   text: "Organisation Name"
                },
-               id: "organisationname",
-               name: "organisationname",
+               id: "organisationName",
+               name: "organisationName",
                value: organisationName,
-               autocomplete: "organisationname",
+               autocomplete: "organisationName",
                classes: "govuk-!-width-three-quarters"
             }) }}
 
             {{ govukRadios({
-              id: "relationshiprole",
-              name: "relationshiprole",
+              id: "relationshipRole",
+              name: "relationshipRole",
               classes: "govuk-radios--inline",
               fieldset: {
                 legend: {
@@ -109,8 +109,8 @@
                 "data-1p-ignore": ""
               },
               errorMessage: {
-                text: formErrors.relationshiprole.message
-              } if formErrors.relationshiprole.message
+                text: formErrors.relationshipRole.message
+              } if formErrors.relationshipRole.message
             }) }}
 
           {% endcall %}

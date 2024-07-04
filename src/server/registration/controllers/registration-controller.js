@@ -10,7 +10,6 @@ import {
   storeRegistration
 } from '~/src/server/registration/helpers/new-registration.js'
 import { updateRegistration } from '~/src/server/registration/helpers/update-registration.js'
-import { findRelationships } from '~/src/server/registration/helpers/find-relationships.js'
 import {
   transformLoa,
   transformAal
@@ -30,12 +29,12 @@ const showRegistrationController = {
       action: `${oidcBasePath}/setup`,
       userId: crypto.randomUUID(),
       contactId: crypto.randomUUID(),
-      uniqueRef: crypto.randomUUID(),
+      uniqueReference: crypto.randomUUID(),
       email: 'some@example.com',
-      firstname: 'Firstnamer',
-      lastname: 'Lastnameson',
-      enrolments: 1,
-      enrolmentRequests: 1,
+      firstName: 'Firstnamer',
+      lastName: 'Lastnameson',
+      enrolmentCount: 1,
+      enrolmentRequestCount: 1,
       loaItems: transformLoa(1),
       aalItems: transformAal(1),
       csrfToken: crypto.randomUUID()
@@ -62,23 +61,23 @@ const registrationController = {
       return h.redirect(oidcBasePath)
     }
 
-    const { userid } = payload
+    const { userId } = payload
 
-    const registration = await newRegistration(userid, request.registrations)
-    registration.contactId = payload.contactid
+    const registration = await newRegistration(userId, request.registrations)
+    registration.contactId = payload.contactId
     registration.email = payload.email
-    registration.firstname = payload.firstname
-    registration.lastname = payload.lastname
-    registration.uniqueRef = payload.uniqueref
+    registration.firstName = payload.firstName
+    registration.lastName = payload.lastName
+    registration.uniqueReference = payload.uniqueReference
     registration.loa = payload.loa
     registration.aal = payload.aal
-    registration.enrolments = payload.enrolments
-    registration.enrolmentRequests = payload.enrolmentrequests
-    await storeRegistration(userid, registration, request.registrations)
+    registration.enrolmentCount = payload.enrolmentCount
+    registration.enrolmentRequestCount = payload.enrolmentRequestCount
+    await storeRegistration(userId, registration, request.registrations)
 
     //  request.logger.info({ registration }, '======New registration=======')
 
-    return h.redirect(relationshipPath(userid))
+    return h.redirect(relationshipPath(userId))
   }
 }
 
@@ -105,14 +104,14 @@ const showExistingRegistrationController = {
       action: `${oidcBasePath}/${userId}/update`,
       userId,
       contactId: registration.contactId,
-      uniqueRef: registration.uniqueRef,
+      uniqueReference: registration.uniqueReference,
       email: registration.email,
-      firstname: registration.firstname,
-      lastname: registration.lastname,
+      firstName: registration.firstName,
+      lastName: registration.lastName,
       loaItems: transformLoa(registration.loa),
       aalItems: transformAal(registration.aal),
-      enrolments: registration.enrolments,
-      enrolmentRequests: registration.enrolmentRequests,
+      enrolmentCount: registration.enrolmentCount,
+      enrolmentRequestCount: registration.enrolmentRequestCount,
       csrfToken: crypto.randomUUID()
     })
   }
@@ -152,15 +151,15 @@ const updateRegistrationController = {
       return h.redirect(oidcBasePath)
     }
 
-    registration.contactId = payload.contactid
+    registration.contactId = payload.contactId
     registration.email = payload.email
-    registration.firstname = payload.firstname
-    registration.lastname = payload.lastname
-    registration.uniqueRef = payload.uniqueref
+    registration.firstName = payload.firstName
+    registration.lastName = payload.lastName
+    registration.uniqueReference = payload.uniqueReference
     registration.loa = payload.loa
     registration.aal = payload.aal
-    registration.enrolments = payload.enrolments
-    registration.enrolmentRequests = payload.enrolmentrequests
+    registration.enrolmentCount = payload.enrolmentCount
+    registration.enrolmentRequestCount = payload.enrolmentRequestCount
     await updateRegistration(userId, registration, request.registrations)
 
     //  request.logger.info({ registration }, '======New registration=======')
@@ -169,46 +168,9 @@ const updateRegistrationController = {
   }
 }
 
-const summaryRegistrationController = {
-  options: {
-    validate: {
-      params: Joi.object({
-        userId: Joi.string().uuid().required()
-      })
-    }
-  },
-  handler: async (request, h) => {
-    const { userId } = request.params
-
-    const registration = await findRegistration(userId, request.registrations)
-
-    if (!registration) {
-      request.logger.error({ userId }, '====== Registration not found ======')
-      return h.redirect(oidcBasePath)
-    }
-
-    const relationships = await findRelationships(userId, request.registrations)
-
-    request.logger.info(
-      { registration, relationships },
-      '======Summary registration======='
-    )
-
-    return h.view('registration/views/summary', {
-      pageTitle: 'DEFRA ID Summary',
-      heading: 'DEFRA ID Summary',
-      registrationLink: `${oidcBasePath}/${userId}`,
-      newRegistrationLink: oidcBasePath,
-      registration,
-      relationships
-    })
-  }
-}
-
 export {
   showRegistrationController,
   registrationController,
   showExistingRegistrationController,
-  updateRegistrationController,
-  summaryRegistrationController
+  updateRegistrationController
 }

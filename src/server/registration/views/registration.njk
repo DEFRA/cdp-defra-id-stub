@@ -20,8 +20,8 @@
                 text: "User ID",
                 classes: "govuk-label--m"
               },
-              id: "userid",
-              name: "userid",
+              id: "userId",
+              name: "userId",
               value: userId,
               hint: {
                 text: "(B2C object ID), randomly generated"
@@ -30,8 +30,8 @@
                 "data-1p-ignore": ""
               },
               errorMessage: {
-                text: formErrors.userid.message
-              } if formErrors.userid.message
+                text: formErrors.userId.message
+              } if formErrors.userId.message
             }) }}
 
             {{ govukInput({
@@ -39,8 +39,8 @@
                 text: "Contact ID",
                 classes: "govuk-label--m"
               },
-              id: "contactid",
-              name: "contactid",
+              id: "contactId",
+              name: "contactId",
               value: contactId,
               hint: {
                 text: "Randomly generated"
@@ -49,8 +49,8 @@
                 "data-1p-ignore": ""
               },
               errorMessage: {
-                text: formErrors.contactid.message
-              } if formErrors.contactid.message
+                text: formErrors.contactId.message
+              } if formErrors.contactII.message
             }) }}
 
 
@@ -80,9 +80,9 @@
                 text: "First name",
                 classes: "govuk-label--m"
               },
-              id: "firstname",
-              name: "firstname",
-              value: firstname,
+              id: "firstName",
+              name: "firstName",
+              value: firstName,
               hint: {
                 text: "What is your first name?"
               },
@@ -90,8 +90,8 @@
                 "data-1p-ignore": ""
               },
               errorMessage: {
-                text: formErrors.firstname.message
-              } if formErrors.firstname.message
+                text: formErrors.firstName.message
+              } if formErrors.firstName.message
             }) }}
 
 
@@ -100,9 +100,9 @@
                 text: "Last name",
                 classes: "govuk-label--m"
               },
-              id: "lastname",
-              name: "lastname",
-              value: lastname,
+              id: "lastName",
+              name: "lastName",
+              value: lastName ,
               hint: {
                 text: "What is your last name?"
               },
@@ -110,8 +110,8 @@
                 "data-1p-ignore": ""
               },
               errorMessage: {
-                text: formErrors.lastname.message
-              } if formErrors.lastname.message
+                text: formErrors.lastName.message
+              } if formErrors.lastName.message
             }) }}
 
 
@@ -121,8 +121,8 @@
                 classes: "govuk-label--m"
               },
               id: "uniqueref",
-              name: "uniqueref",
-              value: uniqueRef,
+              name: "uniqueReference",
+              value: uniqueReference,
               hint: {
                 text: "Randomly generated"
               },
@@ -197,9 +197,9 @@
                 text: "Enrolments",
                 classes: "govuk-label--m"
               },
-              id: "enrolments",
-              name: "enrolments",
-              value: enrolments,
+              id: "enrolmentCount",
+              name: "enrolmentCount",
+              value: enrolmentCount,
               inputmode: "numeric",
               classes: "govuk-!-width-one-quarter",
               hint: {
@@ -209,8 +209,8 @@
                 "data-1p-ignore": ""
               },
               errorMessage: {
-                text: formErrors.enrolments.message
-              } if formErrors.enrolments.message
+                text: formErrors.enrolmentCount.message
+              } if formErrors.enrolmentCount.message
             }) }}
 
           {% endcall %}
@@ -222,9 +222,9 @@
                 text: "Enrolment Requests",
                 classes: "govuk-label--m"
               },
-              id: "enrolmentrequests",
-              name: "enrolmentrequests",
-              value: enrolmentRequests,
+              id: "enrolmentRequestCount",
+              name: "enrolmentRequestCount",
+              value: enrolmentRequestCount,
               inputmode: "numeric",
               classes: "govuk-!-width-one-quarter",
               hint: {
@@ -234,8 +234,8 @@
                 "data-1p-ignore": ""
               },
               errorMessage: {
-                text: formErrors.enrolmentrequests.message
-              } if formErrors.enrolmentrequests.message
+                text: formErrors.enrolmentRequestCount.message
+              } if formErrors.enrolmentRequestCount.message
             }) }}
 
           {% endcall %}

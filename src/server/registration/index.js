@@ -3,9 +3,9 @@ import {
   showRegistrationController,
   registrationController,
   showExistingRegistrationController,
-  updateRegistrationController,
-  summaryRegistrationController
+  updateRegistrationController
 } from '~/src/server/registration/controllers/registration-controller.js'
+import { summaryRegistrationController } from '~/src/server/registration/controllers/summary-controller.js'
 import {
   showRelationshipListController,
   addRelationshipController,
