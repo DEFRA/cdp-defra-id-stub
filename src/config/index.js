@@ -164,7 +164,8 @@ const config = convict({
     clientSecret: {
       doc: 'the client secret key for the oidc stub',
       format: String,
-      default: '',
+      // default: '',
+      default: 'test_value',
       env: 'OIDC_CLIENT_SECRET'
     },
     publicKeyBase64: {
@@ -182,7 +183,7 @@ const config = convict({
     showLogin: {
       doc: 'if set, shows login page, else it auto logs in as admin',
       format: Boolean,
-      default: false,
+      default: true,
       env: 'OIDC_SHOW_LOGIN'
     }
   }

@@ -4,9 +4,15 @@ import { config } from '~/src/config/index.js'
 
 const loggerOptions = {
   enabled: !config.get('isTest'),
-  ignorePaths: ['/health'],
+  ignorePaths: ['/health', '/public', '/favicon.ico'],
   redact: {
-    paths: ['req.headers.authorization', 'req.headers.cookie', 'res.headers'],
+    paths: [
+      'req',
+      'req.headers.authorization',
+      'req.headers.cookie',
+      'res.headers',
+      'responseTime'
+    ],
     remove: true
   },
   level: config.get('logLevel'),

@@ -3,6 +3,9 @@ import { defaultClaims } from '~/src/server/oidc/helpers/default-claims.js'
 import { oidcConfig } from '~/src/server/oidc/oidc-config.js'
 import jsonwebtoken from 'jsonwebtoken'
 import { jwk2pem } from 'pem-jwk'
+import { createLogger } from '~/src/server/common/helpers/logging/logger.js'
+
+const logger = createLogger()
 
 function loadKeyPair(pub, priv) {
   const privatePem = crypto.createPrivateKey({
@@ -76,16 +79,25 @@ function JWKS(keys) {
   }
 }
 
-function generateToken(keys, session, host) {
-  const claim = defaultClaims(session, oidcConfig.ttl, host)
+async function generateToken(keys, session, host, cache) {
+  const claim = await defaultClaims(session, oidcConfig.ttl, host, cache)
+  if (!claim) {
+    logger.warn('No claim found')
+    return null
+  }
+  logger.info('Claim found')
   return jsonwebtoken.sign(claim, keys.pem.privateKey, {
     algorithm: 'RS256',
     keyid: keys.keyId
   })
 }
 
-function generateIDToken(keys, session, host) {
-  const claim = defaultClaims(session, oidcConfig.ttl, host)
+async function generateIDToken(keys, session, host, cache) {
+  const claim = await defaultClaims(session, oidcConfig.ttl, host, cache)
+  if (!claim) {
+    logger.warn('No claim found')
+    return null
+  }
   claim.nonce = session.nonce
   return jsonwebtoken.sign(claim, keys.pem.privateKey, {
     algorithm: 'RS256',
@@ -93,8 +105,12 @@ function generateIDToken(keys, session, host) {
   })
 }
 
-function generateRefreshToken(keys, session, host) {
-  const claim = defaultClaims(session, oidcConfig.refreshTtl, host)
+async function generateRefreshToken(keys, session, host, cache) {
+  const claim = await defaultClaims(session, oidcConfig.refreshTtl, host, cache)
+  if (!claim) {
+    logger.warn('No claim found')
+    return null
+  }
   return jsonwebtoken.sign(claim, keys.pem.privateKey, {
     algorithm: 'RS256',
     keyid: keys.keyId

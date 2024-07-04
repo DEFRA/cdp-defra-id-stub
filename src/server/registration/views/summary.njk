@@ -1,0 +1,139 @@
+{% extends "layouts/page.njk" %}
+
+{% block content %}
+  {{ appHeading({
+    title: heading,
+    caption: "DEFRA ID Stub Registration"
+  }) }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <div class="govuk-body" data-testid="app-page-body">
+
+         {{ govukSummaryList({
+            card: {
+               title: {
+                     text: 'Registration Summary'
+               },
+               actions: {
+                  items: [
+                        {
+                           href: registrationLink,
+                           text: 'Edit',
+                           visuallyHiddenText: 'edit registration'
+                        }
+                     ]
+               }
+            },
+            rows: [
+               {
+                key: {
+                  text: 'User ID'
+                }  ,
+                value: {
+                  text: registration.userId
+                }
+               },
+               {
+                key: {
+                  text: 'Contact ID'
+                }  ,
+                value: {
+                  text: registration.contactId
+                }
+               },
+               {
+                key: {
+                  text: 'Email Address'
+                }  ,
+                value: {
+                  text: registration.email
+                }
+               },
+               {
+                key: {
+                  text: 'First Name'
+                }  ,
+                value: {
+                  text: registration.firstName
+                }
+               },
+               {
+                key: {
+                  text: 'Last Name'
+                }  ,
+                value: {
+                  text: registration.lastName
+                }
+               },
+               {
+                key: {
+                  text: 'Unique reference'
+                }  ,
+                value: {
+                  text: registration.uniqueReference
+                }
+               },
+               {
+                key: {
+                  text: 'Level of Assurance'
+                }  ,
+                value: {
+                  text: registration.loa
+                }
+               },
+               {
+                key: {
+                  text: 'Authentication Assurance'
+                }  ,
+                value: {
+                  text: registration.aal
+                }
+               },
+               {
+                key: {
+                  text: 'Enrolments'
+                }  ,
+                value: {
+                  text: registration.enrolmentCount
+                }
+               },
+               {
+                key: {
+                  text: 'Enrolment requests'
+                }  ,
+                value: {
+                  text: registration.enrolmentRequestCount
+                }
+               },
+               {
+                key: {
+                  text: 'Relationships'
+                }  ,
+                value: {
+                  text: relationships.length
+                }
+               },
+               {
+                key: {
+                  text: 'Created'
+                }  ,
+                value: {
+                  text: registration.created
+                }
+               }
+            ]
+         }) }}
+
+         <div class="govuk-button-group">
+
+            <a class="govuk-link" href="{{ newRegistrationLink }}">New registration</a>
+
+         </div>
+
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}

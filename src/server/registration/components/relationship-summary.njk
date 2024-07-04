@@ -1,0 +1,14 @@
+{% macro relationshipSummary(relationship) %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+   {{ govukSummaryList({
+      card: {
+         title: {
+               text: relationship.title
+         },
+         actions: relationship.actions
+      },
+      rows: relationship.rows
+   }) }}
+
+{% endmacro %}

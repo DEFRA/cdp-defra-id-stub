@@ -1,0 +1,258 @@
+{% extends "layouts/page.njk" %}
+
+{% block content %}
+  {{ appHeading({
+    title: heading,
+    caption: "DEFRA ID Stub User Set Up"
+  }) }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <div class="govuk-body" data-testid="app-page-body">
+
+        <form action="{{ action }}" method="post">
+          <input type="hidden" name="csrfToken" value="{{ csrfToken }}"/>
+
+          {% call govukFieldset() %}
+
+            {{ govukInput({
+              label: {
+                text: "User ID",
+                classes: "govuk-label--m"
+              },
+              id: "userId",
+              name: "userId",
+              value: userId,
+              hint: {
+                text: "(B2C object ID), randomly generated"
+              },
+              attributes: {
+                "data-1p-ignore": ""
+              },
+              errorMessage: {
+                text: formErrors.userId.message
+              } if formErrors.userId.message
+            }) }}
+
+            {{ govukInput({
+              label: {
+                text: "Contact ID",
+                classes: "govuk-label--m"
+              },
+              id: "contactId",
+              name: "contactId",
+              value: contactId,
+              hint: {
+                text: "Randomly generated"
+              },
+              attributes: {
+                "data-1p-ignore": ""
+              },
+              errorMessage: {
+                text: formErrors.contactId.message
+              } if formErrors.contactII.message
+            }) }}
+
+
+            {{ govukInput({
+              label: {
+                text: "Email address",
+                classes: "govuk-label--m"
+              },
+              id: "email",
+              name: "email",
+              inputmode: "email",
+              value: email,
+              hint: {
+                text: "What is your email address?"
+              },
+              attributes: {
+                "data-1p-ignore": ""
+              },
+              errorMessage: {
+                text: formErrors.email.message
+              } if formErrors.email.message
+            }) }}
+
+
+            {{ govukInput({
+              label: {
+                text: "First name",
+                classes: "govuk-label--m"
+              },
+              id: "firstName",
+              name: "firstName",
+              value: firstName,
+              hint: {
+                text: "What is your first name?"
+              },
+              attributes: {
+                "data-1p-ignore": ""
+              },
+              errorMessage: {
+                text: formErrors.firstName.message
+              } if formErrors.firstName.message
+            }) }}
+
+
+            {{ govukInput({
+              label: {
+                text: "Last name",
+                classes: "govuk-label--m"
+              },
+              id: "lastName",
+              name: "lastName",
+              value: lastName ,
+              hint: {
+                text: "What is your last name?"
+              },
+              attributes: {
+                "data-1p-ignore": ""
+              },
+              errorMessage: {
+                text: formErrors.lastName.message
+              } if formErrors.lastName.message
+            }) }}
+
+
+            {{ govukInput({
+              label: {
+                text: "Unique reference",
+                classes: "govuk-label--m"
+              },
+              id: "uniqueref",
+              name: "uniqueReference",
+              value: uniqueReference,
+              hint: {
+                text: "Randomly generated"
+              },
+              attributes: {
+                "data-1p-ignore": ""
+              },
+              errorMessage: {
+                text: formErrors.uniqueref.message
+              } if formErrors.uniqueref.message
+            }) }}
+
+          {% endcall %}
+
+          {% call govukFieldset() %}
+
+            {{ govukRadios({
+              id: "loa",
+              name: "loa",
+              classes: "govuk-radios--inline",
+              hint: {
+                text: "LoA (contact's level of assurance)"
+              },
+              fieldset: {
+                legend: {
+                  text: "Level of assurance",
+                  isPageHeading: true,
+                  classes: "govuk-fieldset__legend--m"
+                }
+              },
+              items: loaItems,
+              attributes: {
+                "data-1p-ignore": ""
+              },
+              errorMessage: {
+                text: formErrors.loa.message
+              } if formErrors.loa.message
+            }) }}
+
+          {% endcall %}
+
+          {% call govukFieldset() %}
+
+            {{ govukRadios({
+              id: "aal",
+              name: "aal",
+              classes: "govuk-radios--inline",
+              hint: {
+                text: "(aal - authentication assurance level)"
+              },
+              fieldset: {
+                legend: {
+                  text: "MFA Performed",
+                  isPageHeading: true,
+                  classes: "govuk-fieldset__legend--m"
+                }
+              },
+              items: aalItems,
+              attributes: {
+                "data-1p-ignore": ""
+              },
+              errorMessage: {
+                text: formErrors.aal.message
+              } if formErrors.aal.message
+            }) }}
+
+          {% endcall %}
+
+          {% call govukFieldset() %}
+
+            {{ govukInput({
+              label: {
+                text: "Enrolments",
+                classes: "govuk-label--m"
+              },
+              id: "enrolmentCount",
+              name: "enrolmentCount",
+              value: enrolmentCount,
+              inputmode: "numeric",
+              classes: "govuk-!-width-one-quarter",
+              hint: {
+                text: "Number of enrolments"
+              },
+              attributes: {
+                "data-1p-ignore": ""
+              },
+              errorMessage: {
+                text: formErrors.enrolmentCount.message
+              } if formErrors.enrolmentCount.message
+            }) }}
+
+          {% endcall %}
+
+          {% call govukFieldset() %}
+
+            {{ govukInput({
+              label: {
+                text: "Enrolment Requests",
+                classes: "govuk-label--m"
+              },
+              id: "enrolmentRequestCount",
+              name: "enrolmentRequestCount",
+              value: enrolmentRequestCount,
+              inputmode: "numeric",
+              classes: "govuk-!-width-one-quarter",
+              hint: {
+                text: "Number of enrolment requests"
+              },
+              attributes: {
+                "data-1p-ignore": ""
+              },
+              errorMessage: {
+                text: formErrors.enrolmentRequestCount.message
+              } if formErrors.enrolmentRequestCount.message
+            }) }}
+
+          {% endcall %}
+
+         <div class="govuk-button-group">
+
+          {{ govukButton({
+            text: "Continue"
+          }) }}
+
+         </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}

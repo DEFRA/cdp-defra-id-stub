@@ -1,0 +1,142 @@
+{% extends "layouts/page.njk" %}
+{% import "registration/components/relationship-summary.njk" as relationshipSummary %}
+
+{% block content %}
+  {{ appHeading({
+    title: heading,
+    caption: "DEFRA ID Stub User Set Up"
+  }) }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <div class="govuk-body" data-testid="app-page-body">
+
+        <form action="{{ action }}" method="post">
+          <input type="hidden" name="csrfToken" value="{{ csrfToken }}"/>
+          <input type="hidden" name="userid" value="{{ userId }}"/>
+
+          {% if currentRelationship|length > 0 %}
+            {% call govukFieldset({
+               legend: {
+                  text: "Relationships",
+                  classes: "govuk-fieldset__legend--m",
+                  isPageHeading: false
+               }
+               }) %}
+
+               {{ relationshipSummary.relationshipSummary(currentRelationship) }}
+
+               {% for relationship in relationships %}
+
+                  {{ relationshipSummary.relationshipSummary(relationship) }}
+
+               {% endfor %}
+
+            {% endcall %}
+          {% endif %}
+
+          {% call govukFieldset({
+            legend: {
+               text: "New User Relationships",
+               classes: "govuk-fieldset__legend--m",
+               isPageHeading: false
+            }
+            }) %}
+
+            {{ govukInput({
+               label: {
+                  text: "Relationship ID"
+               },
+               id: "relationshipId",
+               name: "relationshipId",
+               value: relationshipId,
+               autocomplete: "relationshipId",
+               classes: "govuk-!-width-three-quarters",
+              errorMessage: {
+                text: formErrors.relationshipId.message
+              } if formErrors.relationshipId.message
+            }) }}
+
+            {{ govukInput({
+               label: {
+                  text: "Organisation ID"
+               },
+               id: "organisationId",
+               name: "organisationId",
+               value: organisationId,
+               autocomplete: "organisationId",
+               classes: "govuk-!-width-three-quarters"
+            }) }}
+
+            {{ govukInput({
+               label: {
+                  text: "Organisation Name"
+               },
+               id: "organisationName",
+               name: "organisationName",
+               value: organisationName,
+               autocomplete: "organisationName",
+               classes: "govuk-!-width-three-quarters"
+            }) }}
+
+            {{ govukRadios({
+              id: "relationshipRole",
+              name: "relationshipRole",
+              classes: "govuk-radios--inline",
+              fieldset: {
+                legend: {
+                  text: "Relationship role",
+                  isPageHeading: false,
+                  classes: "govuk-fieldset__legend--m"
+                }
+              },
+              items: [
+                {
+                  value: "agent",
+                  text: "Agent"
+                },
+                {
+                  value: "employee",
+                  text: "Employee",
+                  checked: true
+                },
+                {
+                  value: "citizen",
+                  text: "Citizen"
+                }
+              ],
+              attributes: {
+                "data-1p-ignore": ""
+              },
+              errorMessage: {
+                text: formErrors.relationshipRole.message
+              } if formErrors.relationshipRole.message
+            }) }}
+
+          {% endcall %}
+
+
+         <div class="govuk-button-group">
+
+            {{ govukButton({
+               text: "Add relationship"
+            }) }}
+
+            </div>
+         <div class="govuk-button-group">
+
+            <a class="govuk-link" href="{{ goBackLink }}">Go back</a>
+
+            {% if currentRelationship|length > 0 %}
+               <a class="govuk-link" href="{{ summaryLink }}">Finish</a>
+            {% endif %}
+            </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}

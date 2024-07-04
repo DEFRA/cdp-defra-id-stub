@@ -1,24 +1,51 @@
-// import { oidcConfig } from '~/src/server/oidc/oidc-config.js'
+import { findRegistrationByEmail } from '~/src/server/registration/helpers/find-registration.js'
+// import { findUserEmail } from '~/src/server/oidc/helpers/users.js'
+import { createLogger } from '~/src/server/common/helpers/logging/logger.js'
 
-function defaultClaims(session, ttl, host) {
-  //   const now = Math.floor(Date.now() / 1000)
+const logger = createLogger()
+
+async function defaultClaims(session, ttl, host, cache) {
+  let email
+  if (session.user?.email) {
+    email = session.user.email
+  } else if (session.user?.preferred_username) {
+    email = session.user.preferred_username
+  } else {
+    logger.warn('No email found for session user')
+    return null
+  }
+
+  if (!email) {
+    logger.warn('No email found for user')
+    return null
+  }
+  logger.info({ email }, 'Email found')
+
+  const registration = await findRegistrationByEmail(email, cache)
+
+  if (!registration) {
+    logger.warn('No registration found for user email')
+    return null
+  }
+  logger.info('Registration found')
+
   return {
-    id: '84a8ecf4-20b7-4b85-820a-b60880d627fc',
-    correlationId: '34a5a23d-c50b-491e-9fe7-755500fc0e43',
-    sessionId: '86f88f69-1c4e-42bd-a8c9-eab4402739a3',
-    contactId: '18192903-20a0-4cb4-ba57-0aa5d4d405ba',
-    serviceId: 'cdp-defra-id-stub',
-    firstName: 'Test',
-    lastName: 'Use',
-    email: 'test@example.com',
-    uniqueReference: '126d7054-9104-4bdd-8427-a3fe6a1c1cc0',
-    loa: 1,
-    aal: '1',
-    enrolmentCount: 1,
-    enrolmentRequestCount: 1,
-    currentRelationshipId: '3b7a4305-f14d-429b-b92c-65821a1d46a5',
-    relationships: undefined,
-    roles: undefined
+    id: registration.userId,
+    correlationId: '34a5a23d-c50b-491e-9fe7-755500fc0e43', // TODO: Not sure where this is from
+    sessionId: session.sessionId,
+    contactId: registration.contactId,
+    serviceId: 'cdp-defra-id-stub', // TODO: Should be UUID really
+    firstName: registration.firstName,
+    lastName: registration.lastName,
+    email,
+    uniqueReference: registration.uniqueReference,
+    loa: registration.loa,
+    aal: registration.aal,
+    enrolmentCount: registration.enrolmentCount,
+    enrolmentRequestCount: registration.enrolmentRequestCount,
+    currentRelationshipId: registration.currentRelationshipId,
+    relationships: undefined, // TODO: Need syntax/format
+    roles: undefined // TODO: Need syntax/format
   }
 }
 

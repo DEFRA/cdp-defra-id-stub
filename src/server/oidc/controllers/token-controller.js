@@ -11,7 +11,7 @@ import {
 import { validateCodeChallenge } from '~/src/server/oidc/helpers/validate-code-challenge.js'
 
 const tokenController = {
-  handler: (request, h) => {
+  handler: async (request, h) => {
     const logger = request.logger
 
     logger.info(JSON.stringify(request.payload))
@@ -76,17 +76,28 @@ const tokenController = {
       tokenResponse.refresh_token = refreshToken
     }
 
-    tokenResponse.access_token = generateToken(request.keys, session, host)
+    tokenResponse.access_token = await generateToken(
+      request.keys,
+      session,
+      host,
+      request.registrations
+    )
 
     if (session.scopes.includes('openid')) {
-      tokenResponse.id_token = generateIDToken(request.keys, session, host)
+      tokenResponse.id_token = await generateIDToken(
+        request.keys,
+        session,
+        host,
+        request.registrations
+      )
     }
     if (session.scopes.includes('offline_access')) {
       logger.info('generating a refresh token')
-      tokenResponse.refresh_token = generateRefreshToken(
+      tokenResponse.refresh_token = await generateRefreshToken(
         request.keys,
         session,
-        host
+        host,
+        request.registrations
       )
     }
 

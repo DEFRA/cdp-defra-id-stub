@@ -3,6 +3,18 @@
 {% from "page-body/macro.njk" import appPageBody %}
 {% from "breadcrumbs/macro.njk" import appBreadcrumbs %}
 {% from "heading/macro.njk" import appHeading %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/error-message/macro.njk" import govukErrorMessage %}
+
+{% from "govuk/components/tag/macro.njk" import govukTag %}
 
 {% set mainClasses = "app-main-wrapper" %}
 
@@ -27,6 +39,26 @@
 {% endblock %}
 
 {% block beforeContent %}
+  {% if notifications | length %}
+    {% for notification in notifications %}
+      {{ appBanner({
+        text: notification.text,
+        type: notification.type,
+        js: 'app-notification'
+      }) }}
+    {% endfor %}
+  {% endif %}
+
+
+  {% if globalValidationFailures | length %}
+    {% for globalValidationFailure in globalValidationFailures %}
+      {{ appBanner({
+        text: globalValidationFailure,
+        type: "error"
+      }) }}
+    {% endfor %}
+  {% endif %}
+
   {% if breadcrumbs.length > 1 %}
     {{ appBreadcrumbs({
       items: breadcrumbs

@@ -1,3 +1,5 @@
+import { findRegistrations } from '../../registration/helpers/find-registration.js'
+
 const userAdmin = {
   username: 'admin',
   preferred_username: 'admin@oidc.mock',
@@ -12,9 +14,33 @@ const userNonAdmin = {
   teams: ['7b7c7a75-746a-4083-9072-6e68eb30c90c']
 }
 
-const allUsers = {
-  admin: userAdmin,
-  nonAdmin: userNonAdmin
+async function findAllUsers(cache) {
+  const registrations = await findRegistrations(cache)
+  const users = registrations.map((registration) => {
+    return {
+      username: registration.email,
+      email: registration.email,
+      id: registration.userId,
+      teams: []
+    }
+  })
+  //   return { admin: userAdmin, nonAdmin: userNonAdmin }
+  return users
 }
 
-export { userAdmin, userNonAdmin, allUsers }
+async function findUser(id, cache) {
+  const users = await findAllUsers(cache)
+  return users[id]
+}
+
+async function findUserEmail(id) {
+  const user = await findUser(id)
+  if (user?.email) {
+    return user.email
+  } else if (user?.preferred_username) {
+    return user.preferred_username
+  }
+  return null
+}
+
+export { userAdmin, userNonAdmin, findAllUsers, findUser, findUserEmail }
