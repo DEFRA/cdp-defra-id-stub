@@ -126,8 +126,9 @@
 
             <a class="govuk-link" href="{{ goBackLink }}">Go back</a>
 
-            <a class="govuk-link" href="{{ confirmLink }}">Continue</a>
-
+            {% if currentRelationship|length > 0 %}
+               <a class="govuk-link" href="{{ summaryLink }}">Finish</a>
+            {% endif %}
             </div>
 
         </form>

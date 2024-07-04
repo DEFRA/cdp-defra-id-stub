@@ -3,7 +3,8 @@ import {
   showRegistrationController,
   registrationController,
   showExistingRegistrationController,
-  updateRegistrationController
+  updateRegistrationController,
+  summaryRegistrationController
 } from '~/src/server/registration/controllers/registration-controller.js'
 import {
   showRelationshipListController,
@@ -50,6 +51,11 @@ const registration = {
           method: 'GET',
           path: `${oidcBasePath}/{userId}/relationship/{relationshipId}/remove`,
           ...removeRelationshipController
+        },
+        {
+          method: 'GET',
+          path: `${oidcBasePath}/{userId}/summary`,
+          ...summaryRegistrationController
         }
       ])
     }

@@ -24,32 +24,26 @@ function transformRelationships(relationships, currentRelationship) {
       rows: [
         {
           key: {
-            text: 'Relationship ID',
-            classes: 'govuk-!-width-one-third'
+            text: 'Relationship ID'
           },
           value: {
-            text: r.relationshipId,
-            classes: 'govuk-!-width-one-third'
+            text: r.relationshipId
           }
         },
         {
           key: {
-            text: 'Organisation ID',
-            classes: 'govuk-!-width-one-third'
+            text: 'Organisation ID'
           },
           value: {
-            text: r.organisationId,
-            classes: 'govuk-!-width-one-third'
+            text: r.organisationId
           }
         },
         {
           key: {
-            text: 'Organisation Name',
-            classes: 'govuk-!-width-one-third'
+            text: 'Organisation Name'
           },
           value: {
-            text: r.organisationName,
-            classes: 'govuk-!-width-one-third'
+            text: r.organisationName
           }
         },
         {

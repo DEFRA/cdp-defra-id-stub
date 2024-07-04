@@ -9,7 +9,6 @@ import { updateRegistration } from '~/src/server/registration/helpers/update-reg
 import { removeRelationship } from '~/src/server/registration/helpers/remove-relationship.js'
 import {
   findRelationship,
-  findRelationships,
   findNonCurrentRelationships
 } from '~/src/server/registration/helpers/find-relationships.js'
 import {
@@ -27,8 +26,8 @@ function relationshipPath(userId) {
   return `${oidcBasePath}/${userId}/relationship`
 }
 
-function confirmPath(userId) {
-  return `${oidcBasePath}/${userId}/confirm`
+function summaryPath(userId) {
+  return `${oidcBasePath}/${userId}/summary`
 }
 
 const addRelationshipController = {
@@ -117,8 +116,6 @@ const showRelationshipListController = {
 
     //  request.logger.info('====== Show relationships list =======')
 
-    const relationships = await findRelationships(userId, request.registrations)
-
     let currentRelationship
     let currentRelationshipRows = []
     let relationshipsRows = []
@@ -143,10 +140,12 @@ const showRelationshipListController = {
         [currentRelationship],
         currentRelationship
       )[0]
-      const otherRelationships = relationships.filter(
-        (relationship) =>
-          relationship.relationshipId !== currentRelationship.relationshipId
+      const otherRelationships = await findNonCurrentRelationships(
+        userId,
+        registration.currentRelationship,
+        request.registrations
       )
+
       relationshipsRows = transformRelationships(otherRelationships)
       request.logger.info(
         {
@@ -162,7 +161,7 @@ const showRelationshipListController = {
       action: relationshipPath(userId),
       userId,
       goBackLink: registrationPath(userId),
-      confirmLink: confirmPath(userId),
+      summaryLink: summaryPath(userId),
       csrfToken: crypto.randomUUID(),
       selectedRelationshipId: crypto.randomUUID(),
       relationshipId: crypto.randomUUID(),
