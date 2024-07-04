@@ -1,19 +1,21 @@
-import { allUsers } from '~/src/server/oidc/helpers/users.js'
+import { findAllUsers } from '~/src/server/oidc/helpers/users.js'
 import { oidcBasePath } from '~/src/server/oidc/oidc-config.js'
 
-const userToLink = (user, query) => {
-  return `<li><a id='${user}' href='${oidcBasePath}/authorize${query}&user=${user}'>${allUsers[user].username}</a> - <i>${allUsers[user].id}</i></li>`
+const userToLink = async (user, query) => {
+  const allUsers = await findAllUsers()
+  return `<li><a id='${user}' href='${oidcBasePath}/authorize${query}&user=${user.email}'>${allUsers[user].username}</a> - <i>${allUsers[user].id}</i></li>`
 }
 
-const renderLoginPage = (url, h) => {
+const renderLoginPage = async (url, h) => {
   const queryParams = new URL(url).search
+  const allUsers = await findAllUsers()
   const page = `
         <div style="margin: 5%">
         <h1>CDP-Portal-Stubs - Login Stub</h1>
         <pr>Select a user to login as:</pr>
         <ul>
         ${Object.keys(allUsers)
-          .map((user) => userToLink(user, queryParams))
+          .map(async (user) => await userToLink(user, queryParams))
           .join('')}
         </ul>
 

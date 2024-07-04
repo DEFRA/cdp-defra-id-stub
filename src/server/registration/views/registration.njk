@@ -143,36 +143,49 @@
               name: "loa",
               classes: "govuk-radios--inline",
               hint: {
-                text: "Level of assurance"
+                text: "LoA (contact's level of assurance)"
               },
               fieldset: {
                 legend: {
-                  text: "LoA (contact's level of assurance)",
+                  text: "Level of assurance",
                   isPageHeading: true,
                   classes: "govuk-fieldset__legend--m"
                 }
               },
-              items: [
-                {
-                  value: "LOA0",
-                  text: "LOA0"
-                },
-                {
-                  value: "LOA1",
-                  text: "LOA1",
-                  checked: true
-                },
-                {
-                  value: "LOA2",
-                  text: "LOA2"
-                }
-              ],
+              items: loaItems,
               attributes: {
                 "data-1p-ignore": ""
               },
               errorMessage: {
                 text: formErrors.loa.message
               } if formErrors.loa.message
+            }) }}
+
+          {% endcall %}
+
+          {% call govukFieldset() %}
+
+            {{ govukRadios({
+              id: "aal",
+              name: "aal",
+              classes: "govuk-radios--inline",
+              hint: {
+                text: "(aal - authentication assurance level)"
+              },
+              fieldset: {
+                legend: {
+                  text: "MFA Performed",
+                  isPageHeading: true,
+                  classes: "govuk-fieldset__legend--m"
+                }
+              },
+              items: aalItems,
+              attributes: {
+                "data-1p-ignore": ""
+              },
+              errorMessage: {
+                text: formErrors.aal.message
+              } if formErrors.aal.message
             }) }}
 
           {% endcall %}

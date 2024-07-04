@@ -79,14 +79,15 @@ const addRelationshipController = {
     )
     relationship.organisationId = payload.organisationid
     relationship.organisationName = payload.organisationname
+    relationship.relationshipRole = payload.relationshiprole
     await storeRelationship(
       userId,
       relationshipid,
       relationship,
       request.registrations
     )
-    if (!registration.currentRelationship) {
-      registration.currentRelationship = relationshipid
+    if (!registration.currentRelationshipId) {
+      registration.currentRelationshipId = relationshipid
       await updateRegistration(userId, registration, request.registrations)
     }
 
@@ -119,10 +120,10 @@ const showRelationshipListController = {
     let currentRelationship
     let currentRelationshipRows = []
     let relationshipsRows = []
-    if (registration.currentRelationship) {
+    if (registration.currentRelationshipId) {
       currentRelationship = await findRelationship(
         userId,
-        registration.currentRelationship,
+        registration.currentRelationshipId,
         request.registrations
       )
 
@@ -142,7 +143,7 @@ const showRelationshipListController = {
       )[0]
       const otherRelationships = await findNonCurrentRelationships(
         userId,
-        registration.currentRelationship,
+        registration.currentRelationshipId,
         request.registrations
       )
 
@@ -163,7 +164,6 @@ const showRelationshipListController = {
       goBackLink: registrationPath(userId),
       summaryLink: summaryPath(userId),
       csrfToken: crypto.randomUUID(),
-      selectedRelationshipId: crypto.randomUUID(),
       relationshipId: crypto.randomUUID(),
       organisationId: crypto.randomUUID(),
       organisationName: 'DEFRA Example Organisation',
@@ -211,18 +211,19 @@ const removeRelationshipController = {
     //  request.logger.info({ relationship }, '======Relationship found=======')
 
     if (
-      registration.currentRelationship &&
-      registration.currentRelationship === relationshipId
+      registration.currentRelationshipId &&
+      registration.currentRelationshipId === relationshipId
     ) {
       const otherRelationships = await findNonCurrentRelationships(
         userId,
-        registration.currentRelationship,
+        registration.currentRelationshipId,
         request.registrations
       )
       if (otherRelationships.length > 0) {
-        registration.currentRelationship = otherRelationships[0].relationshipId
+        registration.currentRelationshipId =
+          otherRelationships[0].relationshipId
       } else {
-        delete registration.currentRelationship
+        delete registration.currentRelationshipId
       }
       await updateRegistration(userId, registration, request.registrations)
     }

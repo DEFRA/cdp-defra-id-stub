@@ -1,12 +1,12 @@
 import { oidcConfig } from '~/src/server/oidc/oidc-config.js'
 import { validateScope } from '~/src/server/oidc/helpers/validate-scope.js'
 import { newSession } from '~/src/server/oidc/helpers/session-store.js'
-import { allUsers } from '~/src/server/oidc/helpers/users.js'
+import { findUser } from '~/src/server/oidc/helpers/users.js'
 import { renderLoginPage } from '~/src/server/oidc/helpers/render-login-page.js'
 import { config } from '~/src/config/index.js'
 
 const authorizeController = {
-  handler: (request, h) => {
+  handler: async (request, h) => {
     // a bit of a hack, but basically if the user param hasn't been set
     // show a 'login' page where they can select which fake user they want
 
@@ -51,7 +51,7 @@ const authorizeController = {
         .code(400)
     }
 
-    const user = allUsers[loginUser]
+    const user = await findUser(loginUser)
     if (user === undefined) {
       request.logger.error(`Invalid user selected ${request.query.user}`)
       return h.response(`Invalid user selection!`).code(400)

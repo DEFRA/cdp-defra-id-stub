@@ -48,19 +48,18 @@ function transformRelationships(relationships, currentRelationship) {
         },
         {
           key: {
+            text: 'Role'
+          },
+          value: {
+            text: r.relationshipRole
+          }
+        },
+        {
+          key: {
             text: 'Role Name'
           },
           value: {
-            html: '<a href="#" class="govuk-link">Add role &amp; status</a>'
-          },
-          actions: {
-            items: [
-              {
-                href: '/relationships',
-                text: 'Remove',
-                visuallyHiddenText: 'role from relationship'
-              }
-            ]
+            html: '<a href="#" class="govuk-link">Add role name &amp; status</a>'
           }
         },
         {

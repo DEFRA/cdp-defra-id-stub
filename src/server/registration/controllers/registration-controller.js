@@ -11,6 +11,10 @@ import {
 } from '~/src/server/registration/helpers/new-registration.js'
 import { updateRegistration } from '~/src/server/registration/helpers/update-registration.js'
 import { findRelationships } from '~/src/server/registration/helpers/find-relationships.js'
+import {
+  transformLoa,
+  transformAal
+} from '~/src/server/registration/transformers/loa-aal-transformer.js'
 
 const oidcBasePath = config.get('oidc.basePath')
 
@@ -32,6 +36,8 @@ const showRegistrationController = {
       lastname: 'Lastnameson',
       enrolments: 1,
       enrolmentRequests: 1,
+      loaItems: transformLoa(1),
+      aalItems: transformAal(1),
       csrfToken: crypto.randomUUID()
     })
   }
@@ -65,6 +71,7 @@ const registrationController = {
     registration.lastname = payload.lastname
     registration.uniqueRef = payload.uniqueref
     registration.loa = payload.loa
+    registration.aal = payload.aal
     registration.enrolments = payload.enrolments
     registration.enrolmentRequests = payload.enrolmentrequests
     await storeRegistration(userid, registration, request.registrations)
@@ -102,6 +109,8 @@ const showExistingRegistrationController = {
       email: registration.email,
       firstname: registration.firstname,
       lastname: registration.lastname,
+      loaItems: transformLoa(registration.loa),
+      aalItems: transformAal(registration.aal),
       enrolments: registration.enrolments,
       enrolmentRequests: registration.enrolmentRequests,
       csrfToken: crypto.randomUUID()
@@ -149,6 +158,7 @@ const updateRegistrationController = {
     registration.lastname = payload.lastname
     registration.uniqueRef = payload.uniqueref
     registration.loa = payload.loa
+    registration.aal = payload.aal
     registration.enrolments = payload.enrolments
     registration.enrolmentRequests = payload.enrolmentrequests
     await updateRegistration(userId, registration, request.registrations)

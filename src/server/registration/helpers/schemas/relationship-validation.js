@@ -6,11 +6,10 @@ const relationshipValidation = Joi.object({
     'any.only': 'Enter an id',
     'any.required': 'Enter an id'
   }),
-  selectedrelationshipid: Joi.string().uuid().optional(),
-  relationshipid: Joi.string().uuid().optional(),
-  organisationid: Joi.string().optional(),
-  organisationname: Joi.string().optional(),
-  relationshiprole: Joi.string().optional(),
+  relationshipid: Joi.string().uuid().required(),
+  organisationid: Joi.string().required(),
+  organisationname: Joi.string().required(),
+  relationshiprole: Joi.string().required(),
   rolename: Joi.string().optional(),
   rolenrolestatusame: Joi.string().optional()
 })

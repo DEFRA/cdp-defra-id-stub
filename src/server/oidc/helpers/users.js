@@ -12,9 +12,23 @@ const userNonAdmin = {
   teams: ['7b7c7a75-746a-4083-9072-6e68eb30c90c']
 }
 
-const allUsers = {
-  admin: userAdmin,
-  nonAdmin: userNonAdmin
+async function findAllUsers() {
+  return { admin: userAdmin, nonAdmin: userNonAdmin }
 }
 
-export { userAdmin, userNonAdmin, allUsers }
+async function findUser(id) {
+  const users = await findAllUsers()
+  return users[id]
+}
+
+async function findUserEmail(id) {
+  const user = await findUser(id)
+  if (user?.email) {
+    return user.email
+  } else if (user?.preferred_username) {
+    return user.preferred_username
+  }
+  return null
+}
+
+export { userAdmin, userNonAdmin, findAllUsers, findUser, findUserEmail }

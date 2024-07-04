@@ -30,6 +30,10 @@ const registrationValidation = Joi.object({
     'any.only': 'Enter a level of assurance',
     'any.required': 'Enter a level of assurance'
   }),
+  aal: Joi.string().required().messages({
+    'any.only': 'Enter authentication assurance',
+    'any.required': 'Enter authentication assurance'
+  }),
   enrolments: Joi.number().integer().positive().required().messages({
     'any.only': 'Enter enrolments',
     'any.required': 'Enter enrolments'
