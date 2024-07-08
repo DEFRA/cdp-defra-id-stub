@@ -1,18 +1,19 @@
 import { oidcBasePath } from '~/src/server/oidc/oidc-config.js'
 
-const userToLink = async (user, allUsers, query) => {
-  return `<li><a id='${user}' href='${oidcBasePath}/authorize${query}&user=${user.email}'>${allUsers[user].username}</a> - <i>${allUsers[user].id}</i></li>`
+const userToLink = (user, allUsers, query) => {
+  const queryFirst = query ? '&' : '?'
+  return `<li><a id='${user}' href='${oidcBasePath}/authorize${query}${queryFirst}user=${allUsers[user].email}'>${allUsers[user].email}</a> - <i>${allUsers[user].id}</i></li>`
 }
 
 const renderLoginPage = async (allUsers, url, h) => {
-  const queryParams = new URL(url).search
+  const queryParams = url ? new URL(url).search : ''
   const page = `
         <div style="margin: 5%">
         <h1>CDP-Portal-Stubs - Login Stub</h1>
         <pr>Select a user to login as:</pr>
         <ul>
         ${Object.keys(allUsers)
-          .map(async (user) => await userToLink(user, allUsers, queryParams))
+          .map((user) => userToLink(user, allUsers, queryParams))
           .join('')}
         </ul>
 

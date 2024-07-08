@@ -1,6 +1,7 @@
 import { findRegistrationByEmail } from '~/src/server/registration/helpers/find-registration.js'
 // import { findUserEmail } from '~/src/server/oidc/helpers/users.js'
 import { createLogger } from '~/src/server/common/helpers/logging/logger.js'
+import { findRelationships } from '~/src/server/registration/helpers/find-relationships.js'
 
 const logger = createLogger()
 
@@ -29,6 +30,13 @@ async function defaultClaims(session, ttl, host, cache) {
   }
   logger.info('Registration found')
 
+  const relationships = await findRelationships(registration.userId, cache)
+  const relationshipIdsRow = relationships.map(
+    (r) =>
+      `${r.relationshipId}:${r.organisationId}:` +
+      `${r.organisationName}:0:${r.role}:0`
+  )
+
   return {
     id: registration.userId,
     correlationId: '34a5a23d-c50b-491e-9fe7-755500fc0e43', // TODO: Not sure where this is from
@@ -44,8 +52,8 @@ async function defaultClaims(session, ttl, host, cache) {
     enrolmentCount: registration.enrolmentCount,
     enrolmentRequestCount: registration.enrolmentRequestCount,
     currentRelationshipId: registration.currentRelationshipId,
-    relationships: undefined, // TODO: Need syntax/format
-    roles: undefined // TODO: Need syntax/format
+    relationships: relationshipIdsRow.join(','),
+    roles: undefined // TODO: dd:gg:1,hh:kk:2
   }
 }
 

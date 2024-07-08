@@ -19,47 +19,47 @@ const registration = {
       server.route([
         {
           method: 'GET',
-          path: `${oidcBasePath}`,
+          path: `${oidcBasePath}/register`,
           ...showRegistrationController
         },
         {
           method: 'GET',
-          path: `${oidcBasePath}/{userId}`,
+          path: `${oidcBasePath}/register/{userId}`,
           ...showExistingRegistrationController
         },
         {
           method: 'POST',
-          path: `${oidcBasePath}/setup`,
+          path: `${oidcBasePath}/register`,
           ...registrationController
         },
         {
           method: 'POST',
-          path: `${oidcBasePath}/{userId}/update`,
+          path: `${oidcBasePath}/register/{userId}/update`,
           ...updateRegistrationController
         },
         {
           method: 'GET',
-          path: `${oidcBasePath}/{userId}/relationship`,
+          path: `${oidcBasePath}/register/{userId}/relationship`,
           ...showRelationshipListController
         },
         {
           method: 'POST',
-          path: `${oidcBasePath}/{userId}/relationship`,
+          path: `${oidcBasePath}/register/{userId}/relationship`,
           ...addRelationshipController
         },
         {
           method: 'GET',
-          path: `${oidcBasePath}/{userId}/relationship/{relationshipId}/remove`,
+          path: `${oidcBasePath}/register/{userId}/relationship/{relationshipId}/remove`,
           ...removeRelationshipController
         },
         {
           method: 'GET',
-          path: `${oidcBasePath}/{userId}/relationship/{relationshipId}/current`,
+          path: `${oidcBasePath}/register/{userId}/relationship/{relationshipId}/current`,
           ...removeRelationshipController
         },
         {
           method: 'GET',
-          path: `${oidcBasePath}/{userId}/summary`,
+          path: `${oidcBasePath}/register/{userId}/summary`,
           ...summaryRegistrationController
         }
       ])

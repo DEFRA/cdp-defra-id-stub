@@ -17,4 +17,10 @@ const homeController = {
   }
 }
 
-export { homeController }
+const goHomeController = {
+  handler: (request, h) => {
+    return h.redirect('/')
+  }
+}
+
+export { homeController, goHomeController }

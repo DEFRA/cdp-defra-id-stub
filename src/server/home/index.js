@@ -1,9 +1,9 @@
-import { homeController } from '~/src/server/home/controller.js'
+import {
+  homeController,
+  goHomeController
+} from '~/src/server/home/controller.js'
+import { oidcBasePath } from '~/src/server/oidc/oidc-config.js'
 
-/**
- * Sets up the routes used in the home page.
- * These routes are registered in src/server/router.js.
- */
 const home = {
   plugin: {
     name: 'home',
@@ -13,6 +13,11 @@ const home = {
           method: 'GET',
           path: '/',
           ...homeController
+        },
+        {
+          method: 'GET',
+          path: oidcBasePath,
+          ...goHomeController
         }
       ])
     }

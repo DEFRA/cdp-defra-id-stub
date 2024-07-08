@@ -11,7 +11,9 @@ const loggerOptions = {
       'req.headers.authorization',
       'req.headers.cookie',
       'res.headers',
-      'responseTime'
+      'responseTime',
+      'res.statusCode',
+      'res'
     ],
     remove: true
   },
