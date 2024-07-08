@@ -13,10 +13,12 @@ A service to stub out the real DEFRA ID service.
     - [Directly](#directly)
     - [Docker Compose](#docker-compose)
 - [Integrate](#integrate)
+- [Registration](#registration)
+- [API](#api)
 - [DEFRA ID](#defra-id)
-  - [Onboarding](#onboarding)
+  - [DEFRA ID Onboarding](#defra-id-onboarding)
   - [DEFRA ID Stub](#defra-id-stub)
-  - [DEMO](#demo)
+  - [DEFRA ID Demo](#defra-id-demo)
 - [Licence](#licence)
   - [About the licence](#about-the-licence)
 
@@ -98,7 +100,7 @@ A local environment is provided with:
 docker compose up --build -d
 ```
 
-## Integrating
+## Integrate
 
 More details to come
 
@@ -117,7 +119,62 @@ To integrate in an environment, configure your app's **OIDC Configuration URL** 
 
 (This will change soon)
 
-Set the **DEFRA ID Client Secret** to `test_value`
+Set the **DEFRA ID Client Secret** to `test_value`6
+
+---
+
+## Registration
+
+You can register for a temporary ID and login at:
+
+- Dev: `https://cdp-defra-id-stub.dev.cdp-int.defra.cloud`
+- Test: `https://cdp-defra-id-stub.test.cdp-int.defra.cloud`
+- Perf test: `https://cdp-defra-id-stub.perf-test.cdp-int.defra.cloud`
+
+## API
+
+You create, find and expire a temporary ID via the API
+
+### Register
+
+With an example **payload.json**:
+
+```json
+{
+  "userId": "86a7607c-a1e7-41e5-a0b6-a41680d05a2a",
+  "email": "some@example.com",
+  "firstName": "John",
+  "lastName": "Doe",
+  "loa": "1",
+  "aal": "1",
+  "enrolmentCount": 1,
+  "enrolmentRequestCount": 1,
+  "relationships": [
+    {
+      "organisationName": "Some Org",
+      "relationshipRole": "Employee",
+      "roleName": "Some role",
+      "roleStatus": "1"
+    }
+  ]
+}
+```
+
+```bash
+curl -H "Content-Type: application/json" -X POST -d @payload.json https://cdp-defra-id-stub.dev.cdp-int.defra.cloud/cdp-defra-id-stub/API/register
+```
+
+### Find
+
+```bash
+curl https://cdp-defra-id-stub.dev.cdp-int.defra.cloud/cdp-defra-id-stub/API/register/86a7607c-a1e7-41e5-a0b6-a41680d05a2a
+```
+
+### Expire
+
+```bash
+curl -H "Content-Type: application/json" -X POST https://cdp-defra-id-stub.dev.cdp-int.defra.cloud/cdp-defra-id-stub/API/register/86a7607c-a1e7-41e5-a0b6-a41680d05a2a6/expire
+```
 
 ---
 
@@ -137,7 +194,7 @@ And may offer more features.
 
 - https://dev.azure.com/defragovuk/DEFRA-Common-Platform-Improvements/_wiki/wikis/
 
-### Demo
+### DEFRA ID Demo
 
 A CDP demo app integrating with DEFRA ID
 
