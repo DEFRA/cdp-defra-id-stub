@@ -6,6 +6,12 @@ import { findRelationships } from '~/src/server/registration/helpers/find-relati
 
 const oidcBasePath = config.get('oidc.basePath')
 
+function registrationPathWithId(userId) {
+  return `${oidcBasePath}/register/${userId}`
+}
+
+const registrationPath = `${oidcBasePath}/register`
+
 const summaryRegistrationController = {
   options: {
     validate: {
@@ -26,16 +32,16 @@ const summaryRegistrationController = {
 
     const relationships = await findRelationships(userId, request.registrations)
 
-    request.logger.info(
-      { registration, relationships },
-      '======Summary registration======='
-    )
+    //  request.logger.info(
+    //    { registration, relationships },
+    //    '======Summary registration======='
+    //  )
 
     return h.view('registration/views/summary', {
       pageTitle: 'DEFRA ID Summary',
       heading: 'DEFRA ID Summary',
-      registrationLink: `${oidcBasePath}/${userId}`,
-      newRegistrationLink: oidcBasePath,
+      registrationLink: registrationPathWithId(userId),
+      newRegistrationLink: registrationPath,
       registration,
       relationships
     })

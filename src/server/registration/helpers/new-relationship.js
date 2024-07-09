@@ -5,7 +5,7 @@ import { cacheKeys } from '~/src/server/registration/helpers/cache-keys.js'
 const logger = createLogger()
 
 async function addRelationshipId(userId, relationshipId, cache) {
-  await addToCachedArray(cacheKeys.registrationIds, relationshipId, cache)
+  await addToCachedArray(cacheKeys.relationshipIds, relationshipId, cache)
   await addToCachedArray(
     cacheKeys.userRelationshipIds(userId),
     relationshipId,

@@ -1,7 +1,10 @@
 import { oidcBasePath } from '~/src/server/oidc/oidc-config.js'
 import { openIdConfigurationController } from '~/src/server/oidc/controllers/well-known-openid-configuration.js'
 import { jwksController } from '~/src/server/oidc/controllers/well-known-jwks.js'
-import { authorizeController } from '~/src/server/oidc/controllers/authorize-controller.js'
+import {
+  authorizeController,
+  loginController
+} from '~/src/server/oidc/controllers/authorize-controller.js'
 import { tokenController } from '~/src/server/oidc/controllers/token-controller.js'
 import {
   generateRandomKeypair,
@@ -47,6 +50,11 @@ const oidc = {
           method: 'GET',
           path: `${oidcBasePath}/authorize`,
           ...authorizeController
+        },
+        {
+          method: 'GET',
+          path: `${oidcBasePath}/login`,
+          ...loginController
         },
         {
           method: 'POST',

@@ -20,14 +20,15 @@ import { transformRelationships } from '~/src/server/registration/transformers/r
 const oidcBasePath = config.get('oidc.basePath')
 
 function registrationPath(userId) {
-  return `${oidcBasePath}/${userId}`
+  return `${oidcBasePath}/register/${userId}`
 }
+
 function relationshipPath(userId) {
-  return `${oidcBasePath}/${userId}/relationship`
+  return `${oidcBasePath}/register/${userId}/relationship`
 }
 
 function summaryPath(userId) {
-  return `${oidcBasePath}/${userId}/summary`
+  return `${oidcBasePath}/register/${userId}/summary`
 }
 
 const addRelationshipController = {
@@ -84,7 +85,7 @@ const addRelationshipController = {
       await updateRegistration(userId, registration, request.registrations)
     }
 
-    request.logger.info({ relationship }, '====== Relationships added =======')
+    //  request.logger.info({ relationship }, '====== Relationships added =======')
 
     return h.redirect(relationshipPath(userId))
   }
@@ -136,12 +137,12 @@ const showRelationshipListController = {
       )
 
       relationshipsRows = transformRelationships(otherRelationships)
-      request.logger.info(
-        {
-          otherRelationships
-        },
-        '====== Other relationships found ======='
-      )
+      // request.logger.info(
+      //   {
+      //     otherRelationships
+      //   },
+      //   '====== Other relationships found ======='
+      // )
     }
 
     return h.view('registration/views/relationships-list', {

@@ -10,8 +10,8 @@ const relationshipValidation = Joi.object({
   organisationId: Joi.string().required(),
   organisationName: Joi.string().required(),
   relationshipRole: Joi.string().required(),
-  rolename: Joi.string().optional(),
-  rolenrolestatusame: Joi.string().optional()
+  roleName: Joi.string().optional(),
+  roleStatus: Joi.string().optional()
 })
 
 export { relationshipValidation }

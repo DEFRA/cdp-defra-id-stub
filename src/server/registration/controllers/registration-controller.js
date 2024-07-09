@@ -18,15 +18,21 @@ import {
 const oidcBasePath = config.get('oidc.basePath')
 
 function relationshipPath(userId) {
-  return `${oidcBasePath}/${userId}/relationship`
+  return `${oidcBasePath}/register/${userId}/relationship`
+}
+
+const registrationAction = `${oidcBasePath}/register`
+
+function updateRegistrationPath(userId) {
+  return `${oidcBasePath}/register/${userId}/update`
 }
 
 const showRegistrationController = {
   handler: async (request, h) => {
     return h.view('registration/views/registration', {
-      pageTitle: 'DEFRA ID Setup',
-      heading: 'DEFRA ID Setup',
-      action: `${oidcBasePath}/setup`,
+      pageTitle: 'DEFRA ID Registration',
+      heading: 'DEFRA ID Temporary Registration',
+      action: registrationAction,
       userId: crypto.randomUUID(),
       contactId: crypto.randomUUID(),
       uniqueReference: crypto.randomUUID(),
@@ -75,7 +81,10 @@ const registrationController = {
     registration.enrolmentRequestCount = payload.enrolmentRequestCount
     await storeRegistration(userId, registration, request.registrations)
 
-    //  request.logger.info({ registration }, '======New registration=======')
+    request.logger.info(
+      { email: registration.email, id: registration.userId },
+      'New registration'
+    )
 
     return h.redirect(relationshipPath(userId))
   }
@@ -101,7 +110,7 @@ const showExistingRegistrationController = {
     return h.view('registration/views/registration', {
       pageTitle: 'DEFRA ID Setup',
       heading: 'DEFRA ID Setup',
-      action: `${oidcBasePath}/${userId}/update`,
+      action: updateRegistrationPath(userId),
       userId,
       contactId: registration.contactId,
       uniqueReference: registration.uniqueReference,

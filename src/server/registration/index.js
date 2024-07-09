@@ -11,6 +11,9 @@ import {
   addRelationshipController,
   removeRelationshipController
 } from '~/src/server/registration/controllers/relationship-controller.js'
+import { expireRegistrationApiController } from '~/src/server/registration/controllers/expire-registration-api-controller.js'
+import { findRegistrationApiController } from '~/src/server/registration/controllers/find-registration-api-controller.js'
+import { registerApiController } from '~/src/server/registration/controllers/register-api-controller.js'
 
 const registration = {
   plugin: {
@@ -19,48 +22,63 @@ const registration = {
       server.route([
         {
           method: 'GET',
-          path: `${oidcBasePath}`,
+          path: `${oidcBasePath}/register`,
           ...showRegistrationController
         },
         {
           method: 'GET',
-          path: `${oidcBasePath}/{userId}`,
+          path: `${oidcBasePath}/register/{userId}`,
           ...showExistingRegistrationController
         },
         {
           method: 'POST',
-          path: `${oidcBasePath}/setup`,
+          path: `${oidcBasePath}/register`,
           ...registrationController
         },
         {
           method: 'POST',
-          path: `${oidcBasePath}/{userId}/update`,
+          path: `${oidcBasePath}/register/{userId}/update`,
           ...updateRegistrationController
         },
         {
           method: 'GET',
-          path: `${oidcBasePath}/{userId}/relationship`,
+          path: `${oidcBasePath}/register/{userId}/relationship`,
           ...showRelationshipListController
         },
         {
           method: 'POST',
-          path: `${oidcBasePath}/{userId}/relationship`,
+          path: `${oidcBasePath}/register/{userId}/relationship`,
           ...addRelationshipController
         },
         {
           method: 'GET',
-          path: `${oidcBasePath}/{userId}/relationship/{relationshipId}/remove`,
+          path: `${oidcBasePath}/register/{userId}/relationship/{relationshipId}/remove`,
           ...removeRelationshipController
         },
         {
           method: 'GET',
-          path: `${oidcBasePath}/{userId}/relationship/{relationshipId}/current`,
+          path: `${oidcBasePath}/register/{userId}/relationship/{relationshipId}/current`,
           ...removeRelationshipController
         },
         {
           method: 'GET',
-          path: `${oidcBasePath}/{userId}/summary`,
+          path: `${oidcBasePath}/register/{userId}/summary`,
           ...summaryRegistrationController
+        },
+        {
+          method: 'GET',
+          path: `${oidcBasePath}/API/register/{userId}`,
+          ...findRegistrationApiController
+        },
+        {
+          method: 'POST',
+          path: `${oidcBasePath}/API/register`,
+          ...registerApiController
+        },
+        {
+          method: 'POST',
+          path: `${oidcBasePath}/API/register/{userId}/expire`,
+          ...expireRegistrationApiController
         }
       ])
     }
