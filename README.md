@@ -4,7 +4,7 @@ A service to stub out the real DEFRA ID service.
 
 - [Purpose](#purpose)
 - [Local Development](#local-development)
-  - [Requirement](#requirement)
+  - [Requirements](#requirements)
     - [Node](#node)
     - [Docker Compose](#docker-compose)
   - [Setup](#setup)
@@ -26,7 +26,7 @@ A service to stub out the real DEFRA ID service.
 
 ## Purpose
 
-Allows simulating an integraton with DEFRA ID authentication.
+Allows simulating an integration with DEFRA ID authentication.
 
 Intended use in development and automated testing.
 Available as docker image and in lower CDP environments.
@@ -71,7 +71,7 @@ npm install
 
 ### Test
 
-Test continously:
+Test continuously:
 
 ```bash
 npm run test:watch
@@ -102,9 +102,7 @@ docker compose up --build -d
 
 ## Integrate
 
-More details to come
-
-To integrate locally, see [running](#running) above).stub.infra-dev.cdp-int.defra.cloud/cdp-defra-id-stub/.well-known/openid-configuration'
+To integrate locally, see [running](#running) above).
 
 ### OIDC URL
 
@@ -119,7 +117,7 @@ To integrate in an environment, configure your app's **OIDC Configuration URL** 
 
 (This will change soon)
 
-Set the **DEFRA ID Client Secret** to `test_value`6
+Set the **DEFRA ID Client Secret** to `test_value`
 
 ---
 
@@ -196,7 +194,8 @@ And may offer more features.
 
 ### DEFRA ID Demo
 
-A CDP demo app integrating with DEFRA ID
+A CDP demo app integrating with DEFRA ID.
+Works with both CDP stub and the DEFRA ID's own stub.
 
 - https://cdp-defra-id-demo.test.cdp-int.defra.cloud/cdp-defra-id-demo
 - https://github.com/DEFRA/cdp-defra-id-demo
