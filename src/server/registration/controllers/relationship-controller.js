@@ -46,7 +46,7 @@ const addRelationshipController = {
     const registration = await findRegistration(userId, request.registrations)
 
     if (!registration) {
-      request.logger.error({ userId }, '====== Registration not found ======')
+      request.logger.error({ userId }, 'Registration not found')
       return h.redirect(oidcBasePath)
     }
 
@@ -55,7 +55,7 @@ const addRelationshipController = {
     })
 
     if (validationResult?.error) {
-      request.logger.warn(validationResult?.error, '======Payload error=======')
+      request.logger.warn(validationResult?.error, 'Payload error')
       const errorDetails = buildErrorDetails(validationResult.error.details)
 
       request.yar.flash('validationFailure', {
@@ -85,8 +85,6 @@ const addRelationshipController = {
       await updateRegistration(userId, registration, request.registrations)
     }
 
-    //  request.logger.info({ relationship }, '====== Relationships added =======')
-
     return h.redirect(relationshipPath(userId))
   }
 }
@@ -105,7 +103,7 @@ const showRelationshipListController = {
     const registration = await findRegistration(userId, request.registrations)
 
     if (!registration) {
-      request.logger.error({ userId }, '====== Registration not found ======')
+      request.logger.error({ userId }, 'Registration not found')
       return h.redirect(oidcBasePath)
     }
 
@@ -120,10 +118,7 @@ const showRelationshipListController = {
       )
 
       if (!currentRelationship) {
-        request.logger.error(
-          { userId },
-          '====== Current relationship not found ======'
-        )
+        request.logger.error({ userId }, 'Current relationship not found')
       }
 
       currentRelationshipRows = transformRelationships(
@@ -137,12 +132,6 @@ const showRelationshipListController = {
       )
 
       relationshipsRows = transformRelationships(otherRelationships)
-      // request.logger.info(
-      //   {
-      //     otherRelationships
-      //   },
-      //   '====== Other relationships found ======='
-      // )
     }
 
     return h.view('registration/views/relationships-list', {

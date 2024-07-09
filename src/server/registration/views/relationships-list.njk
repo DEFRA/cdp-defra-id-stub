@@ -13,7 +13,7 @@
 
         <form action="{{ action }}" method="post">
           <input type="hidden" name="csrfToken" value="{{ csrfToken }}"/>
-          <input type="hidden" name="userid" value="{{ userId }}"/>
+          <input type="hidden" name="userId" value="{{ userId }}"/>
 
           {% if currentRelationship|length > 0 %}
             {% call govukFieldset({
