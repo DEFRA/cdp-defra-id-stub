@@ -1,4 +1,7 @@
-import { findRegistrations } from '~/src/server/registration/helpers/find-registration.js'
+import {
+  findRegistrations,
+  findRegistrationByEmail
+} from '~/src/server/registration/helpers/find-registration.js'
 import { createLogger } from '~/src/server/common/helpers/logging/logger.js'
 
 const logger = createLogger()
@@ -16,9 +19,11 @@ async function findAllUsers(cache) {
   return users
 }
 
-async function findUser(id, cache) {
-  const users = await findAllUsers(cache)
-  return users[id]
+async function findUser(user, cache) {
+  const registration = await findRegistrationByEmail(user, cache)
+  if (registration) {
+    return registration
+  }
 }
 
 async function findUserEmail(id) {

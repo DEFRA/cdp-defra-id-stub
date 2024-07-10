@@ -12,21 +12,17 @@ const registrationPath = `${oidcBasePath}/register`
 
 const authorizeController = {
   handler: async (request, h) => {
-    // a bit of a hack, but basically if the user param hasn't been set
-    // show a 'login' page where they can select which fake user they want
-
     if (config.get('oidc.showLogin') && request.query.user === undefined) {
       request.logger.info(
         { url: request.url },
         'No user, redirect to login page' + request.url
       )
-      // return h.redirect(`${oidcBasePath}/login?redirect_url=${request.url}`)
       const allUsers = await findAllUsers(request.registrations)
       if (!allUsers || allUsers.length === 0) {
         request.logger.info('No users found, redirect to register page')
         return h.redirect(registrationPath)
       }
-      request.logger.info({ allUsers }, 'Rendering login page ' + request.url)
+
       return renderLoginPage(allUsers, request.url, h)
     }
 

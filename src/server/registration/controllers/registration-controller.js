@@ -36,11 +36,6 @@ const showRegistrationController = {
       userId: crypto.randomUUID(),
       contactId: crypto.randomUUID(),
       uniqueReference: crypto.randomUUID(),
-      email: 'some@example.com',
-      firstName: 'Firstnamer',
-      lastName: 'Lastnameson',
-      enrolmentCount: 1,
-      enrolmentRequestCount: 1,
       loaItems: transformLoa(1),
       aalItems: transformAal(1),
       csrfToken: crypto.randomUUID()

@@ -142,9 +142,6 @@ const showRelationshipListController = {
       goBackLink: registrationPath(userId),
       summaryLink: summaryPath(userId),
       csrfToken: crypto.randomUUID(),
-      relationshipId: crypto.randomUUID(),
-      organisationId: crypto.randomUUID(),
-      organisationName: 'DEFRA Example Organisation',
       currentRelationship: currentRelationshipRows,
       relationships: relationshipsRows
     })

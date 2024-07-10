@@ -1,0 +1,42 @@
+{% extends "layouts/page.njk" %}
+
+{% block content %}
+  {{ appHeading({
+    title: heading,
+    caption: "DEFRA ID Stub User Set Up"
+  }) }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <div class="govuk-body" data-testid="app-page-body">
+
+         {{ govukTable({
+               caption: "Registered users",
+               captionClasses: "govuk-table__caption--m",
+               firstCellIsHeader: true,
+               head: [
+                  {
+                     text: "Email"
+                  },
+                  {
+                     text: "Actions",
+                     colspan: 2
+                  }
+               ],
+            rows: userRows
+            })
+
+         }}
+
+
+         {{ govukDetails({
+            summaryText: "Query debug",
+            html: debugQueryParams
+         }) }}
+
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}
