@@ -4,11 +4,18 @@ import {
   findRegistrations
 } from '~/src/server/registration/helpers//find-registration.js'
 
+const registration = {
+  userId: 'someUserId',
+  email: 'some@example.com'
+}
+
+const otherRegistration = {
+  userId: 'otherUserId',
+  email: 'other@example.com'
+}
+
 describe('#findRegistration', () => {
   test('Should return registration if found', async () => {
-    const registration = {
-      userId: 'someUserId'
-    }
     const cache = {
       get: jest.fn((k) => {
         return registration
@@ -34,9 +41,6 @@ describe('#findRegistration', () => {
 
 describe('#findRegistrations', () => {
   test('Should return registrations', async () => {
-    const registration = {
-      userId: 'someUserId'
-    }
     const mockCache = jest.fn()
     const cache = {
       get: mockCache
@@ -55,14 +59,6 @@ describe('#findRegistrations', () => {
 
 describe('#findRegistrationByEmail', () => {
   test('Should only return registration with that email', async () => {
-    const registration = {
-      userId: 'someUserId',
-      email: 'some@example.com'
-    }
-    const otherRegistration = {
-      userId: 'otherUserId',
-      email: 'other@example.com'
-    }
     const mockCache = jest.fn()
     const cache = {
       get: mockCache
@@ -78,10 +74,6 @@ describe('#findRegistrationByEmail', () => {
   })
 
   test('Should not return registration if none with that email', async () => {
-    const otherRegistration = {
-      userId: 'otherUserId',
-      email: 'other@example.com'
-    }
     const mockCache = jest.fn()
     const cache = {
       get: mockCache

@@ -36,6 +36,9 @@ async function defaultClaims(session, ttl, host, cache) {
       `${r.relationshipId}:${r.organisationId}:` +
       `${r.organisationName}:0:${r.role}:0`
   )
+  const rolesRow = relationships
+    .filter((r) => r.roleName)
+    .map((r) => `${r.relationshipId}:${r.roleName}:${r.roleStatus}`)
 
   return {
     id: registration.userId,
@@ -53,7 +56,7 @@ async function defaultClaims(session, ttl, host, cache) {
     enrolmentRequestCount: registration.enrolmentRequestCount,
     currentRelationshipId: registration.currentRelationshipId,
     relationships: relationshipIdsRow.join(','),
-    roles: undefined // TODO: dd:gg:1,hh:kk:2
+    roles: rolesRow.join(',')
   }
 }
 
