@@ -9,6 +9,7 @@ import { summaryRegistrationController } from '~/src/server/registration/control
 import {
   showRelationshipListController,
   addRelationshipController,
+  makeCurrentRelationshipController,
   removeRelationshipController
 } from '~/src/server/registration/controllers/relationship-controller.js'
 import { expireRegistrationApiController } from '~/src/server/registration/controllers/expire-registration-api-controller.js'
@@ -63,7 +64,7 @@ const registration = {
         {
           method: 'GET',
           path: `${oidcBasePath}/register/{userId}/relationship/{relationshipId}/current`,
-          ...removeRelationshipController
+          ...makeCurrentRelationshipController
         },
         {
           method: 'GET',

@@ -163,7 +163,7 @@ const removeRelationshipController = {
     const registration = await findRegistration(userId, request.registrations)
 
     if (!registration) {
-      request.logger.error({ userId }, '====== Registration not found ======')
+      request.logger.error({ userId }, 'Registration not found ')
       return h.redirect(oidcBasePath)
     }
 
@@ -174,10 +174,7 @@ const removeRelationshipController = {
     )
 
     if (!relationship) {
-      request.logger.error(
-        { userId, relationshipId },
-        '====== Relationship not found ======'
-      )
+      request.logger.error({ userId, relationshipId }, 'Relationship not found')
       return h.redirect(relationshipPath(userId))
     }
 
@@ -201,7 +198,50 @@ const removeRelationshipController = {
 
     await removeRelationship(userId, relationshipId, request.registrations)
 
-    request.logger.info({ relationshipId }, '======Relationship removed=======')
+    request.logger.info({ relationshipId }, 'Relationship removed')
+
+    return h.redirect(relationshipPath(userId))
+  }
+}
+
+const makeCurrentRelationshipController = {
+  options: {
+    validate: {
+      params: Joi.object({
+        userId: Joi.string().uuid().required(),
+        relationshipId: Joi.string().uuid().required()
+      })
+    }
+  },
+  handler: async (request, h) => {
+    const { userId, relationshipId } = request.params
+
+    const registration = await findRegistration(userId, request.registrations)
+
+    if (!registration) {
+      request.logger.error({ userId }, 'Registration not found ')
+      return h.redirect(oidcBasePath)
+    }
+
+    const relationship = await findRelationship(
+      userId,
+      relationshipId,
+      request.registrations
+    )
+
+    if (!relationship) {
+      request.logger.error({ userId, relationshipId }, 'Relationship not found')
+      return h.redirect(relationshipPath(userId))
+    }
+
+    registration.currentRelationshipId = relationshipId
+
+    await updateRegistration(userId, registration, request.registrations)
+
+    request.logger.info(
+      { userId, relationshipId },
+      'Relationship set as current'
+    )
 
     return h.redirect(relationshipPath(userId))
   }
@@ -210,5 +250,6 @@ const removeRelationshipController = {
 export {
   showRelationshipListController,
   addRelationshipController,
+  makeCurrentRelationshipController,
   removeRelationshipController
 }

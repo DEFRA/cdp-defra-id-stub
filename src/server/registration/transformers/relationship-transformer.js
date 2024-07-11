@@ -11,10 +11,12 @@ const removeAction = (relationship) => {
   }
 }
 
-const currentAction = {
-  href: '#',
-  text: 'Make current',
-  visuallyHiddenText: 'make relationship current'
+const currentAction = (relationship) => {
+  return {
+    href: `relationship/${relationship.relationshipId}/current`,
+    text: 'Make current',
+    visuallyHiddenText: 'make relationship current'
+  }
 }
 
 function transformRoleName(relationship) {
@@ -61,19 +63,14 @@ function transformRoleStatus(relationship) {
   }
 }
 
-function transformRelationships(
-  relationships,
-  addRoleName,
-  removeRoleName,
-  currentRelationship
-) {
+function transformRelationships(relationships, currentRelationship) {
   return relationships.map((r) => {
     return {
       title: currentRelationship ? 'Current relationship' : '',
       actions: {
         items: currentRelationship
           ? [removeAction(r)]
-          : [currentAction, removeAction(r)]
+          : [currentAction(r), removeAction(r)]
       },
       rows: [
         {
