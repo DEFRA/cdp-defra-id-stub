@@ -108,7 +108,7 @@ const registerApiController = {
       return h
         .response(response)
         .code(201)
-        .header('Location', `${oidcBasePath}/register/${userId}`)
+        .header('Location', `${oidcBasePath}/API/register/${userId}`)
     } catch (error) {
       request.logger.error('Error registering user: ' + error)
       const response = {

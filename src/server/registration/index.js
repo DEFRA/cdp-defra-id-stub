@@ -14,6 +14,11 @@ import {
 import { expireRegistrationApiController } from '~/src/server/registration/controllers/expire-registration-api-controller.js'
 import { findRegistrationApiController } from '~/src/server/registration/controllers/find-registration-api-controller.js'
 import { registerApiController } from '~/src/server/registration/controllers/register-api-controller.js'
+import {
+  addRoleNameController,
+  removeRoleNameController,
+  showAddRoleNameController
+} from '~/src/server/registration/controllers/role-controller.js'
 
 const registration = {
   plugin: {
@@ -59,6 +64,21 @@ const registration = {
           method: 'GET',
           path: `${oidcBasePath}/register/{userId}/relationship/{relationshipId}/current`,
           ...removeRelationshipController
+        },
+        {
+          method: 'GET',
+          path: `${oidcBasePath}/register/{userId}/relationship/{relationshipId}/role-name`,
+          ...showAddRoleNameController
+        },
+        {
+          method: 'POST',
+          path: `${oidcBasePath}/register/{userId}/relationship/{relationshipId}/role-name`,
+          ...addRoleNameController
+        },
+        {
+          method: 'GET',
+          path: `${oidcBasePath}/register/{userId}/relationship/{relationshipId}/role-name/remove`,
+          ...removeRoleNameController
         },
         {
           method: 'GET',

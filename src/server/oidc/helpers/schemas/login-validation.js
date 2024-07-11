@@ -2,6 +2,7 @@ import Joi from 'joi'
 
 const loginValidation = Joi.object({
   user: Joi.string().optional(),
+  serviceId: Joi.string().optional(),
   client_id: Joi.string().required(),
   response_type: Joi.string().required(),
   redirect_uri: Joi.string().required(),

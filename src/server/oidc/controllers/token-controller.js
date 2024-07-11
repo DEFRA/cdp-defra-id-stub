@@ -23,13 +23,11 @@ const tokenController = {
     const codeVerifier = request.payload.code_verifier
     const host = `http://${request.info.host}`
 
-    // validate client id
     if (clientId !== oidcConfig.clientId) {
-      logger.error(`Invalid client id ${clientId}`)
+      logger.warn(`Invalid client id ${clientId}`)
       // return h.response(`Invalid client id ${clientId}`).code(401)
     }
 
-    // validate secret
     if (clientSecret !== oidcConfig.clientSecret) {
       logger.error(`Invalid client secret`)
       return h.response(`Invalid client secret`).code(401)
@@ -39,7 +37,7 @@ const tokenController = {
     let result = null
 
     if (grantType === 'authorization_code') {
-      logger.info('handling authorization code')
+      // logger.info('handling authorization code')
       result = getSessionForAuthorizationCode(code)
       const { valid, err } = validateCodeChallenge(result.session, codeVerifier)
       if (!valid) {
@@ -47,9 +45,10 @@ const tokenController = {
         return h.response(err).code(401)
       }
     } else if (grantType === 'refresh_token') {
-      logger.info('handling refresh token code')
+      // logger.info('handling refresh token code')
       result = getSessionForRefreshToken(refreshToken)
     } else {
+      logger.error(`invalid grant type ${grantType}`)
       return h.response(`invalid grant type ${grantType}`).code(400)
     }
 
@@ -101,7 +100,7 @@ const tokenController = {
       )
     }
 
-    logger.info(tokenResponse)
+    //  logger.info(tokenResponse)
 
     return h
       .response(tokenResponse)
