@@ -70,7 +70,7 @@ const tokenController = {
 
     // copy over the refresh token if its not there
     // unsure if we still need the !== string 'null' check anymore
-    if (refreshToken && refreshToken !== 'null') {
+    if (refreshToken) {
       logger.info(`refresh token ${refreshToken}`)
       tokenResponse.refresh_token = refreshToken
     }

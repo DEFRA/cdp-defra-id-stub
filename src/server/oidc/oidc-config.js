@@ -52,7 +52,7 @@ const oidcConfig = {
   ],
   codeChallengeMethodsSupported: ['plain', 'S256'],
   ttl: 3600, // seconds
-  refreshTtl: 3600
+  refreshTtl: 3600 * 6
 }
 
 export { oidcConfig, oidcBasePath }

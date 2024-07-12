@@ -42,6 +42,7 @@ async function defaultClaims(session, ttl, host, cache) {
 
   return {
     id: registration.userId,
+    sub: registration.userId,
     correlationId: '34a5a23d-c50b-491e-9fe7-755500fc0e43', // TODO: Not sure where this is from
     sessionId: session.sessionId,
     contactId: registration.contactId,
