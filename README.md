@@ -119,6 +119,16 @@ To integrate in an environment, configure your app's **OIDC Configuration URL** 
 
 Set the **DEFRA ID Client Secret** to `test_value`
 
+### Scope
+
+The stub responds to provider scopes of `defra-id` and `refresh_token`.
+
+### No localhost redirect
+
+Note, at the moment if integrating to a stub running in one of CDPs environments from your local machine, the `redirect_url` you send from your app on the authorize call to the stub can not be `localhost`. The firewall will not allow that redirect. However, setting your application's host in that URL to e.g. `myapp.127.0.0.1.sslip.io` works.
+
+However mixing traffic across environments and local is not recommended in general.
+
 ---
 
 ## Registration
