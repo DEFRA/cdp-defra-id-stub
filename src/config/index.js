@@ -32,6 +32,12 @@ const config = convict({
     format: String,
     default: 'cdp-defra-id-stub'
   },
+  appBaseUrl: {
+    doc: 'Application base URL for after we login',
+    format: String,
+    default: 'http://localhost:3200',
+    env: 'APP_BASE_URL'
+  },
   root: {
     doc: 'Project root',
     format: String,
