@@ -161,8 +161,7 @@ const showAddRoleNameController = {
       userId,
       relationshipId,
       action: roleNamePath(userId, relationshipId),
-      relationshipLink: relationshipPath(userId),
-      roleName: 'Example role name'
+      relationshipLink: relationshipPath(userId)
     })
   }
 }
