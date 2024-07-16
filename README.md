@@ -13,6 +13,8 @@ A service to stub out the real DEFRA ID service.
     - [Directly](#directly)
     - [Docker Compose](#docker-compose)
 - [Integrate](#integrate)
+- [Limitations](#limitations)
+  - [Cross environment traffic](#cross-environment-traffic)
 - [Registration](#registration)
 - [API](#api)
 - [DEFRA ID](#defra-id)
@@ -118,6 +120,25 @@ To integrate in an environment, configure your app's **OIDC Configuration URL** 
 (This will change soon)
 
 Set the **DEFRA ID Client Secret** to `test_value`
+
+### Scope
+
+The stub responds to provider scopes of `defra-id` and `refresh_token`.
+
+## Limitations
+
+### Cross environment traffic
+
+Currently you can not integrate with the stub running in an environment from your local machine. The service will not allow a redirect post authentication to `localhost`.
+
+You should use the stub intended for the environment you are in.
+
+- If developing locally, use the docker compose stub image to run the stub locally.
+- If running in a CDP enviroment, use the stub for that environment only.
+
+Mixing traffic across environments including local is not recommended in general.
+
+However if necessary, there are work-arounds, and also the DEFRA ID Stub supplied by DEFRA ID do allow integration from a local machine.
 
 ---
 
