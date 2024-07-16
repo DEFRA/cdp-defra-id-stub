@@ -13,6 +13,8 @@ A service to stub out the real DEFRA ID service.
     - [Directly](#directly)
     - [Docker Compose](#docker-compose)
 - [Integrate](#integrate)
+- [Limitations](#limitations)
+  - [Cross environment traffic](#cross-environment-traffic)
 - [Registration](#registration)
 - [API](#api)
 - [DEFRA ID](#defra-id)
@@ -123,11 +125,20 @@ Set the **DEFRA ID Client Secret** to `test_value`
 
 The stub responds to provider scopes of `defra-id` and `refresh_token`.
 
-### No localhost redirect
+## Limitations
 
-Note, at the moment if integrating to a stub running in one of CDPs environments from your local machine, the `redirect_url` you send from your app on the authorize call to the stub can not be `localhost`. The firewall will not allow that redirect. However, setting your application's host in that URL to e.g. `myapp.127.0.0.1.sslip.io` works.
+### Cross environment traffic
 
-However mixing traffic across environments and local is not recommended in general.
+Currently you can not integrate with the stub running in an environment from your local machine. The service will not allow a redirect post authentication to `localhost`.
+
+You should use the stub intended for the environment you are in.
+
+- If developing locally, use the docker compose stub image to run the stub locally.
+- If running in a CDP enviroment, use the stub for that environment only.
+
+Mixing traffic across environments including local is not recommended in general.
+
+However if necessary, there are work-arounds, and also the DEFRA ID Stub supplied by DEFRA ID do allow integration from a local machine.
 
 ---
 
