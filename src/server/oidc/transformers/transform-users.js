@@ -9,7 +9,7 @@ function transformUser(user, queryFirst) {
       html: `<a href="${oidcBasePath}/authorize${queryFirst}user=${user.email}">Log in</a>`
     },
     {
-      html: `<a href="${oidcBasePath}/register/${user.userId}/expire">Expire</a>`
+      html: `<a href="${oidcBasePath}/register/${user.id}/expire">Expire</a>`
     }
   ]
 }
