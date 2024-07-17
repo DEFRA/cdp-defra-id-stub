@@ -5,7 +5,8 @@ const roleNameValidation = Joi.object({
   userId: Joi.string().uuid().required(),
   relationshipId: Joi.string().uuid().required(),
   roleName: Joi.string().required(),
-  roleStatus: Joi.string().required()
+  roleStatus: Joi.string().required(),
+  redirect_uri: Joi.string().uri().optional()
 })
 
 export { roleNameValidation }

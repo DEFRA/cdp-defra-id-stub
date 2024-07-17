@@ -15,6 +15,10 @@
           <input type="hidden" name="csrfToken" value="{{ csrfToken }}"/>
           <input type="hidden" name="userId" value="{{ userId }}"/>
 
+          {% if redirectUri %}
+             <input type="hidden" name="redirect_uri" value="{{ redirectUri }}"/>
+          {% endif %}
+
           {% if currentRelationship|length > 0 %}
             {% call govukFieldset({
                legend: {

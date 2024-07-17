@@ -3,23 +3,23 @@ import {
   removeRoleNamePath
 } from '~/src/server/registration/helpers/role-name-link.js'
 
-const removeAction = (relationship) => {
+const removeAction = (relationship, queryString) => {
   return {
-    href: `relationship/${relationship.relationshipId}/remove`,
+    href: `relationship/${relationship.relationshipId}/remove${queryString}`,
     text: 'Remove',
     visuallyHiddenText: 'remove relationship'
   }
 }
 
-const currentAction = (relationship) => {
+const currentAction = (relationship, queryString) => {
   return {
-    href: `relationship/${relationship.relationshipId}/current`,
+    href: `relationship/${relationship.relationshipId}/current${queryString}`,
     text: 'Make current',
     visuallyHiddenText: 'make relationship current'
   }
 }
 
-function transformRoleName(relationship) {
+function transformRoleName(relationship, queryString) {
   return relationship.roleName
     ? {
         key: {
@@ -32,7 +32,7 @@ function transformRoleName(relationship) {
           items: [
             {
               text: 'Remove',
-              href: removeRoleNamePath(relationship),
+              href: removeRoleNamePath(relationship, queryString),
               visuallyHiddenText: 'remove role name and status'
             }
           ]
@@ -43,7 +43,7 @@ function transformRoleName(relationship) {
           text: 'Role Name & Status'
         },
         value: {
-          html: `<a href="${addRoleNamePath(relationship)}" class="govuk-link">Add role name &amp; status</a>`
+          html: `<a href="${addRoleNamePath(relationship, queryString)}" class="govuk-link">Add role name &amp; status</a>`
         }
       }
 }
@@ -63,14 +63,18 @@ function transformRoleStatus(relationship) {
   }
 }
 
-function transformRelationships(relationships, currentRelationship) {
+function transformRelationships(
+  relationships,
+  currentRelationship,
+  queryString
+) {
   return relationships.map((r) => {
     return {
       title: currentRelationship ? 'Current relationship' : '',
       actions: {
         items: currentRelationship
-          ? [removeAction(r)]
-          : [currentAction(r), removeAction(r)]
+          ? [removeAction(r, queryString)]
+          : [currentAction(r, queryString), removeAction(r, queryString)]
       },
       rows: [
         {
@@ -105,7 +109,7 @@ function transformRelationships(relationships, currentRelationship) {
             text: r.relationshipRole
           }
         },
-        transformRoleName(r),
+        transformRoleName(r, queryString),
         transformRoleStatus(r)
       ]
     }

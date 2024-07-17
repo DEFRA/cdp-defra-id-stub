@@ -1,7 +1,7 @@
 import * as crypto from 'crypto'
 import Joi from 'joi'
 
-import { config } from '~/src/config/index.js'
+import { oidcBasePath } from '~/src/server/oidc/oidc-config.js'
 import { buildErrorDetails } from '~/src/server/common/helpers/build-error-details.js'
 import { registrationValidation } from '~/src/server/registration/helpers/schemas/registration-validation.js'
 import { findRegistration } from '~/src/server/registration/helpers/find-registration.js'
@@ -14,31 +14,34 @@ import {
   transformLoa,
   transformAal
 } from '~/src/server/registration/transformers/loa-aal-transformer.js'
-
-const oidcBasePath = config.get('oidc.basePath')
-
-function relationshipPath(userId) {
-  return `${oidcBasePath}/register/${userId}/relationship`
-}
-
-const registrationAction = `${oidcBasePath}/register`
-
-function updateRegistrationPath(userId) {
-  return `${oidcBasePath}/register/${userId}/update`
-}
+import {
+  registrationAction,
+  relationshipPath,
+  updateRegistrationAction
+} from '~/src/server/registration/helpers/registration-paths.js'
 
 const showRegistrationController = {
+  options: {
+    validate: {
+      query: Joi.object({
+        redirect_uri: Joi.string().uri().optional()
+      })
+    }
+  },
   handler: async (request, h) => {
+    const redirectUri = request.query?.redirect_uri
+
     return h.view('registration/views/registration', {
       pageTitle: 'DEFRA ID Registration',
       heading: 'DEFRA ID Temporary Registration',
-      action: registrationAction,
+      action: registrationAction(),
       userId: crypto.randomUUID(),
       contactId: crypto.randomUUID(),
       uniqueReference: crypto.randomUUID(),
       loaItems: transformLoa(1),
       aalItems: transformAal(1),
-      csrfToken: crypto.randomUUID()
+      csrfToken: crypto.randomUUID(),
+      redirectUri
     })
   }
 }
@@ -63,7 +66,6 @@ const registrationController = {
     }
 
     const { userId } = payload
-
     const registration = await newRegistration(userId, request.registrations)
     registration.contactId = payload.contactId
     registration.email = payload.email
@@ -81,7 +83,7 @@ const registrationController = {
       'New registration'
     )
 
-    return h.redirect(relationshipPath(userId))
+    return h.redirect(relationshipPath(userId, payload.redirect_uri))
   }
 }
 
@@ -90,22 +92,26 @@ const showExistingRegistrationController = {
     validate: {
       params: Joi.object({
         userId: Joi.string().uuid().required()
+      }),
+      query: Joi.object({
+        redirect_uri: Joi.string().uri().optional()
       })
     }
   },
   handler: async (request, h) => {
     const { userId } = request.params
+    const redirectUri = request.query?.redirect_uri
     const registration = await findRegistration(userId, request.registrations)
 
     if (!registration) {
-      request.logger.error({ userId }, '====== Registration not found ======')
+      request.logger.error({ userId }, 'Registration not found')
       return h.redirect(oidcBasePath)
     }
 
     return h.view('registration/views/registration', {
       pageTitle: 'DEFRA ID Setup',
       heading: 'DEFRA ID Setup',
-      action: updateRegistrationPath(userId),
+      action: updateRegistrationAction(userId),
       userId,
       contactId: registration.contactId,
       uniqueReference: registration.uniqueReference,
@@ -116,7 +122,8 @@ const showExistingRegistrationController = {
       aalItems: transformAal(registration.aal),
       enrolmentCount: registration.enrolmentCount,
       enrolmentRequestCount: registration.enrolmentRequestCount,
-      csrfToken: crypto.randomUUID()
+      csrfToken: crypto.randomUUID(),
+      redirectUri
     })
   }
 }
@@ -136,7 +143,7 @@ const updateRegistrationController = {
     const registration = await findRegistration(userId, request.registrations)
 
     if (!registration) {
-      request.logger.error({ userId }, '====== Registration not found ======')
+      request.logger.error({ userId }, 'Registration not found')
       return h.redirect(oidcBasePath)
     }
 
@@ -145,7 +152,7 @@ const updateRegistrationController = {
     })
 
     if (validationResult?.error) {
-      request.logger.warn(validationResult?.error, '======Payload error=======')
+      request.logger.warn(validationResult?.error, 'Payload error')
       const errorDetails = buildErrorDetails(validationResult.error.details)
 
       request.yar.flash('validationFailure', {
@@ -166,9 +173,7 @@ const updateRegistrationController = {
     registration.enrolmentRequestCount = payload.enrolmentRequestCount
     await updateRegistration(userId, registration, request.registrations)
 
-    //  request.logger.info({ registration }, '======New registration=======')
-
-    return h.redirect(relationshipPath(userId))
+    return h.redirect(relationshipPath(userId, payload.redirect_uri))
   }
 }
 

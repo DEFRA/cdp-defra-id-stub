@@ -1,7 +1,6 @@
 import * as crypto from 'crypto'
 import Joi from 'joi'
 
-import { config } from '~/src/config/index.js'
 import { buildErrorDetails } from '~/src/server/common/helpers/build-error-details.js'
 import { relationshipValidation } from '~/src/server/registration/helpers/schemas/relationship-validation.js'
 import { findRegistration } from '~/src/server/registration/helpers/find-registration.js'
@@ -16,20 +15,13 @@ import {
   storeRelationship
 } from '~/src/server/registration/helpers/new-relationship.js'
 import { transformRelationships } from '~/src/server/registration/transformers/relationship-transformer.js'
-
-const oidcBasePath = config.get('oidc.basePath')
-
-function registrationPath(userId) {
-  return `${oidcBasePath}/register/${userId}`
-}
-
-function relationshipPath(userId) {
-  return `${oidcBasePath}/register/${userId}/relationship`
-}
-
-function summaryPath(userId) {
-  return `${oidcBasePath}/register/${userId}/summary`
-}
+import { redirectSearchParam } from '~/src/server/registration/helpers/include-redirect.js'
+import {
+  relationshipPath,
+  registrationPath,
+  summaryPath
+} from '~/src/server/registration/helpers/registration-paths.js'
+import { oidcBasePath } from '~/src/server/oidc/oidc-config.js'
 
 const addRelationshipController = {
   options: {
@@ -62,7 +54,7 @@ const addRelationshipController = {
         formValues: payload,
         formErrors: errorDetails
       })
-      return h.redirect(relationshipPath(userId))
+      return h.redirect(relationshipPath(userId, payload.redirect_uri))
     }
 
     const { relationshipId } = payload
@@ -85,7 +77,7 @@ const addRelationshipController = {
       await updateRegistration(userId, registration, request.registrations)
     }
 
-    return h.redirect(relationshipPath(userId))
+    return h.redirect(relationshipPath(userId, payload.redirect_uri))
   }
 }
 
@@ -94,11 +86,15 @@ const showRelationshipListController = {
     validate: {
       params: Joi.object({
         userId: Joi.string().uuid().required()
+      }),
+      query: Joi.object({
+        redirect_uri: Joi.string().uri().optional()
       })
     }
   },
   handler: async (request, h) => {
     const { userId } = request.params
+    const redirectUri = request.query?.redirect_uri
 
     const registration = await findRegistration(userId, request.registrations)
 
@@ -121,9 +117,12 @@ const showRelationshipListController = {
         request.logger.error({ userId }, 'Current relationship not found')
       }
 
+      const queryString = redirectSearchParam(redirectUri)
+
       currentRelationshipRows = transformRelationships(
         [currentRelationship],
-        currentRelationship
+        currentRelationship,
+        queryString
       )[0]
       const otherRelationships = await findNonCurrentRelationships(
         userId,
@@ -131,7 +130,11 @@ const showRelationshipListController = {
         request.registrations
       )
 
-      relationshipsRows = transformRelationships(otherRelationships)
+      relationshipsRows = transformRelationships(
+        otherRelationships,
+        null,
+        queryString
+      )
     }
 
     return h.view('registration/views/relationships-list', {
@@ -139,11 +142,12 @@ const showRelationshipListController = {
       heading: 'DEFRA ID Relationships Setup',
       action: relationshipPath(userId),
       userId,
-      goBackLink: registrationPath(userId),
-      summaryLink: summaryPath(userId),
+      goBackLink: registrationPath(userId, redirectUri),
+      summaryLink: summaryPath(userId, redirectUri),
       csrfToken: crypto.randomUUID(),
       currentRelationship: currentRelationshipRows,
-      relationships: relationshipsRows
+      relationships: relationshipsRows,
+      redirectUri
     })
   }
 }
@@ -154,6 +158,9 @@ const removeRelationshipController = {
       params: Joi.object({
         userId: Joi.string().uuid().required(),
         relationshipId: Joi.string().uuid().required()
+      }),
+      query: Joi.object({
+        redirect_uri: Joi.string().uri().optional()
       })
     }
   },
@@ -175,7 +182,7 @@ const removeRelationshipController = {
 
     if (!relationship) {
       request.logger.error({ userId, relationshipId }, 'Relationship not found')
-      return h.redirect(relationshipPath(userId))
+      return h.redirect(relationshipPath(userId, request.query?.redirect_uri))
     }
 
     if (
@@ -200,7 +207,7 @@ const removeRelationshipController = {
 
     request.logger.info({ relationshipId }, 'Relationship removed')
 
-    return h.redirect(relationshipPath(userId))
+    return h.redirect(relationshipPath(userId, request.query?.redirect_uri))
   }
 }
 
@@ -210,6 +217,9 @@ const makeCurrentRelationshipController = {
       params: Joi.object({
         userId: Joi.string().uuid().required(),
         relationshipId: Joi.string().uuid().required()
+      }),
+      query: Joi.object({
+        redirect_uri: Joi.string().uri().optional()
       })
     }
   },
@@ -231,7 +241,7 @@ const makeCurrentRelationshipController = {
 
     if (!relationship) {
       request.logger.error({ userId, relationshipId }, 'Relationship not found')
-      return h.redirect(relationshipPath(userId))
+      return h.redirect(relationshipPath(userId, request.query?.redirect_uri))
     }
 
     registration.currentRelationshipId = relationshipId
@@ -243,7 +253,7 @@ const makeCurrentRelationshipController = {
       'Relationship set as current'
     )
 
-    return h.redirect(relationshipPath(userId))
+    return h.redirect(relationshipPath(userId, request.query?.redirect_uri))
   }
 }
 

@@ -8,7 +8,8 @@ const relationshipValidation = Joi.object({
   organisationName: Joi.string().required(),
   relationshipRole: Joi.string().required(),
   roleName: Joi.string().optional(),
-  roleStatus: Joi.string().optional()
+  roleStatus: Joi.string().optional(),
+  redirect_uri: Joi.string().uri().optional()
 })
 
 export { relationshipValidation }

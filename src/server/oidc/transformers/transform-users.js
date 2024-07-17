@@ -1,13 +1,16 @@
 import { oidcBasePath } from '~/src/server/oidc/oidc-config.js'
 
-function transformUser(user, queryFirst) {
+function transformUser(user, loginQuery) {
+  const loginLink = loginQuery
+    ? {
+        html: `<a href="${oidcBasePath}/authorize${loginQuery}">Log in</a>`
+      }
+    : {}
   return [
     {
       text: user.email
     },
-    {
-      html: `<a href="${oidcBasePath}/authorize${queryFirst}user=${user.email}">Log in</a>`
-    },
+    ...(loginQuery ? [loginLink] : []),
     {
       html: `<a href="${oidcBasePath}/register/${user.id}/expire">Expire</a>`
     }
@@ -15,8 +18,9 @@ function transformUser(user, queryFirst) {
 }
 
 function transformUsers(users, query) {
-  const queryFirst = query ? '&' : '?'
-  return users.map((u) => transformUser(u, `${query}${queryFirst}`))
+  return users.map((u) =>
+    query ? transformUser(u, `${query}&user=${u.email}`) : transformUser(u)
+  )
 }
 
 function transformQueryRow(param) {
@@ -27,7 +31,7 @@ function transformQueryRow(param) {
 }
 
 function transformQuery(query) {
-  const querySplit = query.replace('?', '').split('&')
+  const querySplit = query.replace('?', '').split('&') ?? []
   const querySanitised = querySplit.map(decodeURIComponent)
   const queries = querySanitised.map((q) => q.split('='))
   const response =

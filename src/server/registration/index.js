@@ -13,6 +13,7 @@ import {
   removeRelationshipController
 } from '~/src/server/registration/controllers/relationship-controller.js'
 import { expireRegistrationApiController } from '~/src/server/registration/controllers/expire-registration-api-controller.js'
+import { expireRegistrationController } from '~/src/server/registration/controllers/expire-registration-controller.js'
 import { findRegistrationApiController } from '~/src/server/registration/controllers/find-registration-api-controller.js'
 import { registerApiController } from '~/src/server/registration/controllers/register-api-controller.js'
 import {
@@ -100,6 +101,11 @@ const registration = {
           method: 'POST',
           path: `${oidcBasePath}/API/register/{userId}/expire`,
           ...expireRegistrationApiController
+        },
+        {
+          method: 'GET',
+          path: `${oidcBasePath}/register/{userId}/expire`,
+          ...expireRegistrationController
         }
       ])
     }
