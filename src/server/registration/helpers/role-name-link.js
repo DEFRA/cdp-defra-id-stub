@@ -4,12 +4,12 @@ function roleNameBase(relationship) {
   return `${oidcBasePath}/register/${relationship.userId}/relationship/${relationship.relationshipId}`
 }
 
-function addRoleNamePath(relationship) {
-  return `${roleNameBase(relationship)}/role-name`
+function addRoleNamePath(relationship, queryString) {
+  return `${roleNameBase(relationship)}/role-name${queryString}`
 }
 
-function removeRoleNamePath(relationship) {
-  return `${roleNameBase(relationship)}/role-name/remove`
+function removeRoleNamePath(relationship, queryString) {
+  return `${roleNameBase(relationship)}/role-name/remove${queryString}`
 }
 
 export { addRoleNamePath, removeRoleNamePath }

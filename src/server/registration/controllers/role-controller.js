@@ -1,25 +1,16 @@
 import Joi from 'joi'
 
-import { config } from '~/src/config/index.js'
 import { findRegistration } from '~/src/server/registration/helpers/find-registration.js'
 import { findRelationship } from '~/src/server/registration/helpers/find-relationships.js'
 import { updateRelationship } from '~/src/server/registration/helpers/update-relationship.js'
 import { buildErrorDetails } from '~/src/server/common/helpers/build-error-details.js'
 import { roleNameValidation } from '~/src/server/registration/helpers/schemas/role-name-validation.js'
-
-const oidcBasePath = config.get('oidc.basePath')
-
-function registrationPath(userId) {
-  return `${oidcBasePath}/register/${userId}`
-}
-
-function relationshipPath(userId) {
-  return `${oidcBasePath}/register/${userId}/relationship`
-}
-
-function roleNamePath(userId, relationshipId) {
-  return `${oidcBasePath}/register/${userId}/relationship/${relationshipId}/role-name`
-}
+import {
+  relationshipPath,
+  registrationPath,
+  roleNamePath
+} from '~/src/server/registration/helpers/registration-paths.js'
+import { oidcBasePath } from '~/src/server/oidc/oidc-config.js'
 
 const addRoleNameController = {
   options: {
@@ -49,7 +40,7 @@ const addRoleNameController = {
 
     if (!relationship) {
       request.logger.error({ userId, relationshipId }, 'Relationship not found')
-      return h.redirect(registrationPath(userId))
+      return h.redirect(registrationPath(userId, payload.redirect_uri))
     }
 
     const validationResult = roleNameValidation.validate(payload, {
@@ -64,7 +55,7 @@ const addRoleNameController = {
         formValues: payload,
         formErrors: errorDetails
       })
-      return h.redirect(roleNamePath(userId))
+      return h.redirect(roleNamePath(userId, payload.redirect_uri))
     }
 
     relationship.roleName = payload.roleName
@@ -77,7 +68,7 @@ const addRoleNameController = {
       request.registrations
     )
 
-    return h.redirect(relationshipPath(userId))
+    return h.redirect(relationshipPath(userId, payload.redirect_uri))
   }
 }
 
@@ -87,6 +78,9 @@ const removeRoleNameController = {
       params: Joi.object({
         userId: Joi.string().uuid().required(),
         relationshipId: Joi.string().uuid().required()
+      }),
+      query: Joi.object({
+        redirect_uri: Joi.string().uri().optional()
       })
     }
   },
@@ -108,7 +102,7 @@ const removeRoleNameController = {
 
     if (!relationship) {
       request.logger.error({ userId, relationshipId }, 'Relationship not found')
-      return h.redirect(registrationPath(userId))
+      return h.redirect(registrationPath(userId, request.query?.redirect_uri))
     }
 
     delete relationship.roleName
@@ -120,8 +114,7 @@ const removeRoleNameController = {
       relationship,
       request.registrations
     )
-
-    return h.redirect(relationshipPath(userId))
+    return h.redirect(relationshipPath(userId, request.query?.redirect_uri))
   }
 }
 
@@ -131,11 +124,15 @@ const showAddRoleNameController = {
       params: Joi.object({
         userId: Joi.string().uuid().required(),
         relationshipId: Joi.string().uuid().required()
+      }),
+      query: Joi.object({
+        redirect_uri: Joi.string().uri().optional()
       })
     }
   },
   handler: async (request, h) => {
     const { userId, relationshipId } = request.params
+    const redirectUri = request.query?.redirect_uri
 
     const registration = await findRegistration(userId, request.registrations)
 
@@ -152,7 +149,7 @@ const showAddRoleNameController = {
 
     if (!relationship) {
       request.logger.error({ userId, relationshipId }, 'Relationship not found')
-      return h.redirect(registrationPath(userId))
+      return h.redirect(registrationPath(userId, redirectUri))
     }
 
     return h.view('registration/views/relationship-role', {
@@ -161,8 +158,8 @@ const showAddRoleNameController = {
       userId,
       relationshipId,
       action: roleNamePath(userId, relationshipId),
-      relationshipLink: relationshipPath(userId),
-      roleName: 'Example role name'
+      relationshipLink: relationshipPath(userId, redirectUri),
+      redirectUri
     })
   }
 }

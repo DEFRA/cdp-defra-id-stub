@@ -15,6 +15,10 @@
           <input type="hidden" name="userId" value="{{ userId }}"/>
           <input type="hidden" name="relationshipId" value="{{ relationshipId }}"/>
 
+          {% if redirectUri %}
+             <input type="hidden" name="redirect_uri" value="{{ redirectUri }}"/>
+          {% endif %}
+
           {% call govukFieldset() %}
 
             {{ govukInput({

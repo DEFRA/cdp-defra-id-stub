@@ -41,7 +41,8 @@ const registrationValidation = Joi.object({
   enrolmentRequestCount: Joi.number().integer().positive().required().messages({
     'any.only': 'Enter enrolment requests',
     'any.required': 'Enter enrolment requests'
-  })
+  }),
+  redirect_uri: Joi.string().uri().optional()
 })
 
 export { registrationValidation }

@@ -1,3 +1,5 @@
+import Joi from 'joi'
+
 import { oidcConfig } from '~/src/server/oidc/oidc-config.js'
 import { buildErrorDetails } from '~/src/server/common/helpers/build-error-details.js'
 import { validateScope } from '~/src/server/oidc/helpers/validate-scope.js'
@@ -6,21 +8,20 @@ import { findUser, findAllUsers } from '~/src/server/oidc/helpers/users.js'
 import { renderLoginPage } from '~/src/server/oidc/helpers/render-login-page.js'
 import { config } from '~/src/config/index.js'
 import { loginValidation } from '~/src/server/oidc/helpers/schemas/login-validation.js'
-
-const oidcBasePath = config.get('oidc.basePath')
-const registrationPath = `${oidcBasePath}/register`
+import { registrationAction } from '~/src/server/registration/helpers/registration-paths.js'
 
 const authorizeController = {
   handler: async (request, h) => {
+    const redirectUri = request.query?.redirect_uri
     if (config.get('oidc.showLogin') && request.query.user === undefined) {
       request.logger.info(
         { url: request.url },
-        'No user, redirect to login page' + request.url
+        'No user, redirect to login page'
       )
       const allUsers = await findAllUsers(request.registrations)
       if (!allUsers || allUsers.length === 0) {
         request.logger.info('No users found, redirect to register page')
-        return h.redirect(registrationPath)
+        return h.redirect(registrationAction(request.url)) // this may have to be the whole URL
       }
 
       return renderLoginPage(allUsers, request.url, h)
@@ -38,13 +39,14 @@ const authorizeController = {
         formValues: request.query,
         formErrors: errorDetails
       })
-      return h.redirect(oidcBasePath)
+      return h
+        .response(`Unsupported payload ${errorDetails.join(',')}`)
+        .code(400)
     }
 
     const loginUser = request.query.user
     const clientId = request.query.client_id
     const responseType = request.query.response_type
-    const redirectUri = request.query.redirect_uri
     const { scope, state } = request.query
     const codeChallengeMethod = request.query.code_challenge_method
 
@@ -101,18 +103,22 @@ const authorizeController = {
 }
 
 const loginController = {
+  options: {
+    validate: {
+      query: Joi.object({
+        redirect_uri: Joi.string().uri().optional()
+      })
+    }
+  },
   handler: async (request, h) => {
-    const redirectUrl = request.query.redirect_url ?? ''
+    const redirectUri = request.query.redirect_uri ?? ''
     const allUsers = await findAllUsers(request.registrations)
     if (!allUsers || allUsers.length === 0) {
       request.logger.info('No users found, redirect to register page')
-      return h.redirect(registrationPath)
+      return h.redirect(registrationAction(redirectUri))
     }
-    request.logger.info(
-      { allUsers, redirectUrl },
-      'Rendering login page ' + redirectUrl
-    )
-    return renderLoginPage(allUsers, redirectUrl, h)
+    request.logger.info({ allUsers, redirectUri }, 'Rendering login page ')
+    return renderLoginPage(allUsers, redirectUri, h)
   }
 }
 
