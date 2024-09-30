@@ -2,6 +2,7 @@ import { findRegistrationByEmail } from '~/src/server/registration/helpers/find-
 // import { findUserEmail } from '~/src/server/oidc/helpers/users.js'
 import { createLogger } from '~/src/server/common/helpers/logging/logger.js'
 import { findRelationships } from '~/src/server/registration/helpers/find-relationships.js'
+import { oidcConfig } from '~/src/server/oidc/oidc-config.js'
 
 const logger = createLogger()
 
@@ -43,6 +44,7 @@ async function defaultClaims(session, ttl, host, cache) {
   return {
     id: registration.userId,
     sub: registration.userId,
+    iss: host + oidcConfig.issuerBase, // issuer
     correlationId: '34a5a23d-c50b-491e-9fe7-755500fc0e43', // TODO: Not sure where this is from
     sessionId: session.sessionId,
     contactId: registration.contactId,
