@@ -211,7 +211,7 @@ The DEFRA ID team also offers a DEFRA ID stub you can integrate with.
 It may be more up to date.
 And may offer more features.
 
-- https://dev.azure.com/defragovuk/DEFRA-Common-Platform-Improvements/_wiki/wikis/
+- https://dev.azure.com/defragovuk/DEFRA-Common-Platform-Improvements/_wiki/wikis/DEFRA-Common-Platform-Improvements.wiki/17894/IDM-stub
 
 ### DEFRA ID Demo
 
