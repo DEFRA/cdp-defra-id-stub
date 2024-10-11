@@ -1,11 +1,11 @@
-import { oidcBasePath } from '~/src/server/oidc/oidc-config.js'
+import { appBaseUrl, oidcBasePath } from '~/src/server/oidc/oidc-config.js'
 import { includeRedirect } from '~/src/server/registration/helpers/include-redirect.js'
 
 function showLoginPath(redirectUri) {
   return includeRedirect(`${oidcBasePath}/login`, redirectUri)
 }
 function authorizePath(email, redirectUri) {
-  const authorizeUrl = new URL(redirectUri)
+  const authorizeUrl = new URL(redirectUri, appBaseUrl)
   authorizeUrl.searchParams.append('user', email)
   return authorizeUrl.toString()
 }
