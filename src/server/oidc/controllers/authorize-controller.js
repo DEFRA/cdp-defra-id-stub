@@ -20,7 +20,9 @@ const authorizeController = {
       )
       const allUsers = await findAllUsers(request.registrations)
       if (!allUsers || allUsers.length === 0) {
-        request.logger.info('No users found, redirect to register page')
+        request.logger.info(
+          `No users found, redirect to register page: [${request.url}]`
+        )
         return h.redirect(registrationAction(request.url)) // this may have to be the whole URL
       }
 
@@ -98,6 +100,9 @@ const authorizeController = {
     const location = new URL(redirectUri)
     location.searchParams.append('code', session.sessionId)
     location.searchParams.append('state', state)
+    request.logger.info(
+      `Authenticated, redirect to location: [${location.toString()}]`
+    )
     return h.redirect(location.toString())
   }
 }
@@ -114,7 +119,9 @@ const loginController = {
     const redirectUri = request.query.redirect_uri ?? ''
     const allUsers = await findAllUsers(request.registrations)
     if (!allUsers || allUsers.length === 0) {
-      request.logger.info('No users found, redirect to register page')
+      request.logger.info(
+        `No users found, redirect to register page: [${request.url}]`
+      )
       return h.redirect(registrationAction(redirectUri))
     }
     request.logger.info({ allUsers, redirectUri }, 'Rendering login page ')
