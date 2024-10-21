@@ -1,7 +1,6 @@
 import Joi from 'joi'
-import qs from 'qs'
 
-import { oidcConfig } from '~/src/server/oidc/oidc-config.js'
+import { appBaseUrl, oidcConfig } from '~/src/server/oidc/oidc-config.js'
 import { buildErrorDetails } from '~/src/server/common/helpers/build-error-details.js'
 import { validateScope } from '~/src/server/oidc/helpers/validate-scope.js'
 import { newSession } from '~/src/server/oidc/helpers/session-store.js'
@@ -11,18 +10,11 @@ import { config } from '~/src/config/index.js'
 import { loginValidation } from '~/src/server/oidc/helpers/schemas/login-validation.js'
 import { registrationAction } from '~/src/server/registration/helpers/registration-paths.js'
 
-function getRequestUrl({ url, path }) {
-  const queryString = url.searchParams
-    ? qs.stringify(url.searchParams, { addQueryPrefix: true, encode: false })
-    : ''
-  return `${url.protocol}//${url.host}${path}${queryString}`
-}
-
 const authorizeController = {
   handler: async (request, h) => {
     const redirectUri = request.query?.redirect_uri
     if (config.get('oidc.showLogin') && request.query.user === undefined) {
-      const requestUrl = getRequestUrl(request)
+      const requestUrl = `${appBaseUrl}${request.path}${request.url.search}`
       request.logger.info({ requestUrl }, 'No user, redirect to login page')
 
       const allUsers = await findAllUsers(request.registrations)
