@@ -17,14 +17,12 @@ const authorizeController = {
     const redirectUri = request.query?.redirect_uri
     if (config.get('oidc.showLogin') && request.query.user === undefined) {
       const requestUrl = `${appBaseUrl}${request.path}${request.url.search}`
-      request.logger.info({ requestUrl }, 'No user, redirect to login page')
+      request.logger.debug({ requestUrl }, 'No user, redirect to login page')
 
       const allUsers = await findAllUsers(request.registrations)
       if (!allUsers || allUsers.length === 0) {
-        request.logger.info(
-          `No users found, redirect to register page: [${requestUrl}]`
-        )
-        return h.redirect(registrationAction(requestUrl)) // this may have to be the whole URL
+        request.logger.info('No users found, redirect to register page')
+        return h.redirect(registrationAction(requestUrl))
       }
 
       return renderLoginPage(allUsers, requestUrl, h)

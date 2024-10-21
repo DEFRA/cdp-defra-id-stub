@@ -1,5 +1,4 @@
 import { findRegistrationByEmail } from '~/src/server/registration/helpers/find-registration.js'
-// import { findUserEmail } from '~/src/server/oidc/helpers/users.js'
 import { createLogger } from '~/src/server/common/helpers/logging/logger.js'
 import { findRelationships } from '~/src/server/registration/helpers/find-relationships.js'
 import { oidcConfig } from '~/src/server/oidc/oidc-config.js'
@@ -21,7 +20,7 @@ async function defaultClaims(session, ttl, host, cache) {
     logger.warn('No email found for user')
     return null
   }
-  logger.info({ email }, 'Email found')
+  logger.debug({ email }, 'Email found')
 
   const registration = await findRegistrationByEmail(email, cache)
 
