@@ -4,7 +4,6 @@
  */
 const homeController = {
   handler: (request, h) => {
-    request.logger.info('Home page requested:' + request.url)
     return h.view('home/index', {
       pageTitle: 'Home',
       heading: 'Home',
