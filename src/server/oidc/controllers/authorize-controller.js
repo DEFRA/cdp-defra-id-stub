@@ -1,6 +1,6 @@
 import Joi from 'joi'
 
-import { appBaseUrl, oidcConfig } from '~/src/server/oidc/oidc-config.js'
+import { oidcConfig } from '~/src/server/oidc/oidc-config.js'
 import { buildErrorDetails } from '~/src/server/common/helpers/build-error-details.js'
 import { validateScope } from '~/src/server/oidc/helpers/validate-scope.js'
 import { newSession } from '~/src/server/oidc/helpers/session-store.js'
@@ -9,6 +9,8 @@ import { renderLoginPage } from '~/src/server/oidc/helpers/render-login-page.js'
 import { config } from '~/src/config/index.js'
 import { loginValidation } from '~/src/server/oidc/helpers/schemas/login-validation.js'
 import { registrationAction } from '~/src/server/registration/helpers/registration-paths.js'
+
+const appBaseUrl = config.get('appBaseUrl')
 
 const authorizeController = {
   handler: async (request, h) => {

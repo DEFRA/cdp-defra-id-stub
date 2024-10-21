@@ -1,6 +1,5 @@
 import { config } from '~/src/config/index.js'
 
-const appBaseUrl = config.get('appBaseUrl')
 const oidcBasePath = config.get('oidc.basePath')
 
 const oidcConfig = {
@@ -56,4 +55,4 @@ const oidcConfig = {
   refreshTtl: 3600 * 6
 }
 
-export { appBaseUrl, oidcConfig, oidcBasePath }
+export { oidcConfig, oidcBasePath }
