@@ -41,7 +41,7 @@ const tokenController = {
       result = getSessionForAuthorizationCode(code)
       const { valid, err } = validateCodeChallenge(result.session, codeVerifier)
       if (!valid) {
-        logger.error(`invalid code challenge`, err)
+        logger.error(err, 'invalid code challenge')
         return h.response(err).code(401)
       }
     } else if (grantType === 'refresh_token') {
