@@ -157,7 +157,7 @@ const removeRelationshipController = {
     validate: {
       params: Joi.object({
         userId: Joi.string().uuid().required(),
-        relationshipId: Joi.string().uuid().required()
+        relationshipId: Joi.string().required()
       }),
       query: Joi.object({
         redirect_uri: Joi.string().uri().optional()
@@ -216,7 +216,7 @@ const makeCurrentRelationshipController = {
     validate: {
       params: Joi.object({
         userId: Joi.string().uuid().required(),
-        relationshipId: Joi.string().uuid().required()
+        relationshipId: Joi.string().required()
       }),
       query: Joi.object({
         redirect_uri: Joi.string().uri().optional()
