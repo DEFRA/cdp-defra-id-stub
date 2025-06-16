@@ -1,9 +1,9 @@
 import Joi from 'joi'
 
 const roleNameValidation = Joi.object({
-  csrfToken: Joi.string().uuid().required(),
+  csrfToken: Joi.string().required(),
   userId: Joi.string().uuid().required(),
-  relationshipId: Joi.string().uuid().required(),
+  relationshipId: Joi.string().required(),
   roleName: Joi.string().required(),
   roleStatus: Joi.string().required(),
   redirect_uri: Joi.string().uri().optional()

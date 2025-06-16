@@ -12,8 +12,8 @@ const userInfoController = {
     try {
       const decoded = jsonwebtoken.verify(token, request.keys.pem.publicKey)
       return h.response(decoded).code(200)
-    } catch (e) {
-      request.logger.error(e)
+    } catch (error) {
+      request.logger.error('failed to verify token', error)
       return h.response('invalid token').code(401)
     }
   }

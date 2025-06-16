@@ -1,6 +1,5 @@
 import * as crypto from 'crypto'
-import { defaultClaims } from '~/src/server/oidc/helpers/default-claims.js'
-import { oidcConfig } from '~/src/server/oidc/oidc-config.js'
+import { generateDefraIdToken } from '~/src/server/oidc/helpers/generate-defraid-token.js'
 import jsonwebtoken from 'jsonwebtoken'
 import { jwk2pem } from 'pem-jwk'
 import { createLogger } from '~/src/server/common/helpers/logging/logger.js'
@@ -80,12 +79,13 @@ function JWKS(keys) {
 }
 
 async function generateToken(keys, session, host, cache) {
-  const claim = await defaultClaims(session, oidcConfig.ttl, host, cache)
+  const claim = await generateDefraIdToken(session, host, cache)
   if (!claim) {
     logger.warn('No claim found')
     return null
   }
   logger.info('Claim found')
+
   return jsonwebtoken.sign(claim, keys.pem.privateKey, {
     algorithm: 'RS256',
     keyid: keys.keyId
@@ -93,7 +93,7 @@ async function generateToken(keys, session, host, cache) {
 }
 
 async function generateIDToken(keys, session, host, cache) {
-  const claim = await defaultClaims(session, oidcConfig.ttl, host, cache)
+  const claim = await generateDefraIdToken(session, host, cache)
   if (!claim) {
     logger.warn('No claim found')
     return null
@@ -106,7 +106,7 @@ async function generateIDToken(keys, session, host, cache) {
 }
 
 async function generateRefreshToken(keys, session, host, cache) {
-  const claim = await defaultClaims(session, oidcConfig.refreshTtl, host, cache)
+  const claim = await generateDefraIdToken(session, host, cache)
   if (!claim) {
     logger.warn('No claim found')
     return null

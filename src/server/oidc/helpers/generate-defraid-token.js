@@ -1,20 +1,15 @@
-import { findRegistrationByEmail } from '~/src/server/registration/helpers/find-registration.js'
 import { createLogger } from '~/src/server/common/helpers/logging/logger.js'
-import { findRelationships } from '~/src/server/registration/helpers/find-relationships.js'
 import { oidcConfig } from '~/src/server/oidc/oidc-config.js'
+import { randomUUID } from 'node:crypto'
+import { findRegistrationByEmail } from '~/src/server/registration/helpers/find-registration.js'
+import { findRelationships } from '~/src/server/registration/helpers/find-relationships.js'
 
 const logger = createLogger()
 
-async function defaultClaims(session, ttl, host, cache) {
-  let email
-  if (session.user?.email) {
-    email = session.user.email
-  } else if (session.user?.preferred_username) {
-    email = session.user.preferred_username
-  } else {
-    logger.warn('No email found for session user')
-    return null
-  }
+export async function generateDefraIdToken(session, host, cache) {
+  const email = session.user?.email ?? session.user?.preferred_username
+  const registration = await findRegistrationByEmail(email, cache)
+  const relationships = await findRelationships(registration?.userId, cache)
 
   if (!email) {
     logger.warn('No email found for user')
@@ -22,19 +17,16 @@ async function defaultClaims(session, ttl, host, cache) {
   }
   logger.debug({ email }, 'Email found')
 
-  const registration = await findRegistrationByEmail(email, cache)
-
   if (!registration) {
     logger.warn('No registration found for user email')
     return null
   }
   logger.info('Registration found')
 
-  const relationships = await findRelationships(registration.userId, cache)
   const relationshipIdsRow = relationships.map(
     (r) =>
       `${r.relationshipId}:${r.organisationId}:` +
-      `${r.organisationName}:0:${r.role}:0`
+      `${r.organisationName}:0:${r.relationshipRole}:0`
   )
   const rolesRow = relationships
     .filter((r) => r.roleName)
@@ -44,10 +36,10 @@ async function defaultClaims(session, ttl, host, cache) {
     id: registration.userId,
     sub: registration.userId,
     iss: host + oidcConfig.issuerBase, // issuer
-    correlationId: '34a5a23d-c50b-491e-9fe7-755500fc0e43', // TODO: Not sure where this is from
+    correlationId: randomUUID(),
     sessionId: session.sessionId,
     contactId: registration.contactId,
-    serviceId: 'cdp-defra-id-stub', // TODO: Should be UUID really
+    serviceId: 'e84a398b-8104-47a2-86ae-de1168e4132f', // TODO: confirm where this should be set.
     firstName: registration.firstName,
     lastName: registration.lastName,
     email,
@@ -57,9 +49,7 @@ async function defaultClaims(session, ttl, host, cache) {
     enrolmentCount: registration.enrolmentCount,
     enrolmentRequestCount: registration.enrolmentRequestCount,
     currentRelationshipId: registration.currentRelationshipId,
-    relationships: relationshipIdsRow.join(','),
-    roles: rolesRow.join(',')
+    relationships: relationshipIdsRow,
+    roles: rolesRow
   }
 }
-
-export { defaultClaims }

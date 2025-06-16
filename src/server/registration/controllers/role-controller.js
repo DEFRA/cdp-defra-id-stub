@@ -17,8 +17,8 @@ const addRoleNameController = {
     validate: {
       params: Joi.object({
         userId: Joi.string().uuid().required(),
-        relationshipId: Joi.string().uuid().required()
-      })
+        relationshipId: Joi.string().required()
+      }).unknown(true)
     }
   },
   handler: async (request, h) => {
@@ -77,7 +77,7 @@ const removeRoleNameController = {
     validate: {
       params: Joi.object({
         userId: Joi.string().uuid().required(),
-        relationshipId: Joi.string().uuid().required()
+        relationshipId: Joi.string().required()
       }),
       query: Joi.object({
         redirect_uri: Joi.string().uri().optional()
@@ -123,8 +123,8 @@ const showAddRoleNameController = {
     validate: {
       params: Joi.object({
         userId: Joi.string().uuid().required(),
-        relationshipId: Joi.string().uuid().required()
-      }),
+        relationshipId: Joi.string().required()
+      }).unknown(true),
       query: Joi.object({
         redirect_uri: Joi.string().uri().optional()
       })
