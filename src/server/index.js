@@ -13,9 +13,8 @@ import { addFlashMessagesToContext } from '~/src/server/common/helpers/add-flash
 
 const isProduction = config.get('isProduction')
 
-const cacheEngine = getCacheEngine()
-
 async function createServer() {
+  const cacheEngine = getCacheEngine(config.get('session.cache.engine'))
   const server = hapi.server({
     port: config.get('port'),
     routes: {
@@ -45,6 +44,10 @@ async function createServer() {
       {
         name: config.get('session.cache.name'),
         engine: cacheEngine
+      },
+      {
+        name: 'registrations',
+        engine: cacheEngine
       }
     ]
   })
@@ -56,11 +59,13 @@ async function createServer() {
   }
 
   const registrations = server.cache({
+    cache: 'registrations',
     segment: 'registration',
     expiresIn: 3 * 24 * 60 * 60 * 1000
   })
 
   server.decorate('request', 'registrations', registrations)
+  server.decorate('server', 'registrations', registrations)
 
   await server.register([sessionCache, nunjucksConfig])
 

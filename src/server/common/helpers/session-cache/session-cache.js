@@ -18,7 +18,8 @@ const sessionCache = {
     cookieOptions: {
       password: sessionConfig.cookie.password,
       ttl: sessionConfig.cookie.ttl,
-      isSecure: config.get('isProduction')
+      isSecure: sessionConfig.cookie.secure,
+      clearInvalid: true
     }
   }
 }

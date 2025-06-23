@@ -1,26 +1,24 @@
-import ecsFormat from '@elastic/ecs-pino-format'
+import { ecsFormat } from '@elastic/ecs-pino-format'
 
 import { config } from '~/src/config/index.js'
 
-const loggerOptions = {
-  enabled: !config.get('isTest'),
-  ignorePaths: ['/health', '/public', '/favicon.ico'],
-  redact: {
-    paths: [
-      'req',
-      'req.headers.authorization',
-      'req.headers.cookie',
-      'res.headers',
-      'responseTime',
-      'res.statusCode',
-      'res'
-    ],
-    remove: true
+const logConfig = config.get('log')
+
+const formatters = {
+  ecs: {
+    ...ecsFormat()
   },
-  level: config.get('logLevel'),
-  ...(config.get('isDevelopment')
-    ? { transport: { target: 'pino-pretty' } }
-    : ecsFormat())
+  'pino-pretty': { transport: { target: 'pino-pretty' } }
 }
 
-export { loggerOptions }
+export const loggerOptions = {
+  enabled: logConfig.enabled,
+  ignorePaths: ['/health'],
+  redact: {
+    paths: logConfig.redact,
+    remove: true
+  },
+  level: logConfig.level,
+  ...formatters[logConfig.format],
+  nesting: true
+}
