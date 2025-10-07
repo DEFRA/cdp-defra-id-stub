@@ -17,8 +17,6 @@ services:
     links:
       - 'redis:redis'
     depends_on:
-      localstack:
-        condition: service_healthy
       redis:
         condition: service_started
     environment:
