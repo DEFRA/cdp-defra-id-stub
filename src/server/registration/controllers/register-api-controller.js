@@ -149,7 +149,7 @@ async function addRelationship(userId, payload, cache) {
   const relationship = await newRelationship(userId, relationshipId, cache)
   relationship.organisationId = payload.relationshipId ?? crypto.randomUUID()
   relationship.organisationName = payload.organisationName
-  relationship.relationshipRoler = payload.relationshipRole
+  relationship.relationshipRole = payload.relationshipRole
   relationship.roleName = payload.roleName
   relationship.roleStatus = payload.roleStatus
   await storeRelationship(userId, relationshipId, relationship, cache)
