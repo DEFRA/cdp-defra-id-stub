@@ -16,5 +16,6 @@ export default {
     '<rootDir>/src/__fixtures__',
     '<rootDir>/src/server/common/test-helpers'
   ],
-  coverageDirectory: '<rootDir>/coverage'
+  coverageDirectory: '<rootDir>/coverage',
+  transformIgnorePatterns: ['node_modules/(?!@defra/hapi-tracing)']
 }

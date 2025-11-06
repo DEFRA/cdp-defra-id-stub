@@ -5,6 +5,7 @@ import { config } from '~/src/config/index.js'
 import { nunjucksConfig } from '~/src/config/nunjucks/index.js'
 import { router } from './router.js'
 import { requestLogger } from '~/src/server/common/helpers/logging/request-logger.js'
+import { requestTracing } from '~/src/server/common/helpers/request-tracing.js'
 import { catchAll } from '~/src/server/common/helpers/errors.js'
 import { secureContext } from '~/src/server/common/helpers/secure-context/index.js'
 import { sessionCache } from '~/src/server/common/helpers/session-cache/session-cache.js'
@@ -53,6 +54,7 @@ async function createServer() {
   })
 
   await server.register(requestLogger)
+  await server.register(requestTracing)
 
   if (isProduction) {
     await server.register(secureContext)

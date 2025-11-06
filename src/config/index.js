@@ -115,6 +115,14 @@ const config = convict({
         : []
     }
   },
+  tracing: {
+    header: {
+      doc: 'Which header to track for distributed tracing',
+      format: String,
+      default: 'x-cdp-request-id',
+      env: 'TRACING_HEADER'
+    }
+  },
   session: {
     cache: {
       engine: {
