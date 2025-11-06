@@ -2,6 +2,7 @@ import Joi from 'joi'
 
 import { oidcConfig } from '~/src/server/oidc/oidc-config.js'
 import { buildErrorDetails } from '~/src/server/common/helpers/build-error-details.js'
+import { formatErrorDetailsAsString } from '~/src/server/common/helpers/format-error-details.js'
 import { validateScope } from '~/src/server/oidc/helpers/validate-scope.js'
 import { newSession } from '~/src/server/oidc/helpers/session-store.js'
 import { findUser, findAllUsers } from '~/src/server/oidc/helpers/users.js'
@@ -15,7 +16,8 @@ const appBaseUrl = config.get('appBaseUrl')
 const authorizeController = {
   handler: async (request, h) => {
     const redirectUri = request.query?.redirect_uri
-    if (config.get('oidc.showLogin') && request.query.user === undefined) {
+    const userIdentifier = request.query.user || request.query.login_hint
+    if (config.get('oidc.showLogin') && !userIdentifier) {
       const requestUrl = `${appBaseUrl}${request.path}${request.url.search}`
       request.logger.debug({ requestUrl }, 'No user, redirect to login page')
 
@@ -40,12 +42,12 @@ const authorizeController = {
         formValues: request.query,
         formErrors: errorDetails
       })
-      return h
-        .response(`Unsupported payload ${errorDetails.join(',')}`)
-        .code(400)
+
+      const errorMessage = formatErrorDetailsAsString(errorDetails)
+      return h.response(`Unsupported payload: ${errorMessage}`).code(400)
     }
 
-    const loginUser = request.query.user
+    const loginUser = userIdentifier
     const clientId = request.query.client_id
     const responseType = request.query.response_type
     const { scope, state } = request.query
@@ -84,7 +86,7 @@ const authorizeController = {
 
     const user = await findUser(loginUser, request.registrations)
     if (user === undefined) {
-      request.logger.error(`Invalid user selected ${request.query.user}`)
+      request.logger.error(`Invalid user selected ${loginUser}`)
       return h.response(`Invalid user selection!`).code(400)
     }
 
