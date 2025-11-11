@@ -32,6 +32,10 @@ export async function generateDefraIdToken(session, host, cache) {
     .filter((r) => r.roleName)
     .map((r) => `${r.relationshipId}:${r.roleName}:${r.roleStatus}`)
 
+  // Use session's selected relationship if available, otherwise fall back to registration's current
+  const currentRelationshipId =
+    session.relationshipId || registration.currentRelationshipId
+
   return {
     id: registration.userId,
     sub: registration.userId,
@@ -48,7 +52,7 @@ export async function generateDefraIdToken(session, host, cache) {
     aal: registration.aal,
     enrolmentCount: registration.enrolmentCount,
     enrolmentRequestCount: registration.enrolmentRequestCount,
-    currentRelationshipId: registration.currentRelationshipId,
+    currentRelationshipId,
     relationships: relationshipIdsRow,
     roles: rolesRow
   }

@@ -10,7 +10,8 @@ const loginValidation = Joi.object({
   scope: Joi.string().required(),
   code_challenge_method: Joi.string().optional(),
   code_challenge: Joi.string().optional(),
-  nonce: Joi.string().optional()
+  nonce: Joi.string().optional(),
+  forceReselection: Joi.string().optional()
 })
 
 export { loginValidation }
