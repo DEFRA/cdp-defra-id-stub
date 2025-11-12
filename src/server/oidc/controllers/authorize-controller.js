@@ -1,13 +1,14 @@
 import Joi from 'joi'
 
-import { oidcConfig } from '~/src/server/oidc/oidc-config.js'
-import { buildErrorDetails } from '~/src/server/common/helpers/build-error-details.js'
-import { validateScope } from '~/src/server/oidc/helpers/validate-scope.js'
-import { newSession } from '~/src/server/oidc/helpers/session-store.js'
-import { findUser, findAllUsers } from '~/src/server/oidc/helpers/users.js'
-import { renderLoginPage } from '~/src/server/oidc/helpers/render-login-page.js'
 import { config } from '~/src/config/index.js'
+import { buildErrorDetails } from '~/src/server/common/helpers/build-error-details.js'
+import { renderLoginPage } from '~/src/server/oidc/helpers/render-login-page.js'
 import { loginValidation } from '~/src/server/oidc/helpers/schemas/login-validation.js'
+import { newSession } from '~/src/server/oidc/helpers/session-store.js'
+import { findAllUsers, findUser } from '~/src/server/oidc/helpers/users.js'
+import { validateScope } from '~/src/server/oidc/helpers/validate-scope.js'
+import { oidcBasePath, oidcConfig } from '~/src/server/oidc/oidc-config.js'
+import { findRelationships } from '~/src/server/registration/helpers/find-relationships.js'
 import { registrationAction } from '~/src/server/registration/helpers/registration-paths.js'
 
 const appBaseUrl = config.get('appBaseUrl')
@@ -15,7 +16,15 @@ const appBaseUrl = config.get('appBaseUrl')
 const authorizeController = {
   handler: async (request, h) => {
     const redirectUri = request.query?.redirect_uri
-    if (config.get('oidc.showLogin') && request.query.user === undefined) {
+
+    // Check for cached authenticated user in session (SSO behavior)
+    const cachedUserEmail = request.yar.get('authenticated_user')
+
+    if (
+      config.get('oidc.showLogin') &&
+      request.query.user === undefined &&
+      !cachedUserEmail
+    ) {
       const requestUrl = `${appBaseUrl}${request.path}${request.url.search}`
       request.logger.debug({ requestUrl }, 'No user, redirect to login page')
 
@@ -45,7 +54,8 @@ const authorizeController = {
         .code(400)
     }
 
-    const loginUser = request.query.user
+    // Use cached user email if no user query param provided (SSO behavior)
+    const loginUser = request.query.user || cachedUserEmail
     const clientId = request.query.client_id
     const responseType = request.query.response_type
     const { scope, state } = request.query
@@ -88,13 +98,39 @@ const authorizeController = {
       return h.response(`Invalid user selection!`).code(400)
     }
 
+    // Store authenticated user in session for SSO behavior
+    request.yar.set('authenticated_user', user.email)
+
+    const originalAuthorizeUrl = `${appBaseUrl}${request.path}${request.url.search}`
+    const forceReselection = request.query.forceReselection === 'true'
+
     const session = newSession(
       scope,
       request.query.nonce,
       user,
       request.query.code_challenge,
-      request.query.code_challenge_method
+      request.query.code_challenge_method,
+      forceReselection,
+      originalAuthorizeUrl,
+      redirectUri,
+      state
     )
+
+    // Check if user has relationships and need to select organisation
+    const relationships = await findRelationships(
+      user.userId,
+      request.registrations
+    )
+
+    if (relationships && relationships.length > 0 && !session.relationshipId) {
+      request.logger.info(
+        { userId: user.userId, relationshipCount: relationships.length },
+        'User has relationships, redirect to organisation picker'
+      )
+      return h.redirect(
+        `${oidcBasePath}/organisations?sessionId=${session.sessionId}`
+      )
+    }
 
     const location = new URL(redirectUri)
     location.searchParams.append('code', session.sessionId)

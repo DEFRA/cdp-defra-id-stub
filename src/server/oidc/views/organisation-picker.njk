@@ -1,0 +1,37 @@
+{% extends "layouts/page.njk" %}
+
+{% block content %}
+  {{ appHeading({
+    title: "Choose a business",
+    caption: "DEFRA ID Stub"
+  }) }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <div class="govuk-body" data-testid="app-page-body">
+
+        <form action="{{ action }}" method="post">
+          <input type="hidden" name="csrfToken" value="{{ csrfToken }}"/>
+          <input type="hidden" name="sessionId" value="{{ sessionId }}"/>
+
+          {{ govukRadios({
+            name: "relationshipId",
+            fieldset: {
+              legend: {
+                text: "Select your organisation",
+                classes: "govuk-fieldset__legend--m"
+              }
+            },
+            items: organisationItems
+          }) }}
+
+          {{ govukButton({
+            text: "Continue"
+          }) }}
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

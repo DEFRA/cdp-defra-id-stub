@@ -1,18 +1,22 @@
-import { oidcBasePath } from '~/src/server/oidc/oidc-config.js'
-import { openIdConfigurationController } from '~/src/server/oidc/controllers/well-known-openid-configuration.js'
-import { jwksController } from '~/src/server/oidc/controllers/well-known-jwks.js'
+import { config } from '~/src/config/index.js'
 import {
   authorizeController,
   loginController
 } from '~/src/server/oidc/controllers/authorize-controller.js'
+import { logoutController } from '~/src/server/oidc/controllers/logout-controller.js'
+import {
+  selectOrganisationController,
+  showOrganisationPickerController
+} from '~/src/server/oidc/controllers/organisation-controller.js'
 import { tokenController } from '~/src/server/oidc/controllers/token-controller.js'
+import { userInfoController } from '~/src/server/oidc/controllers/user-info-controller.js'
+import { jwksController } from '~/src/server/oidc/controllers/well-known-jwks.js'
+import { openIdConfigurationController } from '~/src/server/oidc/controllers/well-known-openid-configuration.js'
 import {
   generateRandomKeypair,
   loadKeyPair
 } from '~/src/server/oidc/helpers/oidc-crypto.js'
-import { userInfoController } from '~/src/server/oidc/controllers/user-info-controller.js'
-import { config } from '~/src/config/index.js'
-import { logoutController } from '~/src/server/oidc/controllers/logout-controller.js'
+import { oidcBasePath } from '~/src/server/oidc/oidc-config.js'
 
 const oidc = {
   plugin: {
@@ -55,6 +59,16 @@ const oidc = {
           method: 'GET',
           path: `${oidcBasePath}/login`,
           ...loginController
+        },
+        {
+          method: 'GET',
+          path: `${oidcBasePath}/organisations`,
+          ...showOrganisationPickerController
+        },
+        {
+          method: 'POST',
+          path: `${oidcBasePath}/organisations`,
+          ...selectOrganisationController
         },
         {
           method: 'POST',

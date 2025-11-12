@@ -10,7 +10,17 @@ function getSessionId() {
   return crypto.randomUUID()
 }
 
-function newSession(scope, nonce, user, challenge, challengeMethod) {
+function newSession(
+  scope,
+  nonce,
+  user,
+  challenge,
+  challengeMethod,
+  forceReselection,
+  originalAuthorizeUrl,
+  redirectUri,
+  state
+) {
   const id = getSessionId()
 
   sessions[id] = {
@@ -20,7 +30,11 @@ function newSession(scope, nonce, user, challenge, challengeMethod) {
     user,
     granted: false,
     codeChallenge: challenge,
-    codeChallengeMethod: challengeMethod
+    codeChallengeMethod: challengeMethod,
+    forceReselection,
+    originalAuthorizeUrl: originalAuthorizeUrl || '',
+    redirectUri: redirectUri || '',
+    state: state || ''
   }
 
   logger.info(`Creating a new session ${JSON.stringify(sessions[id])}`)
@@ -34,4 +48,4 @@ function getSessionByToken(token) {
   return sessions[sessionId]
 }
 
-export { sessions, newSession, getSessionByToken }
+export { getSessionByToken, newSession, sessions }
