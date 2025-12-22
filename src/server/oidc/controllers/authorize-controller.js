@@ -49,9 +49,13 @@ const authorizeController = {
         formValues: request.query,
         formErrors: errorDetails
       })
-      return h
-        .response(`Unsupported payload ${errorDetails.join(',')}`)
-        .code(400)
+
+      // Extract error messages from the errorDetails object
+      const errorMessages = Object.entries(errorDetails)
+        .map(([field, error]) => `${field}: ${error.message}`)
+        .join(', ')
+
+      return h.response(`Unsupported payload: ${errorMessages}`).code(400)
     }
 
     // Use cached user email if no user query param provided (SSO behavior)
