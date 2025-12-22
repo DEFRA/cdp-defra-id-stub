@@ -36,11 +36,17 @@ export async function generateDefraIdToken(session, host, cache) {
   const currentRelationshipId =
     session.relationshipId || registration.currentRelationshipId
 
+  // Calculate token timestamps (in seconds)
+  const now = Math.floor(Date.now() / 1000)
+  const expiresAt = now + oidcConfig.ttl
+
   return {
     id: registration.userId,
     aud: oidcConfig.clientId,
     sub: registration.userId,
     iss: host + oidcConfig.issuerBase, // issuer
+    nbf: now, // not before - token is valid from now
+    exp: expiresAt, // expiration - token expires after ttl seconds
     correlationId: randomUUID(),
     sessionId: session.sessionId,
     contactId: registration.contactId,
