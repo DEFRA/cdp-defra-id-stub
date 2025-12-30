@@ -14,8 +14,8 @@ const fullRegistrationValidation = Joi.object({
   relationships: Joi.array()
     .items(
       Joi.object({
-        relationshipId: Joi.string().optional(),
-        organisationId: Joi.string().optional(),
+        relationshipId: Joi.string().uuid().optional(),
+        organisationId: Joi.string().uuid().optional(),
         organisationName: Joi.string().required(),
         relationshipRole: Joi.string().required(),
         roleName: Joi.string().optional(),

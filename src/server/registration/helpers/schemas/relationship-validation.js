@@ -3,8 +3,8 @@ import Joi from 'joi'
 const relationshipValidation = Joi.object({
   csrfToken: Joi.string().uuid().required(),
   userId: Joi.string().uuid().required(),
-  relationshipId: Joi.string().required(),
-  organisationId: Joi.string(),
+  relationshipId: Joi.string().uuid().required(),
+  organisationId: Joi.string().uuid(),
   organisationName: Joi.string().required(),
   relationshipRole: Joi.string().required(),
   roleName: Joi.string().optional(),
