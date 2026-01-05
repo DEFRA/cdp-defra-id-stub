@@ -1,14 +1,22 @@
-import { oidcConfig } from '~/src/server/oidc/oidc-config.js'
-import {
-  getSessionByToken,
-  sessions
-} from '~/src/server/oidc/helpers/session-store.js'
+import { config } from '~/src/config/index.js'
 import {
   generateIDToken,
   generateRefreshToken,
   generateToken
 } from '~/src/server/oidc/helpers/oidc-crypto.js'
+import {
+  getSessionByToken,
+  sessions
+} from '~/src/server/oidc/helpers/session-store.js'
 import { validateCodeChallenge } from '~/src/server/oidc/helpers/validate-code-challenge.js'
+import { oidcConfig } from '~/src/server/oidc/oidc-config.js'
+
+export const getHost = (request) => {
+  const baseUrl = config.get('appBaseUrl')
+  const { protocol } = new URL(baseUrl)
+
+  return `${protocol}//${request.info.host}`
+}
 
 const tokenController = {
   handler: async (request, h) => {
@@ -21,7 +29,6 @@ const tokenController = {
     const code = request.payload.code
     const refreshToken = request.payload.refresh_token
     const codeVerifier = request.payload.code_verifier
-    const host = `http://${request.info.host}`
 
     if (clientId !== oidcConfig.clientId) {
       logger.warn(`Invalid client id ${clientId}`)
@@ -74,6 +81,8 @@ const tokenController = {
       logger.info(`refresh token ${refreshToken}`)
       tokenResponse.refresh_token = refreshToken
     }
+
+    const host = getHost(request)
 
     tokenResponse.access_token = await generateToken(
       request.keys,
