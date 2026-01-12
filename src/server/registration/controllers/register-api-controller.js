@@ -68,7 +68,7 @@ const registerApiController = {
         )
 
         if (userId !== regWithEmail.userId) {
-          removeRegistration(regWithEmail.userId)
+          removeRegistration(regWithEmail.userId, request.registrations)
         }
       }
 
