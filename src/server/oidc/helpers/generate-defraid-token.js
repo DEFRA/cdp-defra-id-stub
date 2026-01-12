@@ -47,6 +47,7 @@ export async function generateDefraIdToken(session, host, cache) {
     iss: host + oidcConfig.issuerBase, // issuer
     nbf: now, // not before - token is valid from now
     exp: expiresAt, // expiration - token expires after ttl seconds
+    jti: session.sessionId,
     correlationId: randomUUID(),
     sessionId: session.sessionId,
     contactId: registration.contactId,
