@@ -1,4 +1,4 @@
-ARG PARENT_VERSION=2.2.2-node20.11.1
+ARG PARENT_VERSION=2.10.3-node24.12.0
 ARG PORT=3000
 ARG PORT_DEBUG=9229
 
@@ -21,7 +21,7 @@ RUN npm run build
 
 CMD [ "npm", "run", "docker:dev" ]
 
-FROM development as productionBuild
+FROM development AS productionBuild
 
 ENV NODE_ENV production
 
