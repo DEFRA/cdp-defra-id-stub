@@ -21,7 +21,7 @@ RUN npm run build
 
 CMD [ "npm", "run", "docker:dev" ]
 
-FROM development AS productionBuild
+FROM development AS production-build
 
 ENV NODE_ENV production
 
@@ -41,9 +41,9 @@ USER node
 ARG PARENT_VERSION
 LABEL uk.gov.defra.ffc.parent-image=defradigital/node:${PARENT_VERSION}
 
-COPY --from=productionBuild /home/node/package*.json ./
-COPY --from=productionBuild /home/node/.server ./.server/
-COPY --from=productionBuild /home/node/.public/ ./.public/
+COPY --from=production-build /home/node/package*.json ./
+COPY --from=production-build /home/node/.server ./.server/
+COPY --from=production-build /home/node/.public/ ./.public/
 
 RUN npm ci --omit=dev
 
