@@ -1,5 +1,4 @@
 import { cacheKeys } from '~/src/server/registration/helpers/cache-keys.js'
-import { asyncMap } from '~/src/server/common/helpers/async-map.js'
 import { createLogger } from '~/src/server/common/helpers/logging/logger.js'
 
 const logger = createLogger()
@@ -10,15 +9,23 @@ async function findRegistration(userId, cache) {
 
 async function findRegistrations(cache) {
   const allUserIds = (await cache.get(cacheKeys.registrationIds)) ?? []
-  const registrations = await asyncMap(allUserIds, async (id) => {
+
+  const registrations = []
+
+  for (const id of allUserIds) {
     const reg = await findRegistration(id, cache)
-    if (!reg) {
-      logger.error(
-        `Registration not found: [${id}], but in registration-ids list`
-      )
+    if (reg) {
+      registrations.push(reg)
     }
-    return reg
-  })
+  }
+
+  if (registrations.length < allUserIds.length) {
+    logger.error(
+      `${allUserIds.length - registrations.length} registrations missing, updating cache`
+    )
+    await cache.set(cacheKeys.registrationIds, registrations)
+  }
+
   return registrations.filter((r) => r)
 }
 
