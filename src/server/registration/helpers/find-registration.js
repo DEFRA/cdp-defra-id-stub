@@ -21,9 +21,8 @@ async function findRegistrations(cache) {
 
   if (registrations.length < allUserIds.length) {
     logger.error(
-      `${allUserIds.length - registrations.length} registrations missing, updating cache`
+      `${allUserIds.length - registrations.length} registrations missing`
     )
-    await cache.set(cacheKeys.registrationIds, registrations)
   }
 
   return registrations.filter((r) => r)
