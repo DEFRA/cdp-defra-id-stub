@@ -1,7 +1,7 @@
 import { config } from '~/src/config/index.js'
 import { oidcConfig } from '~/src/server/oidc/oidc-config.js'
 
-const appBaseUrl = config.get('appBaseUrl')
+const appBaseUrl = config.get('oidc.baseUrl') || config.get('appBaseUrl')
 
 const appOidcConfig = {
   issuer: appBaseUrl + oidcConfig.issuerBase,

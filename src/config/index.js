@@ -198,6 +198,13 @@ const config = convict({
     }
   },
   oidc: {
+    baseUrl: {
+      doc: 'Application base URL for OIDC config if different from APP_BASE_URL',
+      format: String,
+      default: null,
+      nullable: true,
+      env: 'OIDC_APP_BASE_URL'
+    },
     basePath: {
       doc: 'the base path all oidc stubs will be served from',
       format: String,
