@@ -1,6 +1,6 @@
 import { ecsFormat } from '@elastic/ecs-pino-format'
 
-import { config } from '~/src/config/index.js'
+import { config } from '#config/index.js'
 
 const logConfig = config.get('log')
 

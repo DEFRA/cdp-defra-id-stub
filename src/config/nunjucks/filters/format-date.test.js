@@ -1,13 +1,13 @@
-import { formatDate } from '~/src/config/nunjucks/filters/format-date.js'
+import { formatDate } from '#config/nunjucks/filters/format-date.js'
 
 describe('#formatDate', () => {
   beforeAll(() => {
-    jest.useFakeTimers('modern')
-    jest.setSystemTime(new Date('2023-04-01'))
+    vi.useFakeTimers('modern')
+    vi.setSystemTime(new Date('2023-04-01'))
   })
 
   afterAll(() => {
-    jest.useRealTimers()
+    vi.useRealTimers()
   })
 
   describe('With defaults', () => {

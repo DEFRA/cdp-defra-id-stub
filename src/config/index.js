@@ -74,20 +74,6 @@ const config = convict({
     default: 'info',
     env: 'LOG_LEVEL'
   },
-  httpProxy: {
-    doc: 'HTTP Proxy',
-    format: String,
-    nullable: true,
-    default: null,
-    env: 'HTTP_PROXY'
-  },
-  httpsProxy: {
-    doc: 'HTTPS Proxy',
-    format: String,
-    nullable: true,
-    default: null,
-    env: 'HTTP_PROXY'
-  },
   log: {
     enabled: {
       doc: 'Is logging enabled',
@@ -195,6 +181,14 @@ const config = convict({
       format: Boolean,
       default: isProduction,
       env: 'REDIS_TLS'
+    }
+  },
+  tracing: {
+    header: {
+      doc: 'Which header to track',
+      format: String,
+      default: 'x-cdp-request-id',
+      env: 'TRACING_HEADER'
     }
   },
   oidc: {

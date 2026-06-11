@@ -1,4 +1,4 @@
-import { generateCodeChallenge } from '~/src/server/oidc/helpers/oidc-crypto.js'
+import { generateCodeChallenge } from '#server/oidc/helpers/oidc-crypto.js'
 
 function validateCodeChallenge(session, codeVerifier) {
   if (

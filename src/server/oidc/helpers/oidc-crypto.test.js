@@ -1,7 +1,7 @@
 import {
   generateCodeChallenge,
   sha256
-} from '~/src/server/oidc/helpers/oidc-crypto.js'
+} from '#server/oidc/helpers/oidc-crypto.js'
 
 describe('sha256', () => {
   it('should produce a valid url-safe base 64 hash in', () => {

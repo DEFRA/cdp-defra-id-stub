@@ -1,7 +1,7 @@
 import * as crypto from 'crypto'
-import { sessions } from '~/src/server/oidc/helpers/session-store.js'
-import { oidcBasePath } from '~/src/server/oidc/oidc-config.js'
-import { findRelationships } from '~/src/server/registration/helpers/find-relationships.js'
+import { sessions } from '#server/oidc/helpers/session-store.js'
+import { oidcBasePath } from '#server/oidc/oidc-config.js'
+import { findRelationships } from '#server/registration/helpers/find-relationships.js'
 
 const showOrganisationPickerController = {
   handler: async (request, h) => {

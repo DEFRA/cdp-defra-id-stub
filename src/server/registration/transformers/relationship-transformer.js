@@ -1,7 +1,7 @@
 import {
   addRoleNamePath,
   removeRoleNamePath
-} from '~/src/server/registration/helpers/role-name-link.js'
+} from '#server/registration/helpers/role-name-link.js'
 
 const removeAction = (relationship, queryString) => {
   return {

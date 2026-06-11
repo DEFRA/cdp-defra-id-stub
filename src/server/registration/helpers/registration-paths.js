@@ -1,6 +1,6 @@
-import { config } from '~/src/config/index.js'
-import { oidcBasePath } from '~/src/server/oidc/oidc-config.js'
-import { includeRedirect } from '~/src/server/registration/helpers/include-redirect.js'
+import { config } from '#config/index.js'
+import { oidcBasePath } from '#server/oidc/oidc-config.js'
+import { includeRedirect } from '#server/registration/helpers/include-redirect.js'
 
 const appBaseUrl = config.get('appBaseUrl')
 

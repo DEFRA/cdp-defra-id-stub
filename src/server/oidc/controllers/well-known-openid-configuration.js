@@ -1,5 +1,5 @@
-import { config } from '~/src/config/index.js'
-import { oidcConfig } from '~/src/server/oidc/oidc-config.js'
+import { config } from '#config/index.js'
+import { oidcConfig } from '#server/oidc/oidc-config.js'
 
 const appBaseUrl = config.get('oidc.baseUrl') || config.get('appBaseUrl')
 

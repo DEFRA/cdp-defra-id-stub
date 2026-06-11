@@ -1,7 +1,7 @@
-import { asyncMap } from '~/src/server/common/helpers/async-map.js'
-import { removeFromCachedArray } from '~/src/server/common/helpers/remove-from-cached-array.js'
-import { cacheKeys } from '~/src/server/registration/helpers/cache-keys.js'
-import { findRelationships } from '~/src/server/registration/helpers/find-relationships.js'
+import { asyncMap } from '#server/common/helpers/async-map.js'
+import { removeFromCachedArray } from '#server/common/helpers/remove-from-cached-array.js'
+import { cacheKeys } from '#server/registration/helpers/cache-keys.js'
+import { findRelationships } from '#server/registration/helpers/find-relationships.js'
 
 async function removeRelationship(userId, relationshipId, cache) {
   await removeFromCachedArray(

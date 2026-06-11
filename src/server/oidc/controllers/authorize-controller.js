@@ -1,15 +1,15 @@
 import Joi from 'joi'
 
-import { config } from '~/src/config/index.js'
-import { buildErrorDetails } from '~/src/server/common/helpers/build-error-details.js'
-import { renderLoginPage } from '~/src/server/oidc/helpers/render-login-page.js'
-import { loginValidation } from '~/src/server/oidc/helpers/schemas/login-validation.js'
-import { newSession } from '~/src/server/oidc/helpers/session-store.js'
-import { findAllUsers, findUser } from '~/src/server/oidc/helpers/users.js'
-import { validateScope } from '~/src/server/oidc/helpers/validate-scope.js'
-import { oidcBasePath, oidcConfig } from '~/src/server/oidc/oidc-config.js'
-import { findRelationships } from '~/src/server/registration/helpers/find-relationships.js'
-import { registrationAction } from '~/src/server/registration/helpers/registration-paths.js'
+import { config } from '#config/index.js'
+import { buildErrorDetails } from '#server/common/helpers/build-error-details.js'
+import { renderLoginPage } from '#server/oidc/helpers/render-login-page.js'
+import { loginValidation } from '#server/oidc/helpers/schemas/login-validation.js'
+import { newSession } from '#server/oidc/helpers/session-store.js'
+import { findAllUsers, findUser } from '#server/oidc/helpers/users.js'
+import { validateScope } from '#server/oidc/helpers/validate-scope.js'
+import { oidcBasePath, oidcConfig } from '#server/oidc/oidc-config.js'
+import { findRelationships } from '#server/registration/helpers/find-relationships.js'
+import { registrationAction } from '#server/registration/helpers/registration-paths.js'
 
 const appBaseUrl = config.get('appBaseUrl')
 

@@ -1,26 +1,26 @@
-import { oidcBasePath } from '~/src/server/oidc/oidc-config.js'
+import { oidcBasePath } from '#server/oidc/oidc-config.js'
 import {
   showRegistrationController,
   registrationController,
   showExistingRegistrationController,
   updateRegistrationController
-} from '~/src/server/registration/controllers/registration-controller.js'
-import { summaryRegistrationController } from '~/src/server/registration/controllers/summary-controller.js'
+} from '#server/registration/controllers/registration-controller.js'
+import { summaryRegistrationController } from '#server/registration/controllers/summary-controller.js'
 import {
   showRelationshipListController,
   addRelationshipController,
   makeCurrentRelationshipController,
   removeRelationshipController
-} from '~/src/server/registration/controllers/relationship-controller.js'
-import { expireRegistrationApiController } from '~/src/server/registration/controllers/expire-registration-api-controller.js'
-import { expireRegistrationController } from '~/src/server/registration/controllers/expire-registration-controller.js'
-import { findRegistrationApiController } from '~/src/server/registration/controllers/find-registration-api-controller.js'
-import { registerApiController } from '~/src/server/registration/controllers/register-api-controller.js'
+} from '#server/registration/controllers/relationship-controller.js'
+import { expireRegistrationApiController } from '#server/registration/controllers/expire-registration-api-controller.js'
+import { expireRegistrationController } from '#server/registration/controllers/expire-registration-controller.js'
+import { findRegistrationApiController } from '#server/registration/controllers/find-registration-api-controller.js'
+import { registerApiController } from '#server/registration/controllers/register-api-controller.js'
 import {
   addRoleNameController,
   removeRoleNameController,
   showAddRoleNameController
-} from '~/src/server/registration/controllers/role-controller.js'
+} from '#server/registration/controllers/role-controller.js'
 
 const registration = {
   plugin: {

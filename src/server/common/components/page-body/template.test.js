@@ -1,4 +1,4 @@
-import { renderComponent } from '~/src/server/common/test-helpers/component-helpers.js'
+import { renderComponent } from '#server/common/test-helpers/component-helpers.js'
 
 describe('Page Body Component', () => {
   let $pageBody

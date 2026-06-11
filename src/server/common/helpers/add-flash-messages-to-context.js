@@ -1,4 +1,4 @@
-import { sessionNames } from '~/src/server/common/constants/session-names.js'
+import { sessionNames } from '#server/common/constants/session-names.js'
 
 async function addFlashMessagesToContext(request, h) {
   const response = request.response

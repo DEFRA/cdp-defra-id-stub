@@ -1,8 +1,8 @@
 import {
   findRegistrations,
   findRegistrationByEmail
-} from '~/src/server/registration/helpers/find-registration.js'
-import { createLogger } from '~/src/server/common/helpers/logging/logger.js'
+} from '#server/registration/helpers/find-registration.js'
+import { createLogger } from '#server/common/helpers/logging/logger.js'
 
 const logger = createLogger()
 

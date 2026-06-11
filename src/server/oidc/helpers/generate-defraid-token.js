@@ -1,8 +1,8 @@
-import { createLogger } from '~/src/server/common/helpers/logging/logger.js'
-import { oidcConfig } from '~/src/server/oidc/oidc-config.js'
+import { createLogger } from '#server/common/helpers/logging/logger.js'
+import { oidcConfig } from '#server/oidc/oidc-config.js'
 import { randomUUID } from 'node:crypto'
-import { findRegistrationByEmail } from '~/src/server/registration/helpers/find-registration.js'
-import { findRelationships } from '~/src/server/registration/helpers/find-relationships.js'
+import { findRegistrationByEmail } from '#server/registration/helpers/find-registration.js'
+import { findRelationships } from '#server/registration/helpers/find-relationships.js'
 
 const logger = createLogger()
 

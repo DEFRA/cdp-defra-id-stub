@@ -1,27 +1,27 @@
 import * as crypto from 'crypto'
 import Joi from 'joi'
 
-import { buildErrorDetails } from '~/src/server/common/helpers/build-error-details.js'
-import { relationshipValidation } from '~/src/server/registration/helpers/schemas/relationship-validation.js'
-import { findRegistration } from '~/src/server/registration/helpers/find-registration.js'
-import { updateRegistration } from '~/src/server/registration/helpers/update-registration.js'
-import { removeRelationship } from '~/src/server/registration/helpers/remove-relationship.js'
+import { buildErrorDetails } from '#server/common/helpers/build-error-details.js'
+import { relationshipValidation } from '#server/registration/helpers/schemas/relationship-validation.js'
+import { findRegistration } from '#server/registration/helpers/find-registration.js'
+import { updateRegistration } from '#server/registration/helpers/update-registration.js'
+import { removeRelationship } from '#server/registration/helpers/remove-relationship.js'
 import {
   findRelationship,
   findNonCurrentRelationships
-} from '~/src/server/registration/helpers/find-relationships.js'
+} from '#server/registration/helpers/find-relationships.js'
 import {
   newRelationship,
   storeRelationship
-} from '~/src/server/registration/helpers/new-relationship.js'
-import { transformRelationships } from '~/src/server/registration/transformers/relationship-transformer.js'
-import { redirectSearchParam } from '~/src/server/registration/helpers/include-redirect.js'
+} from '#server/registration/helpers/new-relationship.js'
+import { transformRelationships } from '#server/registration/transformers/relationship-transformer.js'
+import { redirectSearchParam } from '#server/registration/helpers/include-redirect.js'
 import {
   relationshipPath,
   registrationPath,
   summaryPath
-} from '~/src/server/registration/helpers/registration-paths.js'
-import { oidcBasePath } from '~/src/server/oidc/oidc-config.js'
+} from '#server/registration/helpers/registration-paths.js'
+import { oidcBasePath } from '#server/oidc/oidc-config.js'
 
 const addRelationshipController = {
   options: {

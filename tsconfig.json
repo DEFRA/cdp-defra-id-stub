@@ -4,7 +4,9 @@
     "module": "NodeNext",
     "noEmit": true,
     "paths": {
-      "~/*": ["./*"]
+      "#config/*": ["./src/config/*"],
+      "#server/*": ["./src/server/*"],
+      "#__fixtures__/*": ["./src/__fixtures__/*"]
     },
     "resolveJsonModule": true
   },

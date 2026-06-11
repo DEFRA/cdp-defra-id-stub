@@ -1,8 +1,5 @@
-import {
-  homeController,
-  goHomeController
-} from '~/src/server/home/controller.js'
-import { oidcBasePath } from '~/src/server/oidc/oidc-config.js'
+import { homeController, goHomeController } from '#server/home/controller.js'
+import { oidcBasePath } from '#server/oidc/oidc-config.js'
 
 const home = {
   plugin: {
