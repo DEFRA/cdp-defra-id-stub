@@ -2,7 +2,7 @@ import {
   findRegistration,
   findRegistrationByEmail,
   findRegistrations
-} from '~/src/server/registration/helpers//find-registration.js'
+} from '#server/registration/helpers/find-registration.js'
 
 const registration = {
   userId: 'someUserId',
@@ -17,7 +17,7 @@ const otherRegistration = {
 describe('#findRegistration', () => {
   test('Should return registration if found', async () => {
     const cache = {
-      get: jest.fn((k) => {
+      get: vi.fn((k) => {
         return registration
       })
     }
@@ -30,7 +30,7 @@ describe('#findRegistration', () => {
 
   test('Should return nothing if not found', async () => {
     const cache = {
-      get: jest.fn()
+      get: vi.fn()
     }
 
     const result = await findRegistration('someUserId', cache)
@@ -41,7 +41,7 @@ describe('#findRegistration', () => {
 
 describe('#findRegistrations', () => {
   test('Should return registrations', async () => {
-    const mockCache = jest.fn()
+    const mockCache = vi.fn()
     const cache = {
       get: mockCache
     }
@@ -59,7 +59,7 @@ describe('#findRegistrations', () => {
 
 describe('#findRegistrationByEmail', () => {
   test('Should only return registration with that email', async () => {
-    const mockCache = jest.fn()
+    const mockCache = vi.fn()
     const cache = {
       get: mockCache
     }
@@ -74,7 +74,7 @@ describe('#findRegistrationByEmail', () => {
   })
 
   test('Should not return registration if none with that email', async () => {
-    const mockCache = jest.fn()
+    const mockCache = vi.fn()
     const cache = {
       get: mockCache
     }

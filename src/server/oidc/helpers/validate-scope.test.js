@@ -1,4 +1,4 @@
-import { validateScope } from '~/src/server/oidc/helpers/validate-scope.js'
+import { validateScope } from '#server/oidc/helpers/validate-scope.js'
 
 describe('validateScope function', () => {
   it('should return an empty array for valid scopes', () => {

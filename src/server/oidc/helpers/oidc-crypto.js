@@ -1,8 +1,8 @@
 import * as crypto from 'crypto'
-import { generateDefraIdToken } from '~/src/server/oidc/helpers/generate-defraid-token.js'
+import { generateDefraIdToken } from '#server/oidc/helpers/generate-defraid-token.js'
 import jsonwebtoken from 'jsonwebtoken'
 import { jwk2pem } from 'pem-jwk'
-import { createLogger } from '~/src/server/common/helpers/logging/logger.js'
+import { createLogger } from '#server/common/helpers/logging/logger.js'
 
 const logger = createLogger()
 

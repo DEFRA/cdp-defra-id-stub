@@ -1,7 +1,7 @@
 import Joi from 'joi'
 
-import { findRegistration } from '~/src/server/registration/helpers/find-registration.js'
-import { findRelationships } from '~/src/server/registration/helpers/find-relationships.js'
+import { findRegistration } from '#server/registration/helpers/find-registration.js'
+import { findRelationships } from '#server/registration/helpers/find-relationships.js'
 
 const findRegistrationApiController = {
   options: {

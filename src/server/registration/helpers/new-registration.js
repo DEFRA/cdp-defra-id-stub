@@ -1,6 +1,6 @@
-import { addToCachedArray } from '~/src/server/common/helpers/add-to-cached-array.js'
-import { cacheKeys } from '~/src/server/registration/helpers/cache-keys.js'
-import { createLogger } from '~/src/server/common/helpers/logging/logger.js'
+import { addToCachedArray } from '#server/common/helpers/add-to-cached-array.js'
+import { cacheKeys } from '#server/registration/helpers/cache-keys.js'
+import { createLogger } from '#server/common/helpers/logging/logger.js'
 
 const logger = createLogger()
 

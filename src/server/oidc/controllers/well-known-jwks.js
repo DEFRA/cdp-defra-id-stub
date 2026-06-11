@@ -1,4 +1,4 @@
-import { JWKS } from '~/src/server/oidc/helpers/oidc-crypto.js'
+import { JWKS } from '#server/oidc/helpers/oidc-crypto.js'
 
 const jwksController = {
   handler: (request, h) => {

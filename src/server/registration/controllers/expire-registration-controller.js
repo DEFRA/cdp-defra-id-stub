@@ -1,9 +1,9 @@
 import Joi from 'joi'
 
-import { findRegistration } from '~/src/server/registration/helpers/find-registration.js'
-import { removeAllRelationships } from '~/src/server/registration/helpers/remove-relationship.js'
-import { removeRegistration } from '~/src/server/registration/helpers/remove-registration.js'
-import { showLoginPath } from '~/src/server/registration/helpers/registration-paths.js'
+import { findRegistration } from '#server/registration/helpers/find-registration.js'
+import { removeAllRelationships } from '#server/registration/helpers/remove-relationship.js'
+import { removeRegistration } from '#server/registration/helpers/remove-registration.js'
+import { showLoginPath } from '#server/registration/helpers/registration-paths.js'
 
 const expireRegistrationController = {
   options: {

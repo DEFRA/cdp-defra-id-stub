@@ -1,4 +1,4 @@
-import { oidcConfig } from '~/src/server/oidc/oidc-config.js'
+import { oidcConfig } from '#server/oidc/oidc-config.js'
 
 const validateScope = (scope) => {
   const scopes = scope.split(' ')

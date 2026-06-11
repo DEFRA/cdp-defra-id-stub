@@ -1,16 +1,16 @@
 import Joi from 'joi'
 
-import { findRegistration } from '~/src/server/registration/helpers/find-registration.js'
-import { findRelationship } from '~/src/server/registration/helpers/find-relationships.js'
-import { updateRelationship } from '~/src/server/registration/helpers/update-relationship.js'
-import { buildErrorDetails } from '~/src/server/common/helpers/build-error-details.js'
-import { roleNameValidation } from '~/src/server/registration/helpers/schemas/role-name-validation.js'
+import { findRegistration } from '#server/registration/helpers/find-registration.js'
+import { findRelationship } from '#server/registration/helpers/find-relationships.js'
+import { updateRelationship } from '#server/registration/helpers/update-relationship.js'
+import { buildErrorDetails } from '#server/common/helpers/build-error-details.js'
+import { roleNameValidation } from '#server/registration/helpers/schemas/role-name-validation.js'
 import {
   relationshipPath,
   registrationPath,
   roleNamePath
-} from '~/src/server/registration/helpers/registration-paths.js'
-import { oidcBasePath } from '~/src/server/oidc/oidc-config.js'
+} from '#server/registration/helpers/registration-paths.js'
+import { oidcBasePath } from '#server/oidc/oidc-config.js'
 
 const addRoleNameController = {
   options: {

@@ -1,15 +1,15 @@
 import {
   selectOrganisationController,
   showOrganisationPickerController
-} from '~/src/server/oidc/controllers/organisation-controller.js'
-import { sessions } from '~/src/server/oidc/helpers/session-store.js'
-import { findRelationships } from '~/src/server/registration/helpers/find-relationships.js'
+} from '#server/oidc/controllers/organisation-controller.js'
+import { sessions } from '#server/oidc/helpers/session-store.js'
+import { findRelationships } from '#server/registration/helpers/find-relationships.js'
 
-jest.mock('~/src/server/oidc/helpers/session-store.js', () => ({
+vi.mock('#server/oidc/helpers/session-store.js', () => ({
   sessions: {}
 }))
 
-jest.mock('~/src/server/registration/helpers/find-relationships.js')
+vi.mock('#server/registration/helpers/find-relationships.js')
 
 describe('showOrganisationPickerController', () => {
   let mockRequest
@@ -20,19 +20,19 @@ describe('showOrganisationPickerController', () => {
       query: { sessionId: 'test-session-id' },
       registrations: {},
       logger: {
-        error: jest.fn(),
-        info: jest.fn()
+        error: vi.fn(),
+        info: vi.fn()
       }
     }
 
     mockH = {
-      response: jest.fn().mockReturnThis(),
-      redirect: jest.fn(),
-      view: jest.fn(),
-      code: jest.fn().mockReturnThis()
+      response: vi.fn().mockReturnThis(),
+      redirect: vi.fn(),
+      view: vi.fn(),
+      code: vi.fn().mockReturnThis()
     }
 
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   test('Should return 404 when session not found', async () => {
@@ -161,18 +161,18 @@ describe('selectOrganisationController', () => {
       },
       registrations: {},
       logger: {
-        error: jest.fn(),
-        info: jest.fn()
+        error: vi.fn(),
+        info: vi.fn()
       }
     }
 
     mockH = {
-      response: jest.fn().mockReturnThis(),
-      redirect: jest.fn(),
-      code: jest.fn().mockReturnThis()
+      response: vi.fn().mockReturnThis(),
+      redirect: vi.fn(),
+      code: vi.fn().mockReturnThis()
     }
 
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   test('Should return 400 when sessionId is missing', async () => {

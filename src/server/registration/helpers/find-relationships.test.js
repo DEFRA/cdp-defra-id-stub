@@ -2,7 +2,7 @@ import {
   findRelationships,
   findNonCurrentRelationships,
   findRelationship
-} from '~/src/server/registration/helpers//find-relationships.js'
+} from '#server/registration/helpers//find-relationships.js'
 
 const relationship = {
   userId: 'someUserId',
@@ -12,7 +12,7 @@ const relationship = {
 describe('#findRelationship', () => {
   test('Should return relationship', async () => {
     const cache = {
-      get: jest.fn((key) => {
+      get: vi.fn((key) => {
         if (key === 'defra-id:relationship:someUserId:someRelId') {
           return relationship
         } else {
@@ -33,7 +33,7 @@ describe('#findRelationship', () => {
 describe('#findRelationships', () => {
   test('Should return relationships', async () => {
     const cache = {
-      get: jest.fn((key) => {
+      get: vi.fn((key) => {
         switch (key) {
           case 'defra-id:relationship-ids:someUserId':
             return ['someRelId', 'otherRelId']
@@ -64,7 +64,7 @@ describe('#findNonCurrentRelationships', () => {
       relationshipId: 'otherRelId'
     }
     const cache = {
-      get: jest.fn((key) => {
+      get: vi.fn((key) => {
         switch (key) {
           case 'defra-id:relationship-ids:someUserId':
             return ['someRelId', 'otherRelId']

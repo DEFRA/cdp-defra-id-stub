@@ -1,8 +1,8 @@
 import {
   transformQuery,
   transformUsers
-} from '~/src/server/oidc/transformers/transform-users.js'
-import { registrationAction } from '~/src/server/registration/helpers/registration-paths.js'
+} from '#server/oidc/transformers/transform-users.js'
+import { registrationAction } from '#server/registration/helpers/registration-paths.js'
 
 const renderLoginPage = async (allUsers, url, h) => {
   const queryParams = url ? new URL(url).search : ''

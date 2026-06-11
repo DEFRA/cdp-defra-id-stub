@@ -1,14 +1,14 @@
 import Joi from 'joi'
 
-import { findRegistration } from '~/src/server/registration/helpers/find-registration.js'
-import { findRelationships } from '~/src/server/registration/helpers/find-relationships.js'
-import { oidcBasePath } from '~/src/server/oidc/oidc-config.js'
+import { findRegistration } from '#server/registration/helpers/find-registration.js'
+import { findRelationships } from '#server/registration/helpers/find-relationships.js'
+import { oidcBasePath } from '#server/oidc/oidc-config.js'
 import {
   authorizePath,
   registrationAction,
   registrationPath,
   showLoginPath
-} from '~/src/server/registration/helpers/registration-paths.js'
+} from '#server/registration/helpers/registration-paths.js'
 
 const summaryRegistrationController = {
   options: {

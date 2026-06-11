@@ -1,15 +1,15 @@
-import { config } from '~/src/config/index.js'
+import { config } from '#config/index.js'
 import {
   generateIDToken,
   generateRefreshToken,
   generateToken
-} from '~/src/server/oidc/helpers/oidc-crypto.js'
+} from '#server/oidc/helpers/oidc-crypto.js'
 import {
   getSessionByToken,
   sessions
-} from '~/src/server/oidc/helpers/session-store.js'
-import { validateCodeChallenge } from '~/src/server/oidc/helpers/validate-code-challenge.js'
-import { oidcConfig } from '~/src/server/oidc/oidc-config.js'
+} from '#server/oidc/helpers/session-store.js'
+import { validateCodeChallenge } from '#server/oidc/helpers/validate-code-challenge.js'
+import { oidcConfig } from '#server/oidc/oidc-config.js'
 
 export const getHost = (request) => {
   const baseUrl = config.get('appBaseUrl')

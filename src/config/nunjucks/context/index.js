@@ -1,9 +1,9 @@
 import path from 'node:path'
 import { readFileSync } from 'node:fs'
 
-import { config } from '~/src/config/index.js'
-import { createLogger } from '~/src/server/common/helpers/logging/logger.js'
-import { buildNavigation } from '~/src/config/nunjucks/context/build-navigation.js'
+import { config } from '#config/index.js'
+import { createLogger } from '#server/common/helpers/logging/logger.js'
+import { buildNavigation } from '#config/nunjucks/context/build-navigation.js'
 
 const logger = createLogger()
 const assetPath = config.get('assetPath')

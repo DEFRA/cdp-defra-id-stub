@@ -1,22 +1,22 @@
-import { config } from '~/src/config/index.js'
+import { config } from '#config/index.js'
 import {
   authorizeController,
   loginController
-} from '~/src/server/oidc/controllers/authorize-controller.js'
-import { logoutController } from '~/src/server/oidc/controllers/logout-controller.js'
+} from '#server/oidc/controllers/authorize-controller.js'
+import { logoutController } from '#server/oidc/controllers/logout-controller.js'
 import {
   selectOrganisationController,
   showOrganisationPickerController
-} from '~/src/server/oidc/controllers/organisation-controller.js'
-import { tokenController } from '~/src/server/oidc/controllers/token-controller.js'
-import { userInfoController } from '~/src/server/oidc/controllers/user-info-controller.js'
-import { jwksController } from '~/src/server/oidc/controllers/well-known-jwks.js'
-import { openIdConfigurationController } from '~/src/server/oidc/controllers/well-known-openid-configuration.js'
+} from '#server/oidc/controllers/organisation-controller.js'
+import { tokenController } from '#server/oidc/controllers/token-controller.js'
+import { userInfoController } from '#server/oidc/controllers/user-info-controller.js'
+import { jwksController } from '#server/oidc/controllers/well-known-jwks.js'
+import { openIdConfigurationController } from '#server/oidc/controllers/well-known-openid-configuration.js'
 import {
   generateRandomKeypair,
   loadKeyPair
-} from '~/src/server/oidc/helpers/oidc-crypto.js'
-import { oidcBasePath } from '~/src/server/oidc/oidc-config.js'
+} from '#server/oidc/helpers/oidc-crypto.js'
+import { oidcBasePath } from '#server/oidc/oidc-config.js'
 
 const oidc = {
   plugin: {

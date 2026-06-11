@@ -1,24 +1,24 @@
 import * as crypto from 'crypto'
 import Joi from 'joi'
 
-import { oidcBasePath } from '~/src/server/oidc/oidc-config.js'
-import { buildErrorDetails } from '~/src/server/common/helpers/build-error-details.js'
-import { registrationValidation } from '~/src/server/registration/helpers/schemas/registration-validation.js'
-import { findRegistration } from '~/src/server/registration/helpers/find-registration.js'
+import { oidcBasePath } from '#server/oidc/oidc-config.js'
+import { buildErrorDetails } from '#server/common/helpers/build-error-details.js'
+import { registrationValidation } from '#server/registration/helpers/schemas/registration-validation.js'
+import { findRegistration } from '#server/registration/helpers/find-registration.js'
 import {
   newRegistration,
   storeRegistration
-} from '~/src/server/registration/helpers/new-registration.js'
-import { updateRegistration } from '~/src/server/registration/helpers/update-registration.js'
+} from '#server/registration/helpers/new-registration.js'
+import { updateRegistration } from '#server/registration/helpers/update-registration.js'
 import {
   transformLoa,
   transformAal
-} from '~/src/server/registration/transformers/loa-aal-transformer.js'
+} from '#server/registration/transformers/loa-aal-transformer.js'
 import {
   registrationAction,
   relationshipPath,
   updateRegistrationAction
-} from '~/src/server/registration/helpers/registration-paths.js'
+} from '#server/registration/helpers/registration-paths.js'
 
 const showRegistrationController = {
   options: {

@@ -1,4 +1,4 @@
-import { oidcBasePath } from '~/src/server/oidc/oidc-config.js'
+import { oidcBasePath } from '#server/oidc/oidc-config.js'
 
 function transformUser(user, loginQuery) {
   const loginLink = loginQuery

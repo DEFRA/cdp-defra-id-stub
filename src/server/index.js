@@ -1,17 +1,17 @@
 import path from 'path'
 import hapi from '@hapi/hapi'
 
-import { config } from '~/src/config/index.js'
-import { nunjucksConfig } from '~/src/config/nunjucks/index.js'
+import { config } from '#config/index.js'
+import { nunjucksConfig } from '#config/nunjucks/index.js'
 import { router } from './router.js'
-import { requestLogger } from '~/src/server/common/helpers/logging/request-logger.js'
-import { catchAll } from '~/src/server/common/helpers/errors.js'
-import { secureContext } from '~/src/server/common/helpers/secure-context/index.js'
-import { sessionCache } from '~/src/server/common/helpers/session-cache/session-cache.js'
-import { getCacheEngine } from '~/src/server/common/helpers/session-cache/cache-engine.js'
-import { addFlashMessagesToContext } from '~/src/server/common/helpers/add-flash-messages-to-context.js'
-
-const isProduction = config.get('isProduction')
+import { requestTracing } from '#server/common/helpers/request-tracing.js'
+import { pulse } from '#server/common/helpers/pulse.js'
+import { requestLogger } from '#server/common/helpers/logging/request-logger.js'
+import { catchAll } from '#server/common/helpers/errors.js'
+import { secureContext } from '@defra/hapi-secure-context'
+import { sessionCache } from '#server/common/helpers/session-cache/session-cache.js'
+import { getCacheEngine } from '#server/common/helpers/session-cache/cache-engine.js'
+import { addFlashMessagesToContext } from '#server/common/helpers/add-flash-messages-to-context.js'
 
 async function createServer() {
   const cacheEngine = getCacheEngine(config.get('session.cache.engine'))
@@ -52,11 +52,7 @@ async function createServer() {
     ]
   })
 
-  await server.register(requestLogger)
-
-  if (isProduction) {
-    await server.register(secureContext)
-  }
+  await server.register([requestLogger, requestTracing, secureContext, pulse])
 
   const registrations = server.cache({
     cache: 'registrations',

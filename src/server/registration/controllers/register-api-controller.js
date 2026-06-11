@@ -1,23 +1,23 @@
 import * as crypto from 'crypto'
 
-import { asyncMap } from '~/src/server/common/helpers/async-map.js'
+import { asyncMap } from '#server/common/helpers/async-map.js'
 import {
   findRegistration,
   findRegistrationByEmail
-} from '~/src/server/registration/helpers/find-registration.js'
-import { fullRegistrationValidation } from '~/src/server/registration/helpers/schemas/full-registration-validation.js'
-import { removeRegistration } from '~/src/server/registration/helpers/remove-registration.js'
+} from '#server/registration/helpers/find-registration.js'
+import { fullRegistrationValidation } from '#server/registration/helpers/schemas/full-registration-validation.js'
+import { removeRegistration } from '#server/registration/helpers/remove-registration.js'
 import {
   newRegistration,
   storeRegistration
-} from '~/src/server/registration/helpers/new-registration.js'
-import { updateRegistration } from '~/src/server/registration/helpers/update-registration.js'
+} from '#server/registration/helpers/new-registration.js'
+import { updateRegistration } from '#server/registration/helpers/update-registration.js'
 import {
   newRelationship,
   storeRelationship
-} from '~/src/server/registration/helpers/new-relationship.js'
-import { findRelationship } from '~/src/server/registration/helpers/find-relationships.js'
-import { oidcBasePath } from '~/src/server/oidc/oidc-config.js'
+} from '#server/registration/helpers/new-relationship.js'
+import { findRelationship } from '#server/registration/helpers/find-relationships.js'
+import { oidcBasePath } from '#server/oidc/oidc-config.js'
 
 const registerApiController = {
   handler: async (request, h) => {

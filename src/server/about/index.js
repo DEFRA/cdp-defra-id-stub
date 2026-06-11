@@ -1,4 +1,4 @@
-import { aboutController } from '~/src/server/about/controller.js'
+import { aboutController } from '#server/about/controller.js'
 
 /**
  * Sets up the routes used in the /about page.
