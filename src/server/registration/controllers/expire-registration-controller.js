@@ -16,13 +16,16 @@ const expireRegistrationController = {
   handler: async (request, h) => {
     const { userId } = request.params
 
-    const registration = await findRegistration(userId, request.registrations)
+    const registration = await findRegistration(
+      userId,
+      request.registrationsStore
+    )
 
-    await removeAllRelationships(userId, request.registrations)
+    await removeAllRelationships(userId, request.registrationsStore)
 
     if (registration) {
       request.logger.info({ userId }, 'Registration expired')
-      await removeRegistration(userId, request.registrations)
+      await removeRegistration(userId, request.registrationsStore)
     } else {
       request.logger.info({ userId }, 'Registration not found')
     }

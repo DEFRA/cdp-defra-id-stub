@@ -1,8 +1,11 @@
 import * as crypto from 'crypto'
 import Joi from 'joi'
 
-import { buildErrorDetails } from '#server/common/helpers/build-error-details.js'
 import { relationshipValidation } from '#server/registration/helpers/schemas/relationship-validation.js'
+import {
+  flashValidationFailure,
+  readValidationFailure
+} from '#server/registration/helpers/validation-failure.js'
 import { findRegistration } from '#server/registration/helpers/find-registration.js'
 import { updateRegistration } from '#server/registration/helpers/update-registration.js'
 import { removeRelationship } from '#server/registration/helpers/remove-relationship.js'
@@ -35,7 +38,10 @@ const addRelationshipController = {
     const payload = request?.payload
     const { userId } = request.params
 
-    const registration = await findRegistration(userId, request.registrations)
+    const registration = await findRegistration(
+      userId,
+      request.registrationsStore
+    )
 
     if (!registration) {
       request.logger.error({ userId }, 'Registration not found')
@@ -48,21 +54,12 @@ const addRelationshipController = {
 
     if (validationResult?.error) {
       request.logger.warn(validationResult?.error, 'Payload error')
-      const errorDetails = buildErrorDetails(validationResult.error.details)
-
-      request.yar.flash('validationFailure', {
-        formValues: payload,
-        formErrors: errorDetails
-      })
+      flashValidationFailure(request, payload, validationResult.error)
       return h.redirect(relationshipPath(userId, payload.redirect_uri))
     }
 
     const { relationshipId } = payload
-    const relationship = await newRelationship(
-      userId,
-      relationshipId,
-      request.registrations
-    )
+    const relationship = await newRelationship(userId, relationshipId)
     relationship.organisationId = payload.organisationId
     relationship.organisationName = payload.organisationName
     relationship.relationshipRole = payload.relationshipRole
@@ -70,11 +67,11 @@ const addRelationshipController = {
       userId,
       relationshipId,
       relationship,
-      request.registrations
+      request.registrationsStore
     )
     if (!registration.currentRelationshipId) {
       registration.currentRelationshipId = relationshipId
-      await updateRegistration(userId, registration, request.registrations)
+      await updateRegistration(userId, registration, request.registrationsStore)
     }
 
     return h.redirect(relationshipPath(userId, payload.redirect_uri))
@@ -95,8 +92,12 @@ const showRelationshipListController = {
   handler: async (request, h) => {
     const { userId } = request.params
     const redirectUri = request.query?.redirect_uri
+    const { formValues, formErrors } = readValidationFailure(request)
 
-    const registration = await findRegistration(userId, request.registrations)
+    const registration = await findRegistration(
+      userId,
+      request.registrationsStore
+    )
 
     if (!registration) {
       request.logger.error({ userId }, 'Registration not found')
@@ -110,7 +111,7 @@ const showRelationshipListController = {
       currentRelationship = await findRelationship(
         userId,
         registration.currentRelationshipId,
-        request.registrations
+        request.registrationsStore
       )
 
       if (!currentRelationship) {
@@ -127,7 +128,7 @@ const showRelationshipListController = {
       const otherRelationships = await findNonCurrentRelationships(
         userId,
         registration.currentRelationshipId,
-        request.registrations
+        request.registrationsStore
       )
 
       relationshipsRows = transformRelationships(
@@ -147,7 +148,11 @@ const showRelationshipListController = {
       csrfToken: crypto.randomUUID(),
       currentRelationship: currentRelationshipRows,
       relationships: relationshipsRows,
-      redirectUri
+      redirectUri,
+      relationshipId: formValues.relationshipId,
+      organisationId: formValues.organisationId,
+      organisationName: formValues.organisationName,
+      formErrors
     })
   }
 }
@@ -167,7 +172,10 @@ const removeRelationshipController = {
   handler: async (request, h) => {
     const { userId, relationshipId } = request.params
 
-    const registration = await findRegistration(userId, request.registrations)
+    const registration = await findRegistration(
+      userId,
+      request.registrationsStore
+    )
 
     if (!registration) {
       request.logger.error({ userId }, 'Registration not found ')
@@ -177,7 +185,7 @@ const removeRelationshipController = {
     const relationship = await findRelationship(
       userId,
       relationshipId,
-      request.registrations
+      request.registrationsStore
     )
 
     if (!relationship) {
@@ -192,7 +200,7 @@ const removeRelationshipController = {
       const otherRelationships = await findNonCurrentRelationships(
         userId,
         registration.currentRelationshipId,
-        request.registrations
+        request.registrationsStore
       )
       if (otherRelationships.length > 0) {
         registration.currentRelationshipId =
@@ -200,10 +208,10 @@ const removeRelationshipController = {
       } else {
         delete registration.currentRelationshipId
       }
-      await updateRegistration(userId, registration, request.registrations)
+      await updateRegistration(userId, registration, request.registrationsStore)
     }
 
-    await removeRelationship(userId, relationshipId, request.registrations)
+    await removeRelationship(userId, relationshipId, request.registrationsStore)
 
     request.logger.info({ relationshipId }, 'Relationship removed')
 
@@ -226,7 +234,10 @@ const makeCurrentRelationshipController = {
   handler: async (request, h) => {
     const { userId, relationshipId } = request.params
 
-    const registration = await findRegistration(userId, request.registrations)
+    const registration = await findRegistration(
+      userId,
+      request.registrationsStore
+    )
 
     if (!registration) {
       request.logger.error({ userId }, 'Registration not found ')
@@ -236,7 +247,7 @@ const makeCurrentRelationshipController = {
     const relationship = await findRelationship(
       userId,
       relationshipId,
-      request.registrations
+      request.registrationsStore
     )
 
     if (!relationship) {
@@ -246,7 +257,7 @@ const makeCurrentRelationshipController = {
 
     registration.currentRelationshipId = relationshipId
 
-    await updateRegistration(userId, registration, request.registrations)
+    await updateRegistration(userId, registration, request.registrationsStore)
 
     request.logger.info(
       { userId, relationshipId },

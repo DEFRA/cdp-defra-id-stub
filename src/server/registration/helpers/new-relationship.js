@@ -1,30 +1,18 @@
-import { addToCachedArray } from '#server/common/helpers/add-to-cached-array.js'
 import { createLogger } from '#server/common/helpers/logging/logger.js'
-import { cacheKeys } from '#server/registration/helpers/cache-keys.js'
 
 const logger = createLogger()
 
-async function addRelationshipId(userId, relationshipId, cache) {
-  await addToCachedArray(cacheKeys.relationshipIds, relationshipId, cache)
-  await addToCachedArray(
-    cacheKeys.userRelationshipIds(userId),
-    relationshipId,
-    cache
-  )
-}
-
-async function storeRelationship(userId, relationshipId, relationship, cache) {
+async function storeRelationship(userId, relationshipId, relationship, store) {
   logger.info({ userId, relationshipId }, 'Storing relationship')
-  await cache.set(cacheKeys.relationship(userId, relationshipId), relationship)
+  await store.putRelationship(userId, relationshipId, relationship)
 }
 
-async function newRelationship(userId, relationshipId, cache) {
+async function newRelationship(userId, relationshipId) {
   const relationship = {
     userId,
     relationshipId,
     created: new Date()
   }
-  await addRelationshipId(userId, relationshipId, cache)
   return relationship
 }
 

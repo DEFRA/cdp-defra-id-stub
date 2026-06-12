@@ -16,7 +16,7 @@ const showOrganisationPickerController = {
     const user = session.user
     const relationships = await findRelationships(
       user.userId,
-      request.registrations
+      request.registrationsStore
     )
 
     if (!relationships || relationships.length === 0) {
@@ -83,7 +83,7 @@ const selectOrganisationController = {
     const user = session.user
     const relationships = await findRelationships(
       user.userId,
-      request.registrations
+      request.registrationsStore
     )
     const selectedRelationship = relationships.find(
       (rel) => rel.relationshipId === relationshipId

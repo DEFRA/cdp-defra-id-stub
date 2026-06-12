@@ -1,15 +1,19 @@
+import * as crypto from 'crypto'
 import Joi from 'joi'
 
 import { findRegistration } from '#server/registration/helpers/find-registration.js'
 import { findRelationship } from '#server/registration/helpers/find-relationships.js'
 import { updateRelationship } from '#server/registration/helpers/update-relationship.js'
-import { buildErrorDetails } from '#server/common/helpers/build-error-details.js'
 import { roleNameValidation } from '#server/registration/helpers/schemas/role-name-validation.js'
 import {
   relationshipPath,
   registrationPath,
   roleNamePath
 } from '#server/registration/helpers/registration-paths.js'
+import {
+  flashValidationFailure,
+  readValidationFailure
+} from '#server/registration/helpers/validation-failure.js'
 import { oidcBasePath } from '#server/oidc/oidc-config.js'
 
 const addRoleNameController = {
@@ -25,7 +29,10 @@ const addRoleNameController = {
     const { userId, relationshipId } = request.params
     const payload = request?.payload
 
-    const registration = await findRegistration(userId, request.registrations)
+    const registration = await findRegistration(
+      userId,
+      request.registrationsStore
+    )
 
     if (!registration) {
       request.logger.error({ userId }, 'Registration not found')
@@ -35,7 +42,7 @@ const addRoleNameController = {
     const relationship = await findRelationship(
       userId,
       relationshipId,
-      request.registrations
+      request.registrationsStore
     )
 
     if (!relationship) {
@@ -49,13 +56,10 @@ const addRoleNameController = {
 
     if (validationResult?.error) {
       request.logger.warn(validationResult?.error, 'Payload error')
-      const errorDetails = buildErrorDetails(validationResult.error.details)
-
-      request.yar.flash('validationFailure', {
-        formValues: payload,
-        formErrors: errorDetails
-      })
-      return h.redirect(roleNamePath(userId, payload.redirect_uri))
+      flashValidationFailure(request, payload, validationResult.error)
+      return h.redirect(
+        roleNamePath(userId, relationshipId, payload?.redirect_uri)
+      )
     }
 
     relationship.roleName = payload.roleName
@@ -65,7 +69,7 @@ const addRoleNameController = {
       userId,
       relationshipId,
       relationship,
-      request.registrations
+      request.registrationsStore
     )
 
     return h.redirect(relationshipPath(userId, payload.redirect_uri))
@@ -87,7 +91,10 @@ const removeRoleNameController = {
   handler: async (request, h) => {
     const { userId, relationshipId } = request.params
 
-    const registration = await findRegistration(userId, request.registrations)
+    const registration = await findRegistration(
+      userId,
+      request.registrationsStore
+    )
 
     if (!registration) {
       request.logger.error({ userId }, 'Registration not found')
@@ -97,7 +104,7 @@ const removeRoleNameController = {
     const relationship = await findRelationship(
       userId,
       relationshipId,
-      request.registrations
+      request.registrationsStore
     )
 
     if (!relationship) {
@@ -112,7 +119,7 @@ const removeRoleNameController = {
       userId,
       relationshipId,
       relationship,
-      request.registrations
+      request.registrationsStore
     )
     return h.redirect(relationshipPath(userId, request.query?.redirect_uri))
   }
@@ -133,8 +140,12 @@ const showAddRoleNameController = {
   handler: async (request, h) => {
     const { userId, relationshipId } = request.params
     const redirectUri = request.query?.redirect_uri
+    const { formValues, formErrors } = readValidationFailure(request)
 
-    const registration = await findRegistration(userId, request.registrations)
+    const registration = await findRegistration(
+      userId,
+      request.registrationsStore
+    )
 
     if (!registration) {
       request.logger.error({ userId }, 'Registration not found')
@@ -144,7 +155,7 @@ const showAddRoleNameController = {
     const relationship = await findRelationship(
       userId,
       relationshipId,
-      request.registrations
+      request.registrationsStore
     )
 
     if (!relationship) {
@@ -154,12 +165,16 @@ const showAddRoleNameController = {
 
     return h.view('registration/views/relationship-role', {
       title: 'Role Name',
-      csrfToken: crypto.randomUUID(),
+      heading: 'Role Name',
+      csrfToken: formValues.csrfToken ?? crypto.randomUUID(),
       userId,
       relationshipId,
-      action: roleNamePath(userId, relationshipId),
+      roleName: formValues.roleName,
+      roleStatus: formValues.roleStatus,
+      action: roleNamePath(userId, relationshipId, redirectUri),
       relationshipLink: relationshipPath(userId, redirectUri),
-      redirectUri
+      redirectUri,
+      formErrors
     })
   }
 }

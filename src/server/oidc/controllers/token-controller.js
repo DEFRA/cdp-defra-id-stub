@@ -88,7 +88,7 @@ const tokenController = {
       request.keys,
       session,
       host,
-      request.registrations
+      request.registrationsStore
     )
 
     if (session.scopes.includes('openid')) {
@@ -96,7 +96,7 @@ const tokenController = {
         request.keys,
         session,
         host,
-        request.registrations
+        request.registrationsStore
       )
     }
     if (session.scopes.includes('offline_access')) {
@@ -105,7 +105,7 @@ const tokenController = {
         request.keys,
         session,
         host,
-        request.registrations
+        request.registrationsStore
       )
     }
 
