@@ -1,6 +1,7 @@
 import { describe, expect, test, vi } from 'vitest'
 
 import {
+  buildFormErrorSummary,
   flashValidationFailure,
   readValidationFailure
 } from '#server/registration/helpers/validation-failure.js'
@@ -64,5 +65,23 @@ describe('validation-failure', () => {
       formValues: { email: 'bad' },
       formErrors: { email: { message: 'Enter an email address' } }
     })
+  })
+
+  test('buildFormErrorSummary maps form errors to summary links', () => {
+    expect(
+      buildFormErrorSummary({
+        organisationName: { message: 'Enter an organisation name' },
+        relationshipId: { message: 'Enter a relationship ID' }
+      })
+    ).toEqual([
+      {
+        text: 'Enter an organisation name',
+        href: '#organisationName'
+      },
+      {
+        text: 'Enter a relationship ID',
+        href: '#relationshipId'
+      }
+    ])
   })
 })

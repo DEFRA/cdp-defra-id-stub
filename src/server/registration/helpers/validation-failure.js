@@ -23,4 +23,13 @@ function readValidationFailure(request) {
   }
 }
 
-export { flashValidationFailure, readValidationFailure }
+function buildFormErrorSummary(formErrors, fieldIds = {}) {
+  return Object.entries(formErrors)
+    .filter(([, error]) => error?.message)
+    .map(([field, error]) => ({
+      text: error.message,
+      href: `#${fieldIds[field] ?? field}`
+    }))
+}
+
+export { buildFormErrorSummary, flashValidationFailure, readValidationFailure }

@@ -3,6 +3,7 @@ import Joi from 'joi'
 
 import { relationshipValidation } from '#server/registration/helpers/schemas/relationship-validation.js'
 import {
+  buildFormErrorSummary,
   flashValidationFailure,
   readValidationFailure
 } from '#server/registration/helpers/validation-failure.js'
@@ -25,6 +26,14 @@ import {
   summaryPath
 } from '#server/registration/helpers/registration-paths.js'
 import { oidcBasePath } from '#server/oidc/oidc-config.js'
+
+function relationshipRoleItems(selectedRole = 'Employee') {
+  return ['Agent', 'Employee', 'Citizen'].map((value) => ({
+    value,
+    text: value,
+    checked: value === selectedRole
+  }))
+}
 
 const addRelationshipController = {
   options: {
@@ -145,13 +154,17 @@ const showRelationshipListController = {
       userId,
       goBackLink: registrationPath(userId, redirectUri),
       summaryLink: summaryPath(userId, redirectUri),
-      csrfToken: crypto.randomUUID(),
+      csrfToken: formValues.csrfToken ?? crypto.randomUUID(),
       currentRelationship: currentRelationshipRows,
       relationships: relationshipsRows,
       redirectUri,
       relationshipId: formValues.relationshipId,
       organisationId: formValues.organisationId,
       organisationName: formValues.organisationName,
+      relationshipRoleItems: relationshipRoleItems(
+        formValues.relationshipRole ?? 'Employee'
+      ),
+      errorSummaryItems: buildFormErrorSummary(formErrors),
       formErrors
     })
   }
