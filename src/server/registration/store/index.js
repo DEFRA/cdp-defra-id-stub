@@ -16,8 +16,12 @@ function createRegistrationsStore(config) {
   }
 
   logger.info('Using DynamoDB registrations store')
+  const endpoint = config.get('aws.dynamoDb.endpoint')
+  if (endpoint) {
+    logger.warn({ endpoint }, 'DynamoDB custom endpoint configured')
+  }
   const client = createDynamoDbDocumentClient({
-    endpoint: config.get('aws.dynamoDb.endpoint'),
+    endpoint,
     region: config.get('aws.region')
   })
 
