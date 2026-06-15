@@ -41,14 +41,17 @@ const registerApiController = {
       let userId = payload.userId
 
       if (userId) {
-        const regWithId = await findRegistration(userId, request.registrations)
+        const regWithId = await findRegistration(
+          userId,
+          request.registrationsStore
+        )
 
         if (regWithId) {
           request.logger.info(
             { userId },
             'Registration with User ID already present. Removing'
           )
-          removeRegistration(regWithId.userId, request.registrations)
+          await removeRegistration(regWithId.userId, request.registrationsStore)
         }
       } else {
         userId = crypto.randomUUID()
@@ -58,7 +61,7 @@ const registerApiController = {
 
       const regWithEmail = await findRegistrationByEmail(
         email,
-        request.registrations
+        request.registrationsStore
       )
 
       if (regWithEmail) {
@@ -68,27 +71,30 @@ const registerApiController = {
         )
 
         if (userId !== regWithEmail.userId) {
-          removeRegistration(regWithEmail.userId, request.registrations)
+          await removeRegistration(
+            regWithEmail.userId,
+            request.registrationsStore
+          )
         }
       }
 
       const registration = await createRegistration(
         userId,
         payload,
-        request.registrations
+        request.registrationsStore
       )
 
       const relationships = await addRelationships(
         userId,
         payload.relationships,
-        request.registrations
+        request.registrationsStore
       )
 
       await updateCurrentRelationship(
         userId,
         registration,
         relationships,
-        request.registrations
+        request.registrationsStore
       )
 
       const response = {
@@ -120,7 +126,7 @@ const registerApiController = {
 }
 
 async function createRegistration(userId, payload, cache) {
-  const registration = await newRegistration(userId, cache)
+  const registration = await newRegistration(userId)
   registration.contactId = payload.contactId ?? crypto.randomUUID()
   registration.email = payload.email
   registration.firstName = payload.firstName
@@ -146,7 +152,7 @@ async function addRelationships(userId, payload, cache) {
 
 async function addRelationship(userId, payload, cache) {
   const relationshipId = payload.relationshipId ?? crypto.randomUUID()
-  const relationship = await newRelationship(userId, relationshipId, cache)
+  const relationship = await newRelationship(userId, relationshipId)
   relationship.organisationId = payload.relationshipId ?? crypto.randomUUID()
   relationship.organisationName = payload.organisationName
   relationship.relationshipRole = payload.relationshipRole

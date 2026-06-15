@@ -9,31 +9,24 @@ const registration = {
   email: 'some@example.com'
 }
 
-const otherRegistration = {
-  userId: 'otherUserId',
-  email: 'other@example.com'
-}
-
 describe('#findRegistration', () => {
   test('Should return registration if found', async () => {
-    const cache = {
-      get: vi.fn((k) => {
-        return registration
-      })
+    const store = {
+      getRegistration: vi.fn(() => registration)
     }
 
-    const result = await findRegistration('someUserId', cache)
+    const result = await findRegistration('someUserId', store)
 
     expect(result).toBe(registration)
-    expect(cache.get).toHaveBeenCalledWith('defra-id:registration:someUserId')
+    expect(store.getRegistration).toHaveBeenCalledWith('someUserId')
   })
 
   test('Should return nothing if not found', async () => {
-    const cache = {
-      get: vi.fn()
+    const store = {
+      getRegistration: vi.fn()
     }
 
-    const result = await findRegistration('someUserId', cache)
+    const result = await findRegistration('someUserId', store)
 
     expect(result).toBeUndefined()
   })
@@ -41,48 +34,34 @@ describe('#findRegistration', () => {
 
 describe('#findRegistrations', () => {
   test('Should return registrations', async () => {
-    const mockCache = vi.fn()
-    const cache = {
-      get: mockCache
+    const store = {
+      listRegistrations: vi.fn(() => [registration])
     }
-    mockCache
-      .mockReturnValueOnce(['someUserId'])
-      .mockReturnValueOnce(registration)
 
-    const result = await findRegistrations(cache)
+    const result = await findRegistrations(store)
 
     expect(result).toEqual([registration])
-    expect(cache.get).toHaveBeenCalledWith('defra-id:registration-ids')
-    expect(cache.get).toHaveBeenCalledWith('defra-id:registration:someUserId')
+    expect(store.listRegistrations).toHaveBeenCalled()
   })
 })
 
 describe('#findRegistrationByEmail', () => {
   test('Should only return registration with that email', async () => {
-    const mockCache = vi.fn()
-    const cache = {
-      get: mockCache
+    const store = {
+      findRegistrationByEmail: vi.fn(() => registration)
     }
-    mockCache
-      .mockReturnValueOnce(['someUserId', 'otherUserId'])
-      .mockReturnValueOnce(registration)
-      .mockReturnValueOnce(otherRegistration)
 
-    const result = await findRegistrationByEmail('some@example.com', cache)
+    const result = await findRegistrationByEmail('some@example.com', store)
 
     expect(result).toEqual(registration)
   })
 
   test('Should not return registration if none with that email', async () => {
-    const mockCache = vi.fn()
-    const cache = {
-      get: mockCache
+    const store = {
+      findRegistrationByEmail: vi.fn()
     }
-    mockCache
-      .mockReturnValueOnce(['otherUserId'])
-      .mockReturnValueOnce(otherRegistration)
 
-    const result = await findRegistrationByEmail('some@example.com', cache)
+    const result = await findRegistrationByEmail('some@example.com', store)
 
     expect(result).toBeUndefined()
   })

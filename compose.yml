@@ -1,5 +1,27 @@
-version: '3.4'
 services:
+  # Floci emulates AWS services (DynamoDB) for local development.
+  # See: https://floci.io
+  floci:
+    image: hectorvent/floci:latest-aws
+    ports:
+      - '4566:4566'
+    env_file:
+      - compose/aws.env
+    environment:
+      FLOCI_DEFAULT_REGION: eu-west-2
+      AWS_DYNAMODB_REGISTRATIONS_TABLE_NAME: cdp-defra-id-stub-registrations
+    volumes:
+      - ./compose/floci/start.d:/etc/floci/init/start.d:ro
+    healthcheck:
+      test: ['CMD', 'stat', '/tmp/READY']
+      interval: 3s
+      start_period: 5s
+      retries: 20
+    networks:
+      - cdp-defra-id-net
+
+  ################################################################################
+
   redis:
     image: redis:7.2.3-alpine3.18
     ports:
@@ -16,14 +38,25 @@ services:
       - '3200:3200'
     links:
       - 'redis:redis'
+      - 'floci:floci'
     depends_on:
+      floci:
+        condition: service_healthy
       redis:
         condition: service_started
+    env_file:
+      - compose/aws.env
     environment:
       PORT: 3200
       NODE_ENV: development
       REDIS_HOST: redis
       USE_SINGLE_INSTANCE_CACHE: true
+      REGISTRATIONS_STORE_ENGINE: dynamodb
+      AWS_DYNAMODB_REGISTRATIONS_TABLE_NAME: cdp-defra-id-stub-registrations
+      DYNAMODB_ENDPOINT: http://floci:4566
+      AWS_REGION: eu-west-2
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
     networks:
       - cdp-defra-id-net
 

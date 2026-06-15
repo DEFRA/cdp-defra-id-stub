@@ -6,8 +6,8 @@ import { createLogger } from '#server/common/helpers/logging/logger.js'
 
 const logger = createLogger()
 
-async function findAllUsers(cache) {
-  const registrations = await findRegistrations(cache)
+async function findAllUsers(store) {
+  const registrations = await findRegistrations(store)
   logger.info({ registrations }, 'Found registrations')
   const users = registrations.map((registration) => {
     return {
@@ -19,8 +19,8 @@ async function findAllUsers(cache) {
   return users
 }
 
-async function findUser(user, cache) {
-  const registration = await findRegistrationByEmail(user, cache)
+async function findUser(user, store) {
+  const registration = await findRegistrationByEmail(user, store)
   if (registration) {
     return registration
   }

@@ -14,14 +14,17 @@ const findRegistrationApiController = {
   handler: async (request, h) => {
     const { userId } = request.params
 
-    const registration = await findRegistration(userId, request.registrations)
+    const registration = await findRegistration(
+      userId,
+      request.registrationsStore
+    )
 
     if (registration) {
       request.logger.info({ userId }, 'Registration found')
 
       const relationships = await findRelationships(
         userId,
-        request.registrations
+        request.registrationsStore
       )
       registration.relationships = relationships
       const response = {

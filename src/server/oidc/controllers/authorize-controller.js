@@ -28,7 +28,7 @@ const authorizeController = {
       const requestUrl = `${appBaseUrl}${request.path}${request.url.search}`
       request.logger.debug({ requestUrl }, 'No user, redirect to login page')
 
-      const allUsers = await findAllUsers(request.registrations)
+      const allUsers = await findAllUsers(request.registrationsStore)
       if (!allUsers || allUsers.length === 0) {
         request.logger.info('No users found, redirect to register page')
         return h.redirect(registrationAction(requestUrl))
@@ -96,7 +96,7 @@ const authorizeController = {
         .code(400)
     }
 
-    const user = await findUser(loginUser, request.registrations)
+    const user = await findUser(loginUser, request.registrationsStore)
     if (user === undefined) {
       request.logger.error(`Invalid user selected ${request.query.user}`)
       return h.response(`Invalid user selection!`).code(400)
@@ -123,7 +123,7 @@ const authorizeController = {
     // Check if user has relationships and need to select organisation
     const relationships = await findRelationships(
       user.userId,
-      request.registrations
+      request.registrationsStore
     )
 
     if (relationships && relationships.length > 0 && !session.relationshipId) {
@@ -156,7 +156,7 @@ const loginController = {
   },
   handler: async (request, h) => {
     const redirectUri = request.query.redirect_uri ?? ''
-    const allUsers = await findAllUsers(request.registrations)
+    const allUsers = await findAllUsers(request.registrationsStore)
     if (!allUsers || allUsers.length === 0) {
       request.logger.info(
         `No users found, redirect to register page: [${request.url}]`

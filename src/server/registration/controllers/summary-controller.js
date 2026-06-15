@@ -25,14 +25,20 @@ const summaryRegistrationController = {
     const { userId } = request.params
     const redirectUri = request.query?.redirect_uri
 
-    const registration = await findRegistration(userId, request.registrations)
+    const registration = await findRegistration(
+      userId,
+      request.registrationsStore
+    )
 
     if (!registration) {
       request.logger.error({ userId }, 'Registration not found')
       return h.redirect(oidcBasePath)
     }
 
-    const relationships = await findRelationships(userId, request.registrations)
+    const relationships = await findRelationships(
+      userId,
+      request.registrationsStore
+    )
 
     const loginLink = redirectUri
       ? authorizePath(registration.email, redirectUri, request.logger)

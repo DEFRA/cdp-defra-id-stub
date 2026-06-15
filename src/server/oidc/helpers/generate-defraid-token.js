@@ -6,10 +6,10 @@ import { findRelationships } from '#server/registration/helpers/find-relationshi
 
 const logger = createLogger()
 
-export async function generateDefraIdToken(session, host, cache) {
+export async function generateDefraIdToken(session, host, store) {
   const email = session.user?.email ?? session.user?.preferred_username
-  const registration = await findRegistrationByEmail(email, cache)
-  const relationships = await findRelationships(registration?.userId, cache)
+  const registration = await findRegistrationByEmail(email, store)
+  const relationships = await findRelationships(registration?.userId, store)
 
   if (!email) {
     logger.warn('No email found for user')

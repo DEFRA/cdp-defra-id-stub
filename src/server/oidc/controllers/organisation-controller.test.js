@@ -18,7 +18,7 @@ describe('showOrganisationPickerController', () => {
   beforeEach(() => {
     mockRequest = {
       query: { sessionId: 'test-session-id' },
-      registrations: {},
+      registrationsStore: {},
       logger: {
         error: vi.fn(),
         info: vi.fn()
@@ -159,7 +159,7 @@ describe('selectOrganisationController', () => {
         sessionId: 'test-session-id',
         relationshipId: 'rel-123'
       },
-      registrations: {},
+      registrationsStore: {},
       logger: {
         error: vi.fn(),
         info: vi.fn()

@@ -1,38 +1,21 @@
-import { asyncMap } from '#server/common/helpers/async-map.js'
-import { cacheKeys } from '#server/registration/helpers/cache-keys.js'
-
-async function findRelationships(userId, cache) {
-  const relationshipIds = await cache.get(cacheKeys.userRelationshipIds(userId))
-  if (!relationshipIds) return []
-
-  const relationshipKeys = relationshipIds.map((id) =>
-    cacheKeys.relationship(userId, id)
-  )
-
-  const relationships = await asyncMap(relationshipKeys, (key) =>
-    cache.get(key)
-  )
-
-  return relationships.filter((relationship) => relationship !== null)
+async function findRelationships(userId, store) {
+  return store.listRelationships(userId)
 }
 
 async function findNonCurrentRelationships(
   userId,
   currentRelationshipId,
-  cache
+  store
 ) {
-  const relationships = await findRelationships(userId, cache)
+  const relationships = await findRelationships(userId, store)
   const otherRelationships = relationships.filter(
     (relationship) => relationship.relationshipId !== currentRelationshipId
   )
   return otherRelationships
 }
 
-async function findRelationship(userId, relationshipId, cache) {
-  const relationship = await cache.get(
-    cacheKeys.relationship(userId, relationshipId)
-  )
-  return relationship
+async function findRelationship(userId, relationshipId, store) {
+  return store.getRelationship(userId, relationshipId)
 }
 
 export { findRelationship, findNonCurrentRelationships, findRelationships }

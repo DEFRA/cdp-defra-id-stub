@@ -2,7 +2,7 @@ import {
   findRelationships,
   findNonCurrentRelationships,
   findRelationship
-} from '#server/registration/helpers//find-relationships.js'
+} from '#server/registration/helpers/find-relationships.js'
 
 const relationship = {
   userId: 'someUserId',
@@ -11,49 +11,30 @@ const relationship = {
 
 describe('#findRelationship', () => {
   test('Should return relationship', async () => {
-    const cache = {
-      get: vi.fn((key) => {
-        if (key === 'defra-id:relationship:someUserId:someRelId') {
-          return relationship
-        } else {
-          return null
-        }
-      })
+    const store = {
+      getRelationship: vi.fn(() => relationship)
     }
 
-    const result = await findRelationship('someUserId', 'someRelId', cache)
+    const result = await findRelationship('someUserId', 'someRelId', store)
 
     expect(result).toEqual(relationship)
-    expect(cache.get).toHaveBeenCalledWith(
-      'defra-id:relationship:someUserId:someRelId'
+    expect(store.getRelationship).toHaveBeenCalledWith(
+      'someUserId',
+      'someRelId'
     )
   })
 })
 
 describe('#findRelationships', () => {
   test('Should return relationships', async () => {
-    const cache = {
-      get: vi.fn((key) => {
-        switch (key) {
-          case 'defra-id:relationship-ids:someUserId':
-            return ['someRelId', 'otherRelId']
-          case 'defra-id:relationship:someUserId:someRelId':
-            return relationship
-          default:
-            return null
-        }
-      })
+    const store = {
+      listRelationships: vi.fn(() => [relationship])
     }
 
-    const result = await findRelationships('someUserId', cache)
+    const result = await findRelationships('someUserId', store)
 
     expect(result).toEqual([relationship])
-    expect(cache.get).toHaveBeenCalledWith(
-      'defra-id:relationship-ids:someUserId'
-    )
-    expect(cache.get).toHaveBeenCalledWith(
-      'defra-id:relationship:someUserId:someRelId'
-    )
+    expect(store.listRelationships).toHaveBeenCalledWith('someUserId')
   })
 })
 
@@ -63,33 +44,17 @@ describe('#findNonCurrentRelationships', () => {
       userId: 'someUserId',
       relationshipId: 'otherRelId'
     }
-    const cache = {
-      get: vi.fn((key) => {
-        switch (key) {
-          case 'defra-id:relationship-ids:someUserId':
-            return ['someRelId', 'otherRelId']
-          case 'defra-id:relationship:someUserId:someRelId':
-            return relationship
-          case 'defra-id:relationship:someUserId:otherRelId':
-            return otherRelationship
-          default:
-            return null
-        }
-      })
+    const store = {
+      listRelationships: vi.fn(() => [relationship, otherRelationship])
     }
 
     const result = await findNonCurrentRelationships(
       'someUserId',
       'someRelId',
-      cache
+      store
     )
 
     expect(result).toEqual([otherRelationship])
-    expect(cache.get).toHaveBeenCalledWith(
-      'defra-id:relationship:someUserId:someRelId'
-    )
-    expect(cache.get).toHaveBeenCalledWith(
-      'defra-id:relationship:someUserId:otherRelId'
-    )
+    expect(store.listRelationships).toHaveBeenCalledWith('someUserId')
   })
 })

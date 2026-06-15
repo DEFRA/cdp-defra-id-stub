@@ -5,8 +5,10 @@ import { fileURLToPath } from 'node:url'
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const oneHour = 1000 * 60 * 60
-const fourHours = oneHour * 4
-const oneWeekMillis = oneHour * 24 * 7
+const defaultStaticCacheTimeout = oneHour * 24 * 7
+const defaultSessionCacheTtl = oneHour * 4
+const defaultSessionCookieTtl = oneHour * 4
+const defaultRegistrationsStoreTtl = oneHour * 24 * 3
 
 const isProduction = process.env.NODE_ENV === 'production'
 const isTest = process.env.NODE_ENV === 'test'
@@ -28,7 +30,7 @@ const config = convict({
   staticCacheTimeout: {
     doc: 'Static cache timeout in milliseconds',
     format: Number,
-    default: oneWeekMillis,
+    default: defaultStaticCacheTimeout,
     env: 'STATIC_CACHE_TIMEOUT'
   },
   serviceName: {
@@ -118,7 +120,7 @@ const config = convict({
       ttl: {
         doc: 'server side session cache ttl',
         format: Number,
-        default: fourHours,
+        default: defaultSessionCacheTtl,
         env: 'SESSION_CACHE_TTL'
       }
     },
@@ -126,7 +128,7 @@ const config = convict({
       ttl: {
         doc: 'Session cookie ttl',
         format: Number,
-        default: fourHours,
+        default: defaultSessionCookieTtl,
         env: 'SESSION_COOKIE_TTL'
       },
       password: {
@@ -142,6 +144,45 @@ const config = convict({
         default: isProduction,
         env: 'SESSION_COOKIE_SECURE'
       }
+    }
+  },
+  registrationsStore: {
+    engine: {
+      doc: 'Registration store backend',
+      format: ['dynamodb', 'memory'],
+      default: isTest ? 'memory' : 'dynamodb',
+      env: 'REGISTRATIONS_STORE_ENGINE'
+    },
+    ttl: {
+      doc: 'Registration store item TTL in milliseconds',
+      format: Number,
+      default: defaultRegistrationsStoreTtl,
+      env: 'REGISTRATIONS_STORE_TTL'
+    }
+  },
+  aws: {
+    region: {
+      doc: 'AWS region for DynamoDB access',
+      format: String,
+      default: 'eu-west-2',
+      env: 'AWS_REGION'
+    },
+    dynamoDb: {
+      endpoint: {
+        doc: 'DynamoDB endpoint for local development',
+        format: String,
+        default: isProduction ? null : 'http://127.0.0.1:4566',
+        nullable: true,
+        env: 'DYNAMODB_ENDPOINT'
+      }
+    }
+  },
+  dynamoDb: {
+    registrationsTableName: {
+      doc: 'Registrations DynamoDB table name',
+      format: String,
+      default: 'cdp-defra-id-stub-registrations',
+      env: 'AWS_DYNAMODB_REGISTRATIONS_TABLE_NAME'
     }
   },
   redis: {

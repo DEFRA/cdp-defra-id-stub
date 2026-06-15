@@ -29,7 +29,10 @@
                name: "roleName",
                value: roleName,
                autocomplete: "rolename",
-               classes: "govuk-!-width-one-half"
+               classes: "govuk-!-width-one-half",
+               errorMessage: {
+                 text: formErrors.roleName.message
+               } if formErrors.roleName.message
             }) }}
 
 
@@ -39,6 +42,9 @@
                label: {
                   text: "Role Status"
                },
+               errorMessage: {
+                 text: formErrors.roleStatus.message
+               } if formErrors.roleStatus.message,
                items: [
                   {
                      value: "incomplete",

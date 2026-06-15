@@ -12,6 +12,7 @@ import { secureContext } from '@defra/hapi-secure-context'
 import { sessionCache } from '#server/common/helpers/session-cache/session-cache.js'
 import { getCacheEngine } from '#server/common/helpers/session-cache/cache-engine.js'
 import { addFlashMessagesToContext } from '#server/common/helpers/add-flash-messages-to-context.js'
+import { createRegistrationsStore } from '#server/registration/store/index.js'
 
 async function createServer() {
   const cacheEngine = getCacheEngine(config.get('session.cache.engine'))
@@ -44,24 +45,16 @@ async function createServer() {
       {
         name: config.get('session.cache.name'),
         engine: cacheEngine
-      },
-      {
-        name: 'registrations',
-        engine: cacheEngine
       }
     ]
   })
 
   await server.register([requestLogger, requestTracing, secureContext, pulse])
 
-  const registrations = server.cache({
-    cache: 'registrations',
-    segment: 'registration',
-    expiresIn: 3 * 24 * 60 * 60 * 1000
-  })
+  const registrationsStore = createRegistrationsStore(config)
 
-  server.decorate('request', 'registrations', registrations)
-  server.decorate('server', 'registrations', registrations)
+  server.decorate('request', 'registrationsStore', registrationsStore)
+  server.decorate('server', 'registrationsStore', registrationsStore)
 
   await server.register([sessionCache, nunjucksConfig])
 

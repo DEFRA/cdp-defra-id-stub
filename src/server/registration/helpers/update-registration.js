@@ -1,7 +1,5 @@
-import { cacheKeys } from '#server/registration/helpers/cache-keys.js'
-
-async function updateRegistration(userId, registration, cache) {
-  await cache.set(cacheKeys.registration(userId), registration)
+async function updateRegistration(userId, registration, store) {
+  await store.putRegistration(userId, registration)
 }
 
 export { updateRegistration }

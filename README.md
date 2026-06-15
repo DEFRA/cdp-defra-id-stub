@@ -8,6 +8,7 @@ A service to stub out the real DEFRA ID service.
     - [Node](#node)
     - [Docker Compose](#docker-compose)
   - [Setup](#setup)
+    - [Local DynamoDB setup (Floci)](#local-dynamodb-setup-floci)
   - [Test](#test)
   - [Running](#running)
     - [Directly](#directly)
@@ -45,7 +46,7 @@ Note: DEFRA ID is not made by CDP.
 
 #### Node
 
-Please install [Node.js](http://nodejs.org/) `>= v18` and [npm](https://nodejs.org/) `>= v9`. You will find it
+Please install [Node.js](http://nodejs.org/) `>= v24` and [npm](https://nodejs.org/) `>= v11`. You will find it
 easier to use the Node Version Manager [nvm](https://github.com/creationix/nvm)
 
 To use the correct version of Node.js for this application, via nvm:
@@ -67,6 +68,70 @@ Install application dependencies:
 
 ```bash
 npm install
+```
+
+#### Local DynamoDB setup (Floci)
+
+Registrations use a dedicated store backend. By default:
+
+- `REGISTRATIONS_STORE_ENGINE=dynamodb` (dev/prod)
+- `REGISTRATIONS_STORE_ENGINE=memory` (tests)
+- `REGISTRATIONS_STORE_TTL=259200000` (3 days, matches old Redis registrations TTL)
+
+For local development, DynamoDB is emulated by [Floci](https://floci.io) — a drop-in LocalStack replacement on port `4566`.
+
+**1. Start Floci** (or full compose):
+
+```bash
+docker compose up -d floci
+```
+
+Or run Floci standalone:
+
+```bash
+docker run -d -p 4566:4566 \
+  -e FLOCI_DEFAULT_REGION=eu-west-2 \
+  hectorvent/floci:latest-aws
+```
+
+**2. Configure environment** (see `.env.example`):
+
+```bash
+cp .env.example .env
+```
+
+Key values for local DynamoDB:
+
+```bash
+REGISTRATIONS_STORE_ENGINE=dynamodb
+REGISTRATIONS_STORE_TTL=259200000
+AWS_DYNAMODB_REGISTRATIONS_TABLE_NAME=cdp-defra-id-stub-registrations
+DYNAMODB_ENDPOINT=http://127.0.0.1:4566
+AWS_REGION=eu-west-2
+AWS_ACCESS_KEY_ID=test
+AWS_SECRET_ACCESS_KEY=test
+```
+
+DynamoDB TTL cleanup is eventually consistent; for immediate removal you can still use the expire endpoints documented below.
+
+**3. Create the registrations table**
+
+When using `docker compose up`, the table is created automatically from `./compose/floci/start.d/`.
+
+Otherwise create it manually (requires the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide)):
+
+```bash
+npm run local:dynamodb:create-table
+```
+
+Or with `aws` directly:
+
+```bash
+aws --endpoint-url=http://127.0.0.1:4566 dynamodb create-table \
+  --table-name cdp-defra-id-stub-registrations \
+  --attribute-definitions AttributeName=pk,AttributeType=S AttributeName=sk,AttributeType=S \
+  --key-schema AttributeName=pk,KeyType=HASH AttributeName=sk,KeyType=RANGE \
+  --billing-mode PAY_PER_REQUEST
 ```
 
 ---
@@ -95,12 +160,15 @@ npm run dev
 
 A local environment is provided with:
 
+- Floci (DynamoDB and other AWS services on port `4566`)
 - Redis
 - CDP DEFRA ID stub
 
 ```bash
 docker compose up --build -d
 ```
+
+Mock AWS resources are created when Floci starts — edit scripts in `./compose/floci/start.d/` if needed.
 
 ## Integrate
 

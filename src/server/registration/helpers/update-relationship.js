@@ -1,7 +1,5 @@
-import { cacheKeys } from '#server/registration/helpers/cache-keys.js'
-
-async function updateRelationship(userId, relationshipId, relationship, cache) {
-  await cache.set(cacheKeys.relationship(userId, relationshipId), relationship)
+async function updateRelationship(userId, relationshipId, relationship, store) {
+  await store.putRelationship(userId, relationshipId, relationship)
 }
 
 export { updateRelationship }

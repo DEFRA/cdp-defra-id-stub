@@ -1,5 +1,6 @@
 {% extends "layouts/page.njk" %}
 {% import "registration/components/relationship-summary.njk" as relationshipSummary %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% block content %}
   {{ appHeading({
@@ -10,6 +11,13 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <div class="govuk-body" data-testid="app-page-body">
+
+        {% if errorSummaryItems.length %}
+          {{ govukErrorSummary({
+            titleText: "There is a problem",
+            errorList: errorSummaryItems
+          }) }}
+        {% endif %}
 
         <form action="{{ action }}" method="post">
           <input type="hidden" name="csrfToken" value="{{ csrfToken }}"/>
@@ -80,7 +88,10 @@
                name: "organisationName",
                value: organisationName,
                autocomplete: "organisationName",
-               classes: "govuk-!-width-three-quarters"
+               classes: "govuk-!-width-three-quarters",
+               errorMessage: {
+                 text: formErrors.organisationName.message
+               } if formErrors.organisationName.message
             }) }}
 
             {{ govukRadios({
@@ -94,21 +105,7 @@
                   classes: "govuk-fieldset__legend--m"
                 }
               },
-              items: [
-                {
-                  value: "Agent",
-                  text: "Agent"
-                },
-                {
-                  value: "Employee",
-                  text: "Employee",
-                  checked: true
-                },
-                {
-                  value: "Citizen",
-                  text: "Citizen"
-                }
-              ],
+              items: relationshipRoleItems,
               attributes: {
                 "data-1p-ignore": ""
               },
