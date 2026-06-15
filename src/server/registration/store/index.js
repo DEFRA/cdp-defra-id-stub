@@ -9,7 +9,10 @@ function createRegistrationsStore(config) {
   const engine = config.get('registrationsStore.engine')
 
   if (engine === 'memory') {
-    logger.info('Using in-memory registrations store')
+    const reason = process.env.REGISTRATIONS_STORE_ENGINE
+      ? 'REGISTRATIONS_STORE_ENGINE=memory'
+      : 'REGISTRATIONS_STORE_ENGINE not set, defaulting to memory'
+    logger.info(reason, 'Using in-memory registrations store')
     return new MemoryRegistrationsStore({
       ttlMs: config.get('registrationsStore.ttl')
     })
