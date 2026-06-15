@@ -15,7 +15,11 @@ function createDynamoDbDocumentClient(options) {
     clientConfig.endpoint = endpoint
   }
 
-  if (endpoint && !hasAwsCredentials) {
+  const isLocalEndpoint =
+    endpoint &&
+    (endpoint.includes('localhost') || endpoint.includes('127.0.0.1'))
+
+  if (isLocalEndpoint && !hasAwsCredentials) {
     clientConfig.credentials = {
       accessKeyId: 'test',
       secretAccessKey: 'test'

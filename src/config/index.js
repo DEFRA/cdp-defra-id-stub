@@ -150,7 +150,7 @@ const config = convict({
     engine: {
       doc: 'Registration store backend',
       format: ['dynamodb', 'memory'],
-      default: isTest ? 'memory' : 'dynamodb',
+      default: process.env.REGISTRATIONS_STORE_ENGINE ?? 'memory',
       env: 'REGISTRATIONS_STORE_ENGINE'
     },
     ttl: {
