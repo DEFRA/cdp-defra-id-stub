@@ -136,6 +136,20 @@ const authorizeController = {
       )
     }
 
+    if (request.query.response_mode === 'form_post') {
+      return h
+        .response(
+          `
+   <form id="f" method="post" action="${redirectUri}">
+      <input type="hidden" name="code" value="${session.sessionId}">
+      <input type="hidden" name="state" value="${state ?? ''}">
+    </form>
+    <script>document.getElementById('f').submit()</script>
+  `
+        )
+        .type('text/html')
+    }
+
     const location = new URL(redirectUri)
     location.searchParams.append('code', session.sessionId)
     location.searchParams.append('state', state)
